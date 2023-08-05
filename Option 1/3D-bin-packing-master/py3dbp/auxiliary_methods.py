@@ -24,7 +24,7 @@ def intersect(item1, item2):
         rectIntersect(item1, item2, Axis.WIDTH, Axis.DEPTH)
     )
 
-
+# adds the assigned number of decimal points to the number 1
 def getLimitNumberOfDecimals(number_of_decimals):
     return Decimal('1.{}'.format('0' * number_of_decimals))
 
