@@ -15,7 +15,17 @@ START_POSITION = [0, 0, 0]
 class Item:
 
     def __init__(self, partno,name,typeof, WHD, weight, level, loadbear, updown, color):
-        ''' '''
+        ''' 
+        partno  - Unique id of item
+        name    - name/type of item, i.e "Brush"
+        typeof  - cube or cylinder
+        WHD     - Width, height or depth in that order
+        weight  - Item weight
+        level   - Priority
+        loadbear- loadbearing priority, higher priority = more likely to be at the bottom
+        updown  - (boolean) Whether or not the item can be placed upside down
+        color   - color of the item
+        '''
         self.partno = partno
         self.name = name
         self.typeof = typeof
@@ -27,7 +37,7 @@ class Item:
         self.level = level
         # loadbear
         self.loadbear = loadbear
-        # Upside down? True or False
+        # Upside down? True or False, if item is not a cube then automatically false
         self.updown = updown if typeof == 'cube' else False
         # Draw item color
         self.color = color
@@ -37,7 +47,9 @@ class Item:
 
 
     def formatNumbers(self, number_of_decimals):
-        ''' '''
+        '''
+        normalises the values for width, height, depth and weight
+        '''
         self.width = set2Decimal(self.width, number_of_decimals)
         self.height = set2Decimal(self.height, number_of_decimals)
         self.depth = set2Decimal(self.depth, number_of_decimals)
@@ -46,7 +58,9 @@ class Item:
 
 
     def string(self):
-        ''' '''
+        ''' 
+        common string output func
+        '''
         return "%s(%sx%sx%s, weight: %s) pos(%s) rt(%s) vol(%s)" % (
             self.partno, self.width, self.height, self.depth, self.weight,
             self.position, self.rotation_type, self.getVolume()
@@ -54,14 +68,20 @@ class Item:
 
 
     def getVolume(self):
-        ''' '''
+        ''' 
+        calculates and returns volume of item
+        '''
         return set2Decimal(self.width * self.height * self.depth, self.number_of_decimals)
 
 
     def getMaxArea(self):
-        ''' '''
+        ''' 
+        if item is reversable, it will multiply the 2 largest dimensions, if it is not then it will just multiply the width and height
+        '''
         a = sorted([self.width,self.height,self.depth],reverse=True) if self.updown == True else [self.width,self.height,self.depth]
-    
+        print (a)
+
+
         return set2Decimal(a[0] * a[1] , self.number_of_decimals)
 
 
@@ -89,7 +109,14 @@ class Item:
 class Bin:
 
     def __init__(self, partno, WHD, max_weight,corner=0,put_type=1):
-        ''' '''
+        ''' 
+        partno      - unique id of the bin
+        WHD         - an array consisting of width, height and depth in that order
+        max_weight  - maximum weight of the bin
+        corner      - size of containter corner
+                        -Containers usually have a section of the corner blocked off to leave space for hooks to attach to the container from the outsided
+        put_type    - (0 : general & 1 : open top), Set the bin to open top or general, and the returned results are sorted according to this method.
+        '''
         self.partno = partno
         self.width = WHD[0]
         self.height = WHD[1]
@@ -99,9 +126,13 @@ class Bin:
         self.items = []
         self.fit_items = np.array([[0,WHD[0],0,WHD[1],0,0]])
         self.unfitted_items = []
+        # number of decimals for formatting
         self.number_of_decimals = DEFAULT_NUMBER_OF_DECIMALS
+        #
         self.fix_point = False
+        #
         self.check_stable = False
+        #
         self.support_surface_ratio = 0
         self.put_type = put_type
         # used to put gravity distribution
@@ -109,7 +140,9 @@ class Bin:
 
 
     def formatNumbers(self, number_of_decimals):
-        ''' '''
+        '''
+        normalises its dimensions
+        '''
         self.width = set2Decimal(self.width, number_of_decimals)
         self.height = set2Decimal(self.height, number_of_decimals)
         self.depth = set2Decimal(self.depth, number_of_decimals)
@@ -118,7 +151,9 @@ class Bin:
 
 
     def string(self):
-        ''' '''
+        ''' 
+        common string output function
+        '''
         return "%s(%sx%sx%s, max_weight:%s) vol(%s)" % (
             self.partno, self.width, self.height, self.depth, self.max_weight,
             self.getVolume()
@@ -126,14 +161,18 @@ class Bin:
 
 
     def getVolume(self):
-        ''' '''
+        ''' 
+        returns volume of the bin
+        '''
         return set2Decimal(
             self.width * self.height * self.depth, self.number_of_decimals
         )
 
 
     def getTotalWeight(self):
-        ''' '''
+        ''' 
+        returns total weight of items in the bin
+        '''
         total_weight = 0
 
         for item in self.items:
@@ -348,7 +387,9 @@ class Bin:
 class Packer:
 
     def __init__(self):
-        ''' '''
+        ''' 
+        No input variables needed for construction of packer class, add in items and bins later
+        '''
         self.bins = []
         self.items = []
         self.unfit_items = []
@@ -605,6 +646,9 @@ class Packer:
 
 
 class Painter:
+    '''
+    This class is only for creating the 3d image at the end
+    '''
 
     def __init__(self,bins):
         ''' '''
