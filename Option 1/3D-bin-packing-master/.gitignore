@@ -5,8 +5,8 @@ dist
 .pypirc
 .vscode
 venv
-test
+#test
 setup.py
 venv
 debug.log
-test*
+#test*
