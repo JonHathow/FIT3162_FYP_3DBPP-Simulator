@@ -79,8 +79,6 @@ class Item:
         if item is reversable, it will multiply the 2 largest dimensions, if it is not then it will just multiply the width and height
         '''
         a = sorted([self.width,self.height,self.depth],reverse=True) if self.updown == True else [self.width,self.height,self.depth]
-        print (a)
-
 
         return set2Decimal(a[0] * a[1] , self.number_of_decimals)
 
@@ -115,7 +113,11 @@ class Bin:
         max_weight  - maximum weight of the bin
         corner      - size of containter corner
                         -Containers usually have a section of the corner blocked off to leave space for hooks to attach to the container from the outsided
-        put_type    - (0 : general & 1 : open top), Set the bin to open top or general, and the returned results are sorted according to this method.
+        put_type    - (1 : general & 2 : open top), Set the bin to open top or general, and the returned results are sorted according to this method.
+
+
+        !!!Document mentioned that 0 is general and 2 is open top, but in the putOrder function in the packer class states that 1 is general and 2 is open top!!!
+
         '''
         self.partno = partno
         self.width = WHD[0]
@@ -128,11 +130,11 @@ class Bin:
         self.unfitted_items = []
         # number of decimals for formatting
         self.number_of_decimals = DEFAULT_NUMBER_OF_DECIMALS
-        #
+        # Should we consider gravity?, 
         self.fix_point = False
-        #
+        # Check stability? i.e wont let a large item float horizontal if only one of its corners is on another item
         self.check_stable = False
-        #
+        # Define a support ratio(support_surface_ratio), if the ratio below the support surface does not exceed this ratio, compare the next rule.
         self.support_surface_ratio = 0
         self.put_type = put_type
         # used to put gravity distribution
@@ -453,6 +455,11 @@ class Packer:
 
     def sortBinding(self,bin):
         ''' sorted by binding '''
+        """
+        sorts items together based on the binding input, e.g if bin is [('shoe','book')] then all items with name
+        'shoe' and 'book' will be grouped at the front
+        """
+
         b,front,back = [],[],[]
         for i in range(len(self.binding)):
             b.append([]) 
@@ -585,12 +592,24 @@ class Packer:
 
     def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS):
         '''pack master func '''
+
+        """
+        bigger_first                        - (boolean) pack bigger items first?
+        distribute_items                    - (boolean) distribute items across bins? only works if there are multiple bins
+        fix_point                           - (not sure) fix item float problem.
+        check_stable                        - (boolean) do we consider stability when packing?
+        support_surface_ratio=0.75          - (not sure) set support surface ratio
+        binding                             - (not sure) make a set of items.
+        number_of_decimals                  - number of decimals for formating values
+        """
         # set decimals
         for bin in self.bins:
             bin.formatNumbers(number_of_decimals)
 
         for item in self.items:
             item.formatNumbers(number_of_decimals)
+
+            
         # add binding attribute
         self.binding = binding
         # Bin : sorted by volumn

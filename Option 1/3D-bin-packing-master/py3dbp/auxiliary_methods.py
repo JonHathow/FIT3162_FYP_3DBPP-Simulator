@@ -3,6 +3,7 @@ from .constants import Axis
 
 
 def rectIntersect(item1, item2, x, y):
+    # Checks if 2 items intersect on any 2 given planes
     d1 = item1.getDimension()
     d2 = item2.getDimension()
 
@@ -18,14 +19,17 @@ def rectIntersect(item1, item2, x, y):
 
 
 def intersect(item1, item2):
+    # Checks if 2 items intersect
+
     return (
         rectIntersect(item1, item2, Axis.WIDTH, Axis.HEIGHT) and
         rectIntersect(item1, item2, Axis.HEIGHT, Axis.DEPTH) and
         rectIntersect(item1, item2, Axis.WIDTH, Axis.DEPTH)
     )
 
-# adds the assigned number of decimal points to the number 1
+
 def getLimitNumberOfDecimals(number_of_decimals):
+    # adds the assigned number of decimal points to the number 1
     return Decimal('1.{}'.format('0' * number_of_decimals))
 
 
