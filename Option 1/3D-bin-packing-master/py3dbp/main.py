@@ -19,7 +19,7 @@ class Item:
         partno  - Unique id of item
         name    - name/type of item, i.e "Brush"
         typeof  - cube or cylinder
-        WHD     - Width, height or depth in that order
+        WHD     - Width, height, depth in that order
         weight  - Item weight
         level   - Priority
         loadbear- loadbearing priority, higher priority = more likely to be at the bottom
