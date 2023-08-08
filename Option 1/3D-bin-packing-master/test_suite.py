@@ -154,11 +154,50 @@ class TestAux(unittest.TestCase):
             set2Decimal(4, 'a')
 
     # Main Methods
-    def test_Item(self):
-        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
+    def test_itemConstructor(self):
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
 
-        self.assertEqual(testItem.getMaxArea(), 200)
-        self.assertEqual(testItem.getVolume(), 6000)
+        '''
+        self.partno = partno
+        self.name = name
+        self.typeof = typeof
+        self.width = WHD[0]
+        self.height = WHD[1]
+        self.depth = WHD[2]
+        self.weight = weight
+        self.level = level
+        self.loadbear = loadbear
+        self.updown = updown if typeof == 'cube' else False
+        self.color = color
+        self.rotation_type = 0
+        self.position = START_POSITION
+        self.number_of_decimals = DEFAULT_NUMBER_OF_DECIMALS
+        '''
+        self.assertEqual(testItem.partno, 1)
+        self.assertEqual(testItem.name, "test")
+        self.assertEqual(testItem.typeof, "cube")
+        self.assertEqual(testItem.width, 10)
+        self.assertEqual(testItem.height, 20)
+        self.assertEqual(testItem.depth, 30)
+        self.assertEqual(testItem.weight, 25)
+        self.assertEqual(testItem.level, 2)
+        self.assertEqual(testItem.loadbear, 400)
+        self.assertEqual(testItem.updown, True)
+        self.assertEqual(testItem.color, "orange")
+
+        # Attributes not affected by constructor
+        self.assertEqual(testItem.rotation_type, 0)
+        self.assertEqual(testItem.position, [0,0,0])
+        self.assertEqual(testItem.number_of_decimals, 0)
+
+        # Testing if these attributes change correctly
+        testItem.rotation_type = 5
+        testItem.position = [-75,455,11]
+        testItem.number_of_decimals = 4
+
+        self.assertEqual(testItem.rotation_type, 5)
+        self.assertEqual(testItem.position, [-75,455,11])
+        self.assertEqual(testItem.number_of_decimals, 4)
 
     def test_Packer(self):
         """
