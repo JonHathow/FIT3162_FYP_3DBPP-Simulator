@@ -3,26 +3,8 @@ from py3dbp import rectIntersect, intersect, getLimitNumberOfDecimals, set2Decim
 import unittest
 
 class TestAux(unittest.TestCase):
-    def test_getLimitNumberOfDecimals(self):
-        self.assertEqual(getLimitNumberOfDecimals(3), 1.000)
-        self.assertEqual(getLimitNumberOfDecimals(0), 1)
-        self.assertEqual(getLimitNumberOfDecimals(20), 1.00000000000000000000)
-        self.assertEqual(getLimitNumberOfDecimals(-5), 1)
-
-        with self.assertRaises(TypeError):
-            getLimitNumberOfDecimals(1.5)
-            getLimitNumberOfDecimals('a')
-
-    def test_set2Decimal(self):
-        self.assertEqual(set2Decimal(4, 3), 4.000)
-        self.assertEqual(set2Decimal(4, 0), 4)
-        self.assertEqual(set2Decimal(4, 20), 4.00000000000000000000)
-        self.assertEqual(set2Decimal(4, -5), 4)
-
-        with self.assertRaises(TypeError):
-            set2Decimal(4, 1.5)
-            set2Decimal(4, 'a')
-
+    
+    # Auxiliary Methods
     def test_rectIntersect(self):
         testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
         testItem2 = Item(2,"test","cube", [5,10,10], 25, 2, 400, False, "orange")
@@ -76,31 +58,102 @@ class TestAux(unittest.TestCase):
         self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), False)
         self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), False)
 
-        # Changing position of item 2 (mo planes intersecting)
+        # Changing position of item 2 (no planes intersecting)
         #                     W   H   D
         testItem2.position = [50, 50, 50]
         self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), False)
         self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), False)
         self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), False)
 
-
-
-
-    
-    
     def test_intersect(self):
         testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
-        testItem2 = Item(2,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
+        testItem2 = Item(2,"test","cube", [20,10,10], 25, 2, 400, False, "orange")
 
-        # print(intersect(testItem1, testItem2))
-        
-        # self.assertEqual(intersect(testItem1, testItem2), )
+        #default start position     
+        START_POSITION = [0, 0, 0] 
+
+        with self.assertRaises(AttributeError):
+            # only objects of item class have the position attribute
+            intersect(32, testItem2)
+            intersect('a', testItem2)
+            intersect(False, testItem2)
+            intersect(testItem1, 32)
+            intersect(testItem1, 'a')
+            intersect(testItem1, False)
+            
+
+        # All 3 planes intersecting
+        self.assertEqual(intersect(testItem1, testItem2), True)
 
 
+        # Changing position of item 2 width
+        #                     W   H  D
+        testItem2.position = [9, 0, 0]
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+        testItem2.position = [10, 0, 0]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+        testItem2.position = [20, 0, 0]
+        self.assertEqual(intersect(testItem1, testItem2), False)
 
 
+        # Changing position of item 2 height
+        #                     W  H   D
+        testItem2.position = [0, 19, 0]
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+        testItem2.position = [0, 20, 0]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+        testItem2.position = [0, 100, 0]
+        self.assertEqual(intersect(testItem1, testItem2), False)
 
 
+        # Changing position of item 2 depth
+        #                     W  H  D
+        testItem2.position = [0, 0, 29]
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+        testItem2.position = [0, 0, 30]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+        testItem2.position = [0, 0, 100]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+
+        # Changing position of item 2 for all dimensions
+        #                     W   H   D
+        testItem2.position = [9, 19, 29]
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+        testItem2.position = [10, 20, 30]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+        testItem2.position = [100, 100, 100]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+    def test_getLimitNumberOfDecimals(self):
+        self.assertEqual(getLimitNumberOfDecimals(3), 1.000)
+        self.assertEqual(getLimitNumberOfDecimals(0), 1)
+        self.assertEqual(getLimitNumberOfDecimals(20), 1.00000000000000000000)
+        self.assertEqual(getLimitNumberOfDecimals(-5), 1)
+
+        with self.assertRaises(TypeError):
+            getLimitNumberOfDecimals(1.5)
+            getLimitNumberOfDecimals('a')
+
+    def test_set2Decimal(self):
+        self.assertEqual(set2Decimal(4, 3), 4.000)
+        self.assertEqual(set2Decimal(4, 0), 4)
+        self.assertEqual(set2Decimal(4, 20), 4.00000000000000000000)
+        self.assertEqual(set2Decimal(4, -5), 4)
+
+        with self.assertRaises(TypeError):
+            set2Decimal(4, 1.5)
+            set2Decimal(4, 'a')
+
+    # Main Methods
     def test_Item(self):
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
 
