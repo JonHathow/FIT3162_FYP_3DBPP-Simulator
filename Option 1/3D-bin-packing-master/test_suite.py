@@ -1,5 +1,5 @@
 #Testing suite designed to test all of the methods in the auxiliary_methods.py folder in the py3dbp folder
-from py3dbp import getLimitNumberOfDecimals, set2Decimal, Item, Bin, Packer
+from py3dbp import rectIntersect, intersect, getLimitNumberOfDecimals, set2Decimal, Item, Bin, Packer, Axis
 import unittest
 
 class TestAux(unittest.TestCase):
@@ -9,11 +9,97 @@ class TestAux(unittest.TestCase):
         self.assertEqual(getLimitNumberOfDecimals(20), 1.00000000000000000000)
         self.assertEqual(getLimitNumberOfDecimals(-5), 1)
 
-        # method has no way of dealing with float values
-        # self.assertEqual(getLimitNumberOfDecimals(1.5), 1)
+        with self.assertRaises(TypeError):
+            getLimitNumberOfDecimals(1.5)
+            getLimitNumberOfDecimals('a')
 
     def test_set2Decimal(self):
-        self.assertEqual(set2Decimal(4, 4), 4.0000)
+        self.assertEqual(set2Decimal(4, 3), 4.000)
+        self.assertEqual(set2Decimal(4, 0), 4)
+        self.assertEqual(set2Decimal(4, 20), 4.00000000000000000000)
+        self.assertEqual(set2Decimal(4, -5), 4)
+
+        with self.assertRaises(TypeError):
+            set2Decimal(4, 1.5)
+            set2Decimal(4, 'a')
+
+    def test_rectIntersect(self):
+        testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
+        testItem2 = Item(2,"test","cube", [5,10,10], 25, 2, 400, False, "orange")
+
+        #default start position     
+        START_POSITION = [0, 0, 0] 
+
+        with self.assertRaises(AttributeError):
+            # only objects of item class have the position attribute
+            rectIntersect(32, testItem2, Axis.WIDTH, Axis.HEIGHT)
+            rectIntersect('a', testItem2, Axis.WIDTH, Axis.HEIGHT)
+            rectIntersect(False, testItem2, Axis.WIDTH, Axis.HEIGHT)
+            rectIntersect(testItem1, 32, Axis.WIDTH, Axis.HEIGHT)
+            rectIntersect(testItem1, 'a', Axis.WIDTH, Axis.HEIGHT)
+            rectIntersect(testItem1, False, Axis.WIDTH, Axis.HEIGHT)
+
+        with self.assertRaises(IndexError):
+            # position array holds 3 values, x, y and z. Any index above 2 is out of range
+            rectIntersect(testItem1, testItem2, 11, Axis.HEIGHT)
+            rectIntersect(testItem1, testItem2, -11, Axis.HEIGHT)
+            rectIntersect(testItem1, testItem2, Axis.WIDTH, 11)
+            rectIntersect(testItem1, testItem2, Axis.WIDTH, -11)
+
+        with self.assertRaises(TypeError):
+            rectIntersect(testItem1, testItem2, "hello", Axis.HEIGHT)
+            rectIntersect(testItem1, testItem2, Axis.WIDTH, "hello")
+            
+        # All 3 planes intersecting
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), True)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), True)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), True)
+
+        # Changing position of item 2 (1 plane intersecting)
+        #                     W   H  D
+        testItem2.position = [30, 0, 0]
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), True)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), False)
+
+        # Changing position of item 2 (1 plane intersecting)
+        #                     W  H   D
+        testItem2.position = [0, 30, 0]
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), True)
+
+        # Changing position of item 2 (1 plane intersecting)
+        #                     W  H  D
+        testItem2.position = [0, 0, 30]
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), True)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), False)
+
+        # Changing position of item 2 (mo planes intersecting)
+        #                     W   H   D
+        testItem2.position = [50, 50, 50]
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), False)
+
+
+
+
+    
+    
+    def test_intersect(self):
+        testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
+        testItem2 = Item(2,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
+
+        # print(intersect(testItem1, testItem2))
+        
+        # self.assertEqual(intersect(testItem1, testItem2), )
+
+
+
+
+
 
     def test_Item(self):
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
