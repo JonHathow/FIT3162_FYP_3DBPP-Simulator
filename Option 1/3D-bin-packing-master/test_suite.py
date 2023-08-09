@@ -1,6 +1,7 @@
 #Testing suite designed to test all of the methods in the auxiliary_methods.py folder in the py3dbp folder
 from py3dbp import rectIntersect, intersect, getLimitNumberOfDecimals, set2Decimal, Item, Bin, Packer, Axis
 from decimal import Decimal
+import decimal
 import unittest
 
 class TestAux(unittest.TestCase):
@@ -154,7 +155,7 @@ class TestAux(unittest.TestCase):
             set2Decimal(4, 1.5)
             set2Decimal(4, 'a')
 
-    # Main Methods
+    # Item Class Methods
     def test_itemConstructor(self):
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
 
@@ -231,6 +232,15 @@ class TestAux(unittest.TestCase):
         # Tests random data types of attributes
         testItem = Item("1",34 ,33, [10.23423,20.3,30], False, True, "400", 22, "orange")
         self.assertEqual(testItem.string(), "1(10.23423x20.3x30, weight: False) pos([0, 0, 0]) rt(0) vol(6233)")
+
+    def test_itemGetVolume(self):
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        self.assertEqual(testItem.getVolume(), 6000)
+
+        testItem = Item(1,"test","cube", ["10",True,30], 25, 2, 400, True, "orange")
+
+        with self.assertRaises(decimal.InvalidOperation):
+            testItem.getVolume()
 
 
     def test_Packer(self):
