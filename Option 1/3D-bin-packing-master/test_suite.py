@@ -242,6 +242,20 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(decimal.InvalidOperation):
             testItem.getVolume()
 
+    def test_itemGetMaxArea(self):
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        self.assertEqual(testItem.getMaxArea(), 600)
+
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
+        self.assertEqual(testItem.getMaxArea(), 200)
+
+        # incorrect dimensions
+        with self.assertRaises(TypeError):
+            testItem = Item(1,"test","cube", ["10",True,30], 25, 2, 400, True, "orange")
+            testItem.getMaxArea()
+            testItem = Item(1,"test","cube", ["10",True,30], 25, 2, 400, False, "orange")
+            testItem.getMaxArea()
+
 
     def test_Packer(self):
         """
