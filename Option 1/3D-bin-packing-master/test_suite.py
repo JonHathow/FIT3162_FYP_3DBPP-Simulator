@@ -256,6 +256,32 @@ class TestAux(unittest.TestCase):
             testItem = Item(1,"test","cube", ["10",True,30], 25, 2, 400, False, "orange")
             testItem.getMaxArea()
 
+    def test_itemGetDimension(self):
+
+        # rotation type must match as shown in constants.py
+        #                                 W  H  D
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        #default rotation type is 0
+        self.assertEqual(testItem.getDimension(), [10,20,30])
+
+        testItem.rotation_type = 1  #HWD
+        self.assertEqual(testItem.getDimension(), [20,10,30])
+
+        testItem.rotation_type = 2  #HDW
+        self.assertEqual(testItem.getDimension(), [20,30,10])
+
+        testItem.rotation_type = 3  #DHW
+        self.assertEqual(testItem.getDimension(), [30,20,10])
+
+        testItem.rotation_type = 4  #DWH
+        self.assertEqual(testItem.getDimension(), [30,10,20])
+
+        testItem.rotation_type = 5  #WDH
+        self.assertEqual(testItem.getDimension(), [10,30,20])
+
+        testItem = Item(1,"test","cube", ["10",False,30.3], 25, 2, 400, True, "orange")
+        self.assertEqual(testItem.getDimension(), ["10",False,30.3])
+
 
     def test_Packer(self):
         """
