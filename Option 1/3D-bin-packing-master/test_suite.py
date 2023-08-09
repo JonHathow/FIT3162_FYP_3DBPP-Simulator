@@ -222,7 +222,15 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testItem.weight, Decimal('25'))
         self.assertEqual(testItem.number_of_decimals, -2)
 
+    def test_itemString(self):
+        testItem = Item(1,"test","cube", [10.23423,20.3,30], 25., 2, 400, True, "orange")
 
+        # string should output more information ERROR
+        # self.assertEqual(testItem.string(), 'partno:1, name:test, typeof:cube, dimensions:(10.23423x20.3x30), weight: 25.0, pos([0, 0, 0]), rt(0), vol(6233)')
+
+        # Tests random data types of attributes
+        testItem = Item("1",34 ,33, [10.23423,20.3,30], False, True, "400", 22, "orange")
+        self.assertEqual(testItem.string(), "1(10.23423x20.3x30, weight: False) pos([0, 0, 0]) rt(0) vol(6233)")
 
 
     def test_Packer(self):
