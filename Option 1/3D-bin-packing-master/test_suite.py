@@ -1,5 +1,6 @@
 #Testing suite designed to test all of the methods in the auxiliary_methods.py folder in the py3dbp folder
 from py3dbp import rectIntersect, intersect, getLimitNumberOfDecimals, set2Decimal, Item, Bin, Packer, Axis
+from decimal import Decimal
 import unittest
 
 class TestAux(unittest.TestCase):
@@ -198,6 +199,31 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testItem.rotation_type, 5)
         self.assertEqual(testItem.position, [-75,455,11])
         self.assertEqual(testItem.number_of_decimals, 4)
+
+    def test_itemFormatNumbers(self):
+        testItem = Item(1,"test","cube", [10.23423,20.3,30], 25., 2, 400, True, "orange")
+
+       
+        with self.assertRaises(TypeError):
+            testItem.formatNumbers(2.3)
+            testItem.formatNumbers('a')
+
+        testItem.formatNumbers(3)
+        self.assertEqual(testItem.width, Decimal('10.234'))
+        self.assertEqual(testItem.height, Decimal('20.300'))
+        self.assertEqual(testItem.depth, Decimal('30.000'))
+        self.assertEqual(testItem.weight, Decimal('25.000'))
+        self.assertEqual(testItem.number_of_decimals, 3)
+
+        testItem.formatNumbers(-2)
+        self.assertEqual(testItem.width, Decimal('10'))
+        self.assertEqual(testItem.height, Decimal('20'))
+        self.assertEqual(testItem.depth, Decimal('30'))
+        self.assertEqual(testItem.weight, Decimal('25'))
+        self.assertEqual(testItem.number_of_decimals, -2)
+
+
+
 
     def test_Packer(self):
         """
