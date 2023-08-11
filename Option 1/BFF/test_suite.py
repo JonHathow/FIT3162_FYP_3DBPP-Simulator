@@ -513,8 +513,18 @@ class TestAux(unittest.TestCase):
             testbin2.putCorner(8, "corner")
             testbin2.putCorner(8, True)
 
+    def test_binClearBin(self):
+        testbin1 = Bin("testbin1", [100,200,100], 5000, 1, 0)
 
+        testItem1 = Item("testitem1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("testitem2","test","cube", [5,20,10], 100, 2, 200, True, "red")
 
+        testbin1.putItem(testItem1 , [0,0,0])
+        testbin1.putItem(testItem2 , [35,35,35])
+
+        testbin1.clearBin()
+
+        self.assertEqual(testbin1.items,[])
 
 
 
