@@ -571,6 +571,54 @@ class TestAux(unittest.TestCase):
 
         self.assertEqual(testPacker2.addBin(None), None)
 
+    def test_packerAddItem(self):
+        testPacker = Packer()
+        testItem1 = Item("testitem1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("testitem2","test","cube", [1,1,1], 5, 2, 20, True, "blue")
+        testItem3 = Item("testitem3","test","cube", [60,10,10], 200, 2, 250, True, "grey")
+
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.addItem(testItem3)
+
+        #func to return string of items
+        def retStr(items):
+            res = []
+            for item in items:
+                res.append(item.string())
+            return res
+
+        self.assertEqual(retStr(testPacker.items),['testitem1(10x30x30, weight: 25) pos([0, 0, 0]) rt(0) vol(9000)', 'testitem2(1x1x1, weight: 5) pos([0, 0, 0]) rt(0) vol(1)', 'testitem3(60x10x10, weight: 200) pos([0, 0, 0]) rt(0) vol(6000)'])
+
+        self.assertEqual(testPacker.total_items, 3)
+
+        testPacker2 = Packer()
+
+        testbin1 = Bin("testbin1", [100,200,100], 5000, 1, 0)
+
+        testPacker2.addItem(testbin1)
+
+        self.assertEqual(retStr(testPacker2.items),['testbin1(100x200x100, max_weight:5000) vol(2000000)'])
+
+        testPacker3 = Packer()
+
+        testPacker3.addItem("testbin1")
+
+        testPacker3.addItem(False)
+
+        testPacker3.addItem(43)
+
+        self.assertEqual(testPacker3.items,['testbin1', False, 43])
+
+
+
+
+
+
+
+
+
+
 
 
     def test_Packer(self):
