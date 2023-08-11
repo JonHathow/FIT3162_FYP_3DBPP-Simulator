@@ -482,10 +482,36 @@ class TestAux(unittest.TestCase):
 
         self.assertEqual(retList(testbin.addCorner()), ['corner0(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner1(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner2(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner3(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner4(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner5(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner6(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner7(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)'])
         
+    def test_binPutCorner(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
 
+        #create corner items
+        corners = testbin.addCorner()
+        for count in range(len(corners)):
+            testbin.putCorner(count, corners[count])
 
+        # a function to return the contents of list and not the list object
+        def retList(lst):
+            res = []
+            for item in lst:
+                res.append(item.string())
+            return res
+
+        self.assertEqual(retList(testbin.items), ['corner0(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', "corner1(1x1x1, weight: 0) pos([0, 0, Decimal('99')]) rt(0) vol(1)", "corner2(1x1x1, weight: 0) pos([0, Decimal('199'), Decimal('99')]) rt(0) vol(1)", "corner3(1x1x1, weight: 0) pos([0, Decimal('199'), 0]) rt(0) vol(1)", "corner4(1x1x1, weight: 0) pos([Decimal('99'), Decimal('199'), 0]) rt(0) vol(1)", "corner5(1x1x1, weight: 0) pos([Decimal('99'), 0, 0]) rt(0) vol(1)", "corner6(1x1x1, weight: 0) pos([Decimal('99'), 0, Decimal('99')]) rt(0) vol(1)", "corner7(1x1x1, weight: 0) pos([Decimal('99'), Decimal('199'), Decimal('99')]) rt(0) vol(1)"])
         
-        
+        testbin2 = Bin("testbin2", [100,200,100], 5000, 1, 0)
+
+        with self.assertRaises(TypeError):
+            testbin2.putCorner("count", corners[count])
+
+        # adds only the last corner in the list
+        testbin2.putCorner(True, corners[count])
+
+        self.assertEqual(retList(testbin2.items), ["corner7(1x1x1, weight: 0) pos([0, 0, Decimal('99')]) rt(0) vol(1)"])
+
+        with self.assertRaises(IndexError):
+            testbin2.putCorner(8, "corner")
+            testbin2.putCorner(8, True)
 
 
 
