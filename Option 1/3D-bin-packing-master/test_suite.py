@@ -451,7 +451,27 @@ class TestAux(unittest.TestCase):
             testbin.putItem("hello", [80, 90, 80])
             testbin.putItem(5, [80, 90, 80])
             testbin.putItem(testbin2, [80, 90, 80])
-            
+
+
+    # Honestly not sure what these next three functions do          
+    def test_binCheckDepth(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        self.assertEqual(testbin.checkDepth([0,10,0,20,0,20]), 0.0)
+
+    def test_binCheckWidth(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        self.assertEqual(testbin.checkWidth([0,10,0,20,0,20]), 0.0)
+
+    def test_binCheckHeight(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        self.assertEqual(testbin.checkHeight([0,10,0,20,0,20]), 0.0)
+
+        
+        
+
 
         
         
