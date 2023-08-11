@@ -281,15 +281,22 @@ class Bin:
         z_ = [[0,0],[float(self.depth),float(self.depth)]]
         for j in self.fit_items:
             # creat x set
-            x_bottom = set([i for i in range(int(j[0]),int(j[1]))])
-            x_top = set([i for i in range(int(unfix_point[0]),int(unfix_point[1]))])
+            x_bottom = set([i for i in range(int(j[0]),int(j[1]))]) # creates a list of every number from j[0] to j[1]
+            x_top = set([i for i in range(int(unfix_point[0]),int(unfix_point[1]))]) # creates a list of every number from unfix_point[0] to unfix_point[1]
+
+
             # creat y set
-            y_bottom = set([i for i in range(int(j[2]),int(j[3]))])
-            y_top = set([i for i in range(int(unfix_point[2]),int(unfix_point[3]))])
+            y_bottom = set([i for i in range(int(j[2]),int(j[3]))]) # creates a list of every number from j[2] to j[3]
+            y_top = set([i for i in range(int(unfix_point[2]),int(unfix_point[3]))]) # creates a list of every number from unfix_point[2] to unfix_point[3]
+
+
             # find intersection on x set and y set.
             if len(x_bottom & x_top) != 0 and len(y_bottom & y_top) != 0 :
                 z_.append([float(j[4]),float(j[5])])
+
         top_depth = unfix_point[5] - unfix_point[4]
+
+
         # find diff set on z_.
         z_ = sorted(z_, key = lambda z_ : z_[1])
         for j in range(len(z_)-1):
@@ -344,7 +351,7 @@ class Bin:
 
 
     def addCorner(self):
-        '''add container coner '''
+        '''add container corner '''
         if self.corner != 0 :
             corner = set2Decimal(self.corner)
             corner_list = []
