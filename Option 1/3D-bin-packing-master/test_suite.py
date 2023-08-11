@@ -3,6 +3,7 @@ from py3dbp import rectIntersect, intersect, getLimitNumberOfDecimals, set2Decim
 from decimal import Decimal
 import decimal
 import unittest
+import numpy as np
 
 class TestAux(unittest.TestCase):
     
@@ -281,6 +282,126 @@ class TestAux(unittest.TestCase):
 
         testItem = Item(1,"test","cube", ["10",False,30.3], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.getDimension(), ["10",False,30.3])
+
+    # Bin Class Methods
+    def test_binConstructor(self):
+        """
+        self.partno = partno
+        self.width = WHD[0]
+        self.height = WHD[1]
+        self.depth = WHD[2]
+        self.max_weight = max_weight
+        self.corner = corner
+        self.items = []
+        self.fit_items = np.array([[0,WHD[0],0,WHD[1],0,0]])
+        self.unfitted_items = []
+        # number of decimals for formatting
+        self.number_of_decimals = DEFAULT_NUMBER_OF_DECIMALS
+        # Should we consider gravity?, 
+        self.fix_point = False
+        # Check stability? i.e wont let a large item float horizontal if only one of its corners is on another item
+        self.check_stable = False
+        # Define a support ratio(support_surface_ratio), if the ratio below the support surface does not exceed this ratio, compare the next rule.
+        self.support_surface_ratio = 0
+        self.put_type = put_type
+        # used to put gravity distribution
+        self.gravity = []
+        """
+        testbin = Bin(1, [100,200,100], 5000)
+
+        self.assertEqual(testbin.partno, 1)
+        self.assertEqual(testbin.width, 100)
+        self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.max_weight, 5000)
+        self.assertEqual(testbin.corner, 0)
+        self.assertEqual(testbin.put_type, 1)
+
+        # Attributes not affected by constructor
+        self.assertEqual(testbin.items, [])
+        self.assertEqual(testbin.unfitted_items, [])
+        self.assertEqual(testbin.number_of_decimals, 0)
+        self.assertEqual(testbin.fix_point, False)
+        self.assertEqual(testbin.check_stable, False)
+        self.assertEqual(testbin.support_surface_ratio, 0)
+        self.assertEqual(testbin.gravity, [])
+      
+
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        self.assertEqual(testbin.partno, 1)
+        self.assertEqual(testbin.width, 100)
+        self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.max_weight, 5000)
+        self.assertEqual(testbin.corner, 1)
+        self.assertEqual(testbin.put_type, 0)
+
+        # Attributes not affected by constructor
+        self.assertEqual(testbin.items, [])
+        self.assertEqual(testbin.unfitted_items, [])
+        self.assertEqual(testbin.number_of_decimals, 0)
+        self.assertEqual(testbin.fix_point, False)
+        self.assertEqual(testbin.check_stable, False)
+        self.assertEqual(testbin.support_surface_ratio, 0)
+        self.assertEqual(testbin.gravity, [])
+
+
+        testbin = Bin(1, ["100",13.4,False], [2232,54], False, "true")
+
+        self.assertEqual(testbin.partno, 1)
+        self.assertEqual(testbin.width, "100")
+        self.assertEqual(testbin.height, 13.4)
+        self.assertEqual(testbin.max_weight, [2232,54])
+        self.assertEqual(testbin.corner, False)
+        self.assertEqual(testbin.put_type, "true")
+
+        # Attributes not affected by constructor
+        self.assertEqual(testbin.items, [])
+        self.assertEqual(testbin.unfitted_items, [])
+        self.assertEqual(testbin.number_of_decimals, 0)
+        self.assertEqual(testbin.fix_point, False)
+        self.assertEqual(testbin.check_stable, False)
+        self.assertEqual(testbin.support_surface_ratio, 0)
+        self.assertEqual(testbin.gravity, [])
+
+    def test_binFormatNumbers(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        testbin.formatNumbers(3)
+        self.assertEqual(testbin.width, 100.000)
+        self.assertEqual(testbin.height, 200.000)
+        self.assertEqual(testbin.depth, 100.000)
+        self.assertEqual(testbin.max_weight, 5000.000)
+        self.assertEqual(testbin.number_of_decimals, 3)
+
+        testbin.formatNumbers(0)
+        self.assertEqual(testbin.width, 100)
+        self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.depth, 100)
+        self.assertEqual(testbin.max_weight, 5000)
+        self.assertEqual(testbin.number_of_decimals, 0)
+
+        testbin.formatNumbers(-1)
+        self.assertEqual(testbin.width, 100)
+        self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.depth, 100)
+        self.assertEqual(testbin.max_weight, 5000)
+        self.assertEqual(testbin.number_of_decimals, -1)
+
+        testbin.formatNumbers(10)
+        self.assertEqual(testbin.width, 100.0000000000)
+        self.assertEqual(testbin.height, 200.0000000000)
+        self.assertEqual(testbin.depth, 100.0000000000)
+        self.assertEqual(testbin.max_weight, 5000.0000000000)
+        self.assertEqual(testbin.number_of_decimals, 10)
+
+        with self.assertRaises(TypeError):
+            testbin.formatNumbers("potato")
+            testbin.formatNumbers(False)
+
+
+
+
+
 
 
     def test_Packer(self):
