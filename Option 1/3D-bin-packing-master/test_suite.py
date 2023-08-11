@@ -389,6 +389,8 @@ class TestAux(unittest.TestCase):
 
         self.assertEqual(testbin.string(), "1(100x200x100, max_weight:5000) vol(2000000)")
 
+        # does list items for some reason
+
         testbin = Bin("454", [100,200,100], False, "1")
 
         self.assertEqual(testbin.string(), "454(100x200x100, max_weight:False) vol(2000000)")
@@ -420,6 +422,42 @@ class TestAux(unittest.TestCase):
         testbin.putItem(testItem3, [0,0,0])
         #items cant overlap
         self.assertEqual(testbin.getTotalWeight(), 100)
+
+    def test_binPutItem(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        self.assertEqual(testbin.items, [])
+
+        testItem = Item("testItem1","test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testbin.putItem(testItem, [0,0,0])
+
+        #func to print all items in bin
+        def retItems(bin):
+            final = []
+            for item in bin.items:
+                final.append(item.string())
+            return final
+
+        self.assertEqual(retItems(testbin), ['testItem1(10x20x30, weight: 25) pos([0, 0, 0]) rt(0) vol(6000)'])
+
+        testItem2 = Item("testItem2","test","cube", [5,14,10], 50, 2, 400, True, "blue")
+        testbin.putItem(testItem2, [50,50,50])
+
+        self.assertEqual(retItems(testbin), ['testItem1(10x20x30, weight: 25) pos([0, 0, 0]) rt(0) vol(6000)', 'testItem2(5x14x10, weight: 50) pos([50, 50, 50]) rt(0) vol(700)'])
+
+
+        testbin2 = Bin("testBin2", [100,200,100], 5000, 1, 0)
+        with self.assertRaises(AttributeError):
+            testbin.putItem("hello", [80, 90, 80])
+            testbin.putItem(5, [80, 90, 80])
+            testbin.putItem(testbin2, [80, 90, 80])
+            
+
+        
+        
+
+
+
 
 
 
