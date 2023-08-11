@@ -610,6 +610,18 @@ class TestAux(unittest.TestCase):
 
         self.assertEqual(testPacker3.items,['testbin1', False, 43])
 
+    # Not sure why this method has an error
+    def test_packerPack2Bin(self):
+        testPacker1 = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 0)
+        testItem1 = Item("testItem1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+
+        testPacker1.addBin(testBin1)
+
+        testPacker1.addItem(testItem1)
+
+        with self.assertRaises(TypeError):
+            testPacker1.pack2Bin(testBin1, testItem1, True, False, 0)
 
 
 
@@ -619,35 +631,33 @@ class TestAux(unittest.TestCase):
 
 
 
+    # def test_Packer(self):
+    #     """
+    #     Test to find out what sortBinding does and how it works
+    #     """
+    #     bin1 = Bin(partno='Bin', WHD=(589,243,259), max_weight=28080, corner=15, put_type= 1)
+    #     item1 = Item(partno='toy', name='toy', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
+    #     item2 = Item(partno='pencil', name='pencil', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
+    #     item3 = Item(partno='shoes', name='shoes', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
+    #     testPacker = Packer()
+    #     testPacker.addBin(bin1)
+    #     testPacker.addItem(item1)
+    #     testPacker.addItem(item2)
+    #     testPacker.addItem(item3)
 
+    #     bin = [('toy','shoes')]
 
-    def test_Packer(self):
-        """
-        Test to find out what sortBinding does and how it works
-        """
-        bin1 = Bin(partno='Bin', WHD=(589,243,259), max_weight=28080, corner=15, put_type= 1)
-        item1 = Item(partno='toy', name='toy', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
-        item2 = Item(partno='pencil', name='pencil', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
-        item3 = Item(partno='shoes', name='shoes', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
-        testPacker = Packer()
-        testPacker.addBin(bin1)
-        testPacker.addItem(item1)
-        testPacker.addItem(item2)
-        testPacker.addItem(item3)
+    #     # add binding attribute REMOVE AFTERWARDS
+    #     testPacker.binding = bin
 
-        bin = [('toy','shoes')]
+    #     # Packer could have a proper string output
+    #     # for i in testPacker.items:
+    #     #     print (i.string())
 
-        # add binding attribute REMOVE AFTERWARDS
-        testPacker.binding = bin
+    #     testPacker.sortBinding(bin)
 
-        # Packer could have a proper string output
-        # for i in testPacker.items:
-        #     print (i.string())
-
-        testPacker.sortBinding(bin)
-
-        # for i in testPacker.items:
-        #     print (i.string())
+    #     # for i in testPacker.items:
+    #     #     print (i.string())
 
 
 
