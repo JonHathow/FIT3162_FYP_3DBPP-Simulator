@@ -469,7 +469,6 @@ class TestAux(unittest.TestCase):
 
         self.assertEqual(testbin.checkHeight([0,10,0,20,0,20]), 0.0)
 
-
     def test_binAddCorner(self):
         testbin = Bin(1, [100,200,100], 5000, 1, 0)
 
