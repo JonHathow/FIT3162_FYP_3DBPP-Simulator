@@ -401,7 +401,25 @@ class TestAux(unittest.TestCase):
         testbin.formatNumbers(3)
         self.assertEqual(testbin.getVolume(), 2000000.000)
 
+    def test_binGetTotalWeight(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
 
+        self.assertEqual(testbin.getTotalWeight(), 0)
+
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testbin.putItem(testItem, [0,0,0])
+
+        self.assertEqual(testbin.getTotalWeight(), 25)
+
+        testItem2 = Item(2,"test","cube", [10,20,30], 75, 2, 400, False, "blue")
+        testbin.putItem(testItem2, [50,0,50])
+
+        self.assertEqual(testbin.getTotalWeight(), 100)
+
+        testItem3 = Item(3,"test","cube", [10,20,30], 75, 2, 400, False, "red")
+        testbin.putItem(testItem3, [0,0,0])
+        #items cant overlap
+        self.assertEqual(testbin.getTotalWeight(), 100)
 
 
 
