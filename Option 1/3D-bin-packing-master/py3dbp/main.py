@@ -111,7 +111,7 @@ class Bin:
         partno      - unique id of the bin
         WHD         - an array consisting of width, height and depth in that order
         max_weight  - maximum weight of the bin
-        corner      - size of containter corner
+        corner      - size of container corner
                         -Containers usually have a section of the corner blocked off to leave space for hooks to attach to the container from the outsided
         put_type    - (1 : general & 2 : open top), Set the bin to open top or general, and the returned results are sorted according to this method.
 
@@ -126,6 +126,7 @@ class Bin:
         self.max_weight = max_weight
         self.corner = corner
         self.items = []
+        # not too sure what this does
         self.fit_items = np.array([[0,WHD[0],0,WHD[1],0,0]])
         self.unfitted_items = []
         # number of decimals for formatting
@@ -599,7 +600,7 @@ class Packer:
         fix_point                           - (not sure) fix item float problem.
         check_stable                        - (boolean) do we consider stability when packing?
         support_surface_ratio=0.75          - (not sure) set support surface ratio
-        binding                             - (not sure) make a set of items.
+        binding                             - make a set of items.
         number_of_decimals                  - number of decimals for formating values
         """
         # set decimals
