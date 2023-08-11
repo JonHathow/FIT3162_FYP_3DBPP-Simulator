@@ -527,6 +527,19 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin1.items,[])
 
 
+    # Packer Class Methods
+    def test_packerConstructor(self):
+        # no input variables
+        testPacker = Packer()
+
+        self.assertEqual(testPacker.bins, [])
+        self.assertEqual(testPacker.items, [])
+        self.assertEqual(testPacker.unfit_items, [])
+        self.assertEqual(testPacker.total_items, 0)
+        self.assertEqual(testPacker.binding, [])
+
+
+
 
     def test_Packer(self):
         """
