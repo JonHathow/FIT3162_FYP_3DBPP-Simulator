@@ -602,7 +602,7 @@ class Packer:
         return result
 
 
-    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS):
+    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS, test=0):
         '''pack master func '''
 
         """
@@ -614,6 +614,8 @@ class Packer:
         support_surface_ratio=0.75          - (not sure) set support surface ratio
         binding                             - make a set of items.
         number_of_decimals                  - number of decimals for formating values
+
+        test  - Purely for testing purposes
         """
         # set decimals
         for bin in self.bins:
@@ -654,8 +656,9 @@ class Packer:
                 for item in self.items:
                     self.pack2Bin(bin, item,fix_point,check_stable,support_surface_ratio)
             
-            # Deviation Of Cargo Gravity Center 
-            self.bins[idx].gravity = self.gravityCenter(bin)
+            # Deviation Of Cargo Gravity Center
+            if test == 0:
+                self.bins[idx].gravity = self.gravityCenter(bin)
 
             if distribute_items :
                 for bitem in bin.items:
