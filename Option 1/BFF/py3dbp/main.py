@@ -193,7 +193,7 @@ class Bin:
         for i in range(0, len(rotate)):
             item.rotation_type = i
             dimension = item.getDimension()
-            # rotatate
+            # rotate
             if (
                 self.width < pivot[0] + dimension[0] or
                 self.height < pivot[1] + dimension[1] or
@@ -606,6 +606,7 @@ class Packer:
         '''pack master func '''
 
         """
+        
         bigger_first                        - (boolean) pack bigger items first?
         distribute_items                    - (boolean) distribute items across bins? only works if there are multiple bins
         fix_point                           - (not sure) fix item float problem.
