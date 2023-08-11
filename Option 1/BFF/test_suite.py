@@ -538,6 +538,38 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testPacker.total_items, 0)
         self.assertEqual(testPacker.binding, [])
 
+    def test_packerAddBin(self):
+        testPacker = Packer()
+        testbin1 = Bin("testbin1", [100,200,100], 5000, 1, 0)
+        testbin2 = Bin("testbin2", [250,30,1000], 10000)
+
+        testPacker.addBin(testbin1)
+        testPacker.addBin(testbin2)
+
+        #return string of bins
+        def retStr(bins):
+            ret = []
+            for bin in bins:
+                ret.append(bin.string())
+            return ret
+
+        self.assertEqual(retStr(testPacker.bins), ['testbin1(100x200x100, max_weight:5000) vol(2000000)', 'testbin2(250x30x1000, max_weight:10000) vol(7500000)'])
+
+        testPacker2 = Packer()
+
+        testItem1 = Item("testitem1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+
+        testPacker2.addBin(testItem1)
+
+        self.assertEqual(retStr(testPacker2.bins), ['testitem1(10x30x30, weight: 25) pos([0, 0, 0]) rt(0) vol(9000)'])
+
+        self.assertEqual(testPacker2.addBin(True), None)
+
+        self.assertEqual(testPacker2.addBin("testItem1"), None)
+
+        self.assertEqual(testPacker2.addBin(45), None)
+
+        self.assertEqual(testPacker2.addBin(None), None)
 
 
 
