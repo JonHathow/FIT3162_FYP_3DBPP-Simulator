@@ -623,41 +623,42 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(TypeError):
             testPacker1.pack2Bin(testBin1, testItem1, True, False, 0)
 
+    def test_packerSortBinding(self):
+        """
+        Test to find out what sortBinding does and how it works
+        """
+        bin1 = Bin(partno='Bin', WHD=(589,243,259), max_weight=28080, corner=15, put_type= 1)
+        item1 = Item(partno='toy1', name='toy', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
+        item2 = Item(partno='pencil1', name='pencil', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
+        item3 = Item(partno='spinner1', name='pencil', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
+        item4 = Item(partno='shoes1', name='shoes', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
+        testPacker = Packer()
+        testPacker.addBin(bin1)
+        testPacker.addItem(item1)
+        testPacker.addItem(item2)
+        testPacker.addItem(item3)
+        testPacker.addItem(item4)
 
+        bind = [('toy','shoes')]
 
+        testPacker.binding = bind
 
+        # for i in testPacker.items:
+        #     print (i.string())
 
+        testPacker.sortBinding(bind)
 
+        # returns string of items
+        def retStr(packer):
+            ret = []
+            for item in testPacker.items:
+                ret.append(item.string())
+            return ret
 
+        self.assertEqual(retStr(testPacker), ['toy1(85x60x60, weight: 10) pos([0, 0, 0]) rt(0) vol(306000)', 'shoes1(85x60x60, weight: 10) pos([0, 0, 0]) rt(0) vol(306000)', 'pencil1(85x60x60, weight: 10) pos([0, 0, 0]) rt(0) vol(306000)', 'spinner1(85x60x60, weight: 10) pos([0, 0, 0]) rt(0) vol(306000)'])
 
-
-    # def test_Packer(self):
-    #     """
-    #     Test to find out what sortBinding does and how it works
-    #     """
-    #     bin1 = Bin(partno='Bin', WHD=(589,243,259), max_weight=28080, corner=15, put_type= 1)
-    #     item1 = Item(partno='toy', name='toy', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
-    #     item2 = Item(partno='pencil', name='pencil', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
-    #     item3 = Item(partno='shoes', name='shoes', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
-    #     testPacker = Packer()
-    #     testPacker.addBin(bin1)
-    #     testPacker.addItem(item1)
-    #     testPacker.addItem(item2)
-    #     testPacker.addItem(item3)
-
-    #     bin = [('toy','shoes')]
-
-    #     # add binding attribute REMOVE AFTERWARDS
-    #     testPacker.binding = bin
-
-    #     # Packer could have a proper string output
-    #     # for i in testPacker.items:
-    #     #     print (i.string())
-
-    #     testPacker.sortBinding(bin)
-
-    #     # for i in testPacker.items:
-    #     #     print (i.string())
+        # for i in testPacker.items:
+        #     print (i.string())
 
 
 
