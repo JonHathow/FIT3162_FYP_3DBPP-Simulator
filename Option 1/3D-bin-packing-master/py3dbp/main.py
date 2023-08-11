@@ -352,6 +352,10 @@ class Bin:
 
     def addCorner(self):
         '''add container corner '''
+        '''
+        self.corner only holds the size of the corner
+        this func returns a list of corners
+        '''
         if self.corner != 0 :
             corner = set2Decimal(self.corner)
             corner_list = []
@@ -372,7 +376,7 @@ class Bin:
 
 
     def putCorner(self,info,item):
-        '''put coner in bin '''
+        '''put corner in bin '''
         fit = False
         x = set2Decimal(self.width - self.corner)
         y = set2Decimal(self.height - self.corner)
