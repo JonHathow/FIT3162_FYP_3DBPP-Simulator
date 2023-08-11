@@ -469,7 +469,18 @@ class TestAux(unittest.TestCase):
 
         self.assertEqual(testbin.checkHeight([0,10,0,20,0,20]), 0.0)
 
-        
+
+    def test_binAddCorner(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        # a function to return the contents of list and not the list object
+        def retList(lst):
+            res = []
+            for item in lst:
+                res.append(item.string())
+            return res
+
+        self.assertEqual(retList(testbin.addCorner()), ['corner0(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner1(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner2(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner3(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner4(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner5(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner6(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner7(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)'])
         
 
 
