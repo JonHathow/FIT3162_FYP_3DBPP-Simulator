@@ -285,33 +285,13 @@ class TestAux(unittest.TestCase):
 
     # Bin Class Methods
     def test_binConstructor(self):
-        """
-        self.partno = partno
-        self.width = WHD[0]
-        self.height = WHD[1]
-        self.depth = WHD[2]
-        self.max_weight = max_weight
-        self.corner = corner
-        self.items = []
-        self.fit_items = np.array([[0,WHD[0],0,WHD[1],0,0]])
-        self.unfitted_items = []
-        # number of decimals for formatting
-        self.number_of_decimals = DEFAULT_NUMBER_OF_DECIMALS
-        # Should we consider gravity?, 
-        self.fix_point = False
-        # Check stability? i.e wont let a large item float horizontal if only one of its corners is on another item
-        self.check_stable = False
-        # Define a support ratio(support_surface_ratio), if the ratio below the support surface does not exceed this ratio, compare the next rule.
-        self.support_surface_ratio = 0
-        self.put_type = put_type
-        # used to put gravity distribution
-        self.gravity = []
-        """
+  
         testbin = Bin(1, [100,200,100], 5000)
 
         self.assertEqual(testbin.partno, 1)
         self.assertEqual(testbin.width, 100)
         self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.depth, 100)
         self.assertEqual(testbin.max_weight, 5000)
         self.assertEqual(testbin.corner, 0)
         self.assertEqual(testbin.put_type, 1)
@@ -331,6 +311,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.partno, 1)
         self.assertEqual(testbin.width, 100)
         self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.depth, 100)
         self.assertEqual(testbin.max_weight, 5000)
         self.assertEqual(testbin.corner, 1)
         self.assertEqual(testbin.put_type, 0)
@@ -350,6 +331,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.partno, 1)
         self.assertEqual(testbin.width, "100")
         self.assertEqual(testbin.height, 13.4)
+        self.assertEqual(testbin.depth, False)
         self.assertEqual(testbin.max_weight, [2232,54])
         self.assertEqual(testbin.corner, False)
         self.assertEqual(testbin.put_type, "true")
@@ -362,6 +344,10 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.check_stable, False)
         self.assertEqual(testbin.support_surface_ratio, 0)
         self.assertEqual(testbin.gravity, [])
+
+        #just changing dimensions from array to int
+        with self.assertRaises(TypeError):
+            testbin = Bin(1, 100, [2232,54], False, "true")
 
     def test_binFormatNumbers(self):
         testbin = Bin(1, [100,200,100], 5000, 1, 0)
@@ -398,7 +384,22 @@ class TestAux(unittest.TestCase):
             testbin.formatNumbers("potato")
             testbin.formatNumbers(False)
 
+    def test_binString(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
 
+        self.assertEqual(testbin.string(), "1(100x200x100, max_weight:5000) vol(2000000)")
+
+        testbin = Bin("454", [100,200,100], False, "1")
+
+        self.assertEqual(testbin.string(), "454(100x200x100, max_weight:False) vol(2000000)")
+
+    def test_binGetVolume(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+    
+        self.assertEqual(testbin.getVolume(), 2000000)
+
+        testbin.formatNumbers(3)
+        self.assertEqual(testbin.getVolume(), 2000000.000)
 
 
 
