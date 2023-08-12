@@ -3,6 +3,7 @@ from py3dbp import rectIntersect, intersect, getLimitNumberOfDecimals, set2Decim
 from decimal import Decimal
 import decimal
 import unittest
+import numpy as np
 
 class TestAux(unittest.TestCase):
     
@@ -282,37 +283,611 @@ class TestAux(unittest.TestCase):
         testItem = Item(1,"test","cube", ["10",False,30.3], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.getDimension(), ["10",False,30.3])
 
+    # Bin Class Methods
+    def test_binConstructor(self):
+  
+        testbin = Bin(1, [100,200,100], 5000)
 
-    def test_Packer(self):
+        self.assertEqual(testbin.partno, 1)
+        self.assertEqual(testbin.width, 100)
+        self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.depth, 100)
+        self.assertEqual(testbin.max_weight, 5000)
+        self.assertEqual(testbin.corner, 0)
+        self.assertEqual(testbin.put_type, 1)
+
+        # Attributes not affected by constructor
+        self.assertEqual(testbin.items, [])
+        self.assertEqual(testbin.unfitted_items, [])
+        self.assertEqual(testbin.number_of_decimals, 0)
+        self.assertEqual(testbin.fix_point, False)
+        self.assertEqual(testbin.check_stable, False)
+        self.assertEqual(testbin.support_surface_ratio, 0)
+        self.assertEqual(testbin.gravity, [])
+      
+
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        self.assertEqual(testbin.partno, 1)
+        self.assertEqual(testbin.width, 100)
+        self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.depth, 100)
+        self.assertEqual(testbin.max_weight, 5000)
+        self.assertEqual(testbin.corner, 1)
+        self.assertEqual(testbin.put_type, 0)
+
+        # Attributes not affected by constructor
+        self.assertEqual(testbin.items, [])
+        self.assertEqual(testbin.unfitted_items, [])
+        self.assertEqual(testbin.number_of_decimals, 0)
+        self.assertEqual(testbin.fix_point, False)
+        self.assertEqual(testbin.check_stable, False)
+        self.assertEqual(testbin.support_surface_ratio, 0)
+        self.assertEqual(testbin.gravity, [])
+
+
+        testbin = Bin(1, ["100",13.4,False], [2232,54], False, "true")
+
+        self.assertEqual(testbin.partno, 1)
+        self.assertEqual(testbin.width, "100")
+        self.assertEqual(testbin.height, 13.4)
+        self.assertEqual(testbin.depth, False)
+        self.assertEqual(testbin.max_weight, [2232,54])
+        self.assertEqual(testbin.corner, False)
+        self.assertEqual(testbin.put_type, "true")
+
+        # Attributes not affected by constructor
+        self.assertEqual(testbin.items, [])
+        self.assertEqual(testbin.unfitted_items, [])
+        self.assertEqual(testbin.number_of_decimals, 0)
+        self.assertEqual(testbin.fix_point, False)
+        self.assertEqual(testbin.check_stable, False)
+        self.assertEqual(testbin.support_surface_ratio, 0)
+        self.assertEqual(testbin.gravity, [])
+
+        #just changing dimensions from array to int
+        with self.assertRaises(TypeError):
+            testbin = Bin(1, 100, [2232,54], False, "true")
+
+    def test_binFormatNumbers(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        testbin.formatNumbers(3)
+        self.assertEqual(testbin.width, 100.000)
+        self.assertEqual(testbin.height, 200.000)
+        self.assertEqual(testbin.depth, 100.000)
+        self.assertEqual(testbin.max_weight, 5000.000)
+        self.assertEqual(testbin.number_of_decimals, 3)
+
+        testbin.formatNumbers(0)
+        self.assertEqual(testbin.width, 100)
+        self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.depth, 100)
+        self.assertEqual(testbin.max_weight, 5000)
+        self.assertEqual(testbin.number_of_decimals, 0)
+
+        testbin.formatNumbers(-1)
+        self.assertEqual(testbin.width, 100)
+        self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.depth, 100)
+        self.assertEqual(testbin.max_weight, 5000)
+        self.assertEqual(testbin.number_of_decimals, -1)
+
+        testbin.formatNumbers(10)
+        self.assertEqual(testbin.width, 100.0000000000)
+        self.assertEqual(testbin.height, 200.0000000000)
+        self.assertEqual(testbin.depth, 100.0000000000)
+        self.assertEqual(testbin.max_weight, 5000.0000000000)
+        self.assertEqual(testbin.number_of_decimals, 10)
+
+        with self.assertRaises(TypeError):
+            testbin.formatNumbers("potato")
+            testbin.formatNumbers(False)
+
+    def test_binString(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        self.assertEqual(testbin.string(), "1(100x200x100, max_weight:5000) vol(2000000)")
+
+        # does list items for some reason
+
+        testbin = Bin("454", [100,200,100], False, "1")
+
+        self.assertEqual(testbin.string(), "454(100x200x100, max_weight:False) vol(2000000)")
+
+    def test_binGetVolume(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+    
+        self.assertEqual(testbin.getVolume(), 2000000)
+
+        testbin.formatNumbers(3)
+        self.assertEqual(testbin.getVolume(), 2000000.000)
+
+    def test_binGetTotalWeight(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        self.assertEqual(testbin.getTotalWeight(), 0)
+
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testbin.putItem(testItem, [0,0,0])
+
+        self.assertEqual(testbin.getTotalWeight(), 25)
+
+        testItem2 = Item(2,"test","cube", [10,20,30], 75, 2, 400, False, "blue")
+        testbin.putItem(testItem2, [50,0,50])
+
+        self.assertEqual(testbin.getTotalWeight(), 100)
+
+        testItem3 = Item(3,"test","cube", [10,20,30], 75, 2, 400, False, "red")
+        testbin.putItem(testItem3, [0,0,0])
+        #items cant overlap
+        self.assertEqual(testbin.getTotalWeight(), 100)
+
+    def test_binPutItem(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        self.assertEqual(testbin.items, [])
+
+        testItem = Item("testItem1","test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testbin.putItem(testItem, [0,0,0])
+
+        #func to print all items in bin
+        def retItems(bin):
+            final = []
+            for item in bin.items:
+                final.append(item.string())
+            return final
+
+        self.assertEqual(retItems(testbin), ['testItem1(10x20x30, weight: 25) pos([0, 0, 0]) rt(0) vol(6000)'])
+
+        testItem2 = Item("testItem2","test","cube", [5,14,10], 50, 2, 400, True, "blue")
+        testbin.putItem(testItem2, [50,50,50])
+
+        self.assertEqual(retItems(testbin), ['testItem1(10x20x30, weight: 25) pos([0, 0, 0]) rt(0) vol(6000)', 'testItem2(5x14x10, weight: 50) pos([50, 50, 50]) rt(0) vol(700)'])
+
+
+        testbin2 = Bin("testBin2", [100,200,100], 5000, 1, 0)
+        with self.assertRaises(AttributeError):
+            testbin.putItem("hello", [80, 90, 80])
+            testbin.putItem(5, [80, 90, 80])
+            testbin.putItem(testbin2, [80, 90, 80])
+
+
+    # Honestly not sure what these next three functions do          
+    def test_binCheckDepth(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        self.assertEqual(testbin.checkDepth([0,10,0,20,0,20]), 0.0)
+
+    def test_binCheckWidth(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        self.assertEqual(testbin.checkWidth([0,10,0,20,0,20]), 0.0)
+
+    def test_binCheckHeight(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        self.assertEqual(testbin.checkHeight([0,10,0,20,0,20]), 0.0)
+
+
+    def test_binAddCorner(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        # a function to return the contents of list and not the list object
+        def retList(lst):
+            res = []
+            for item in lst:
+                res.append(item.string())
+            return res
+
+        self.assertEqual(retList(testbin.addCorner()), ['corner0(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner1(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner2(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner3(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner4(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner5(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner6(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner7(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)'])
+        
+    def test_binPutCorner(self):
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+
+        #create corner items
+        corners = testbin.addCorner()
+        for count in range(len(corners)):
+            testbin.putCorner(count, corners[count])
+
+        # a function to return the contents of list and not the list object
+        def retList(lst):
+            res = []
+            for item in lst:
+                res.append(item.string())
+            return res
+
+        self.assertEqual(retList(testbin.items), ['corner0(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', "corner1(1x1x1, weight: 0) pos([0, 0, Decimal('99')]) rt(0) vol(1)", "corner2(1x1x1, weight: 0) pos([0, Decimal('199'), Decimal('99')]) rt(0) vol(1)", "corner3(1x1x1, weight: 0) pos([0, Decimal('199'), 0]) rt(0) vol(1)", "corner4(1x1x1, weight: 0) pos([Decimal('99'), Decimal('199'), 0]) rt(0) vol(1)", "corner5(1x1x1, weight: 0) pos([Decimal('99'), 0, 0]) rt(0) vol(1)", "corner6(1x1x1, weight: 0) pos([Decimal('99'), 0, Decimal('99')]) rt(0) vol(1)", "corner7(1x1x1, weight: 0) pos([Decimal('99'), Decimal('199'), Decimal('99')]) rt(0) vol(1)"])
+        
+        testbin2 = Bin("testbin2", [100,200,100], 5000, 1, 0)
+
+        with self.assertRaises(TypeError):
+            testbin2.putCorner("count", corners[count])
+
+        # adds only the last corner in the list
+        testbin2.putCorner(True, corners[count])
+
+        self.assertEqual(retList(testbin2.items), ["corner7(1x1x1, weight: 0) pos([0, 0, Decimal('99')]) rt(0) vol(1)"])
+
+        with self.assertRaises(IndexError):
+            testbin2.putCorner(8, "corner")
+            testbin2.putCorner(8, True)
+
+    def test_binClearBin(self):
+        testbin1 = Bin("testbin1", [100,200,100], 5000, 1, 0)
+
+        testItem1 = Item("testitem1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("testitem2","test","cube", [5,20,10], 100, 2, 200, True, "red")
+
+        testbin1.putItem(testItem1 , [0,0,0])
+        testbin1.putItem(testItem2 , [35,35,35])
+
+        testbin1.clearBin()
+
+        self.assertEqual(testbin1.items,[])
+
+
+    # Packer Class Methods
+    def test_packerConstructor(self):
+        # no input variables
+        testPacker = Packer()
+
+        self.assertEqual(testPacker.bins, [])
+        self.assertEqual(testPacker.items, [])
+        self.assertEqual(testPacker.unfit_items, [])
+        self.assertEqual(testPacker.total_items, 0)
+        self.assertEqual(testPacker.binding, [])
+
+    def test_packerAddBin(self):
+        testPacker = Packer()
+        testbin1 = Bin("testbin1", [100,200,100], 5000, 1, 0)
+        testbin2 = Bin("testbin2", [250,30,1000], 10000)
+
+        testPacker.addBin(testbin1)
+        testPacker.addBin(testbin2)
+
+        #return string of bins
+        def retStr(bins):
+            ret = []
+            for bin in bins:
+                ret.append(bin.string())
+            return ret
+
+        self.assertEqual(retStr(testPacker.bins), ['testbin1(100x200x100, max_weight:5000) vol(2000000)', 'testbin2(250x30x1000, max_weight:10000) vol(7500000)'])
+
+        testPacker2 = Packer()
+
+        testItem1 = Item("testitem1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+
+        testPacker2.addBin(testItem1)
+
+        self.assertEqual(retStr(testPacker2.bins), ['testitem1(10x30x30, weight: 25) pos([0, 0, 0]) rt(0) vol(9000)'])
+
+        self.assertEqual(testPacker2.addBin(True), None)
+
+        self.assertEqual(testPacker2.addBin("testItem1"), None)
+
+        self.assertEqual(testPacker2.addBin(45), None)
+
+        self.assertEqual(testPacker2.addBin(None), None)
+
+    def test_packerAddItem(self):
+        testPacker = Packer()
+        testItem1 = Item("testitem1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("testitem2","test","cube", [1,1,1], 5, 2, 20, True, "blue")
+        testItem3 = Item("testitem3","test","cube", [60,10,10], 200, 2, 250, True, "grey")
+
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.addItem(testItem3)
+
+        #func to return string of items
+        def retStr(items):
+            res = []
+            for item in items:
+                res.append(item.string())
+            return res
+
+        self.assertEqual(retStr(testPacker.items),['testitem1(10x30x30, weight: 25) pos([0, 0, 0]) rt(0) vol(9000)', 'testitem2(1x1x1, weight: 5) pos([0, 0, 0]) rt(0) vol(1)', 'testitem3(60x10x10, weight: 200) pos([0, 0, 0]) rt(0) vol(6000)'])
+
+        self.assertEqual(testPacker.total_items, 3)
+
+        testPacker2 = Packer()
+
+        testbin1 = Bin("testbin1", [100,200,100], 5000, 1, 0)
+
+        testPacker2.addItem(testbin1)
+
+        self.assertEqual(retStr(testPacker2.items),['testbin1(100x200x100, max_weight:5000) vol(2000000)'])
+
+        testPacker3 = Packer()
+
+        testPacker3.addItem("testbin1")
+
+        testPacker3.addItem(False)
+
+        testPacker3.addItem(43)
+
+        self.assertEqual(testPacker3.items,['testbin1', False, 43])
+
+    # Not sure why this method has an error
+    def test_packerPack2Bin(self):
+        testPacker1 = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 0)
+        testItem1 = Item("testItem1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+
+        testPacker1.addBin(testBin1)
+
+        testPacker1.addItem(testItem1)
+
+        with self.assertRaises(TypeError):
+            testPacker1.pack2Bin(testBin1, testItem1, True, False, 0)
+
+    def test_packerSortBinding(self):
         """
         Test to find out what sortBinding does and how it works
         """
         bin1 = Bin(partno='Bin', WHD=(589,243,259), max_weight=28080, corner=15, put_type= 1)
-        item1 = Item(partno='toy', name='toy', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
-        item2 = Item(partno='pencil', name='pencil', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
-        item3 = Item(partno='shoes', name='shoes', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
+        item1 = Item(partno='toy1', name='toy', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
+        item2 = Item(partno='pencil1', name='pencil', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
+        item3 = Item(partno='spinner1', name='pencil', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
+        item4 = Item(partno='shoes1', name='shoes', typeof='cube', WHD=(85, 60, 60), weight=10, level=1, loadbear=100, updown=True, color='#FFFF37')
         testPacker = Packer()
         testPacker.addBin(bin1)
         testPacker.addItem(item1)
         testPacker.addItem(item2)
         testPacker.addItem(item3)
+        testPacker.addItem(item4)
 
-        bin = [('toy','shoes')]
+        bind = [('toy','shoes')]
 
-        # add binding attribute REMOVE AFTERWARDS
-        testPacker.binding = bin
-
-        # Packer could have a proper string output
-        # for i in testPacker.items:
-        #     print (i.string())
-
-        testPacker.sortBinding(bin)
+        testPacker.binding = bind
 
         # for i in testPacker.items:
         #     print (i.string())
 
+        testPacker.sortBinding(bind)
+
+        # returns string of items
+        def retStr(packer):
+            ret = []
+            for item in testPacker.items:
+                ret.append(item.string())
+            return ret
+
+        self.assertEqual(retStr(testPacker), ['toy1(85x60x60, weight: 10) pos([0, 0, 0]) rt(0) vol(306000)', 'shoes1(85x60x60, weight: 10) pos([0, 0, 0]) rt(0) vol(306000)', 'pencil1(85x60x60, weight: 10) pos([0, 0, 0]) rt(0) vol(306000)', 'spinner1(85x60x60, weight: 10) pos([0, 0, 0]) rt(0) vol(306000)'])
+
+        # for i in testPacker.items:
+        #     print (i.string())
+
+    def test_packerPutOrder(self):
+        
+        testPacker1 = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+
+        testItem1 = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","test","cube", [5,5,5], 5, 2, 400, True, "red")
+        testItem3 = Item("3","test","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","test","cube", [1,100,2], 20, 2, 400, True, "yellow")
+        testItem5 = Item("5","test","cube", [10,2,10], 20, 2, 400, True, "purple")
+        testItem6 = Item("6","test","cube", [3,20,42], 20, 2, 400, True, "green")
+
+        testPacker1.addBin(testBin1)
+        testPacker1.addItem(testItem1)
+        testPacker1.addItem(testItem2)
+        testPacker1.addItem(testItem3)
+        testPacker1.addItem(testItem5)
+        testPacker1.addItem(testItem4)
+        testPacker1.addItem(testItem6)
+
+        testPacker1.pack()
+        
+
+        #print bin items
+        def retStr(bin):
+            res = []
+            for item in bin.items:
+                if item.name != 'corner':
+                    res.append(item.partno)
+            return res
+
+        self.assertEqual(retStr(testBin1), ['4', '2', '1', '5', '6', '3'])
+
+        testBin1.put_type = 2
+
+        testPacker1.putOrder()
+
+        self.assertEqual(retStr(testBin1), ['2', '5', '6', '3', '4', '1'])
+        
+    def test_packerGravityCenter(self):
+        testPacker1 = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+
+        testItem1 = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","test","cube", [5,50,5], 5, 2, 400, True, "red")
+        testItem3 = Item("3","test","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","test","cube", [1,100,2], 20, 2, 400, True, "yellow")
+        testItem5 = Item("5","test","cube", [10,120,10], 20, 2, 400, True, "purple")
+        testItem6 = Item("6","test","cube", [100,100,100], 20, 2, 400, True, "green")
+
+        testPacker1.addBin(testBin1)
+        testPacker1.addItem(testItem1)
+        testPacker1.addItem(testItem2)
+        testPacker1.addItem(testItem3)
+        testPacker1.addItem(testItem5)
+        testPacker1.addItem(testItem4)
+        testPacker1.addItem(testItem6)
+
+        # final input is determins if we run gravity control or not, 1 = No , 0 = Yes
+        testPacker1.pack(False,True,True,True,0.75,[],0,1)
+        
+        # #print bin items
+        # def retStr(bin):
+        #     res = []
+        #     for item in bin.items:
+        #         if item.name != 'corner':
+        #             res.append(item.partno)
+        #     return res
+
+        # print item positions
+        def retStr(bin):
+            res = []
+            for item in bin.items:
+                if item.name != 'corner':
+                    res.append(item.position)
+            return res
+
+        # no gravity distribution with as we stopped it from running
+        self.assertEqual(testBin1.gravity, [])
+
+        # remaking all of the items, bins and packer
+        testPacker1 = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+
+        testItem1 = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","test","cube", [5,50,5], 5, 2, 400, True, "red")
+        testItem3 = Item("3","test","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","test","cube", [1,100,2], 20, 2, 400, True, "yellow")
+        testItem5 = Item("5","test","cube", [10,120,10], 20, 2, 400, True, "purple")
+        testItem6 = Item("6","test","cube", [100,100,100], 20, 2, 400, True, "green")
+
+        testPacker1.addBin(testBin1)
+        testPacker1.addItem(testItem1)
+        testPacker1.addItem(testItem2)
+        testPacker1.addItem(testItem3)
+        testPacker1.addItem(testItem5)
+        testPacker1.addItem(testItem4)
+        testPacker1.addItem(testItem6)
 
 
-    
+        testPacker1.pack(False,True,True,True,0.75,[],0,0)
+
+        self.assertEqual(testBin1.gravity, [96.48, 0.0, 3.52, 0.0])
+
+    def test_packerPack(self):
+        
+        # False,True,True,True,0.75,[],0
+        testPacker1 = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+
+        testItem1 = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","test","cube", [5,50,5], 5, 2, 400, True, "red")
+        testItem3 = Item("3","test","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","test","cube", [1,100,2], 20, 2, 400, True, "yellow")
+        testItem5 = Item("5","test","cube", [10,120,10], 20, 2, 400, True, "purple")
+        testItem6 = Item("6","test","cube", [100,100,100], 20, 2, 400, True, "green")
+
+        testPacker1.addBin(testBin1)
+        testPacker1.addItem(testItem1)
+        testPacker1.addItem(testItem2)
+        testPacker1.addItem(testItem3)
+        testPacker1.addItem(testItem5)
+        testPacker1.addItem(testItem4)
+        testPacker1.addItem(testItem6)
+
+        testPacker1.pack(False, True, True, True, 0.75, [], 0)
+
+        #print bin items
+        def retStr(bin):
+            res = []
+            for item in bin.items:
+                if item.name != 'corner':
+                    res.append(item.partno)
+            return res
+        
+        self.assertEqual(retStr(testBin1), ['4', '2', '3', '1', '5'])
+
+        # True,True,True,True,0.75,[],0
+        testPacker1 = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+
+        testItem1 = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","test","cube", [5,50,5], 5, 2, 400, True, "red")
+        testItem3 = Item("3","test","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","test","cube", [1,100,2], 20, 2, 400, True, "yellow")
+        testItem5 = Item("5","test","cube", [10,120,10], 20, 2, 400, True, "purple")
+        testItem6 = Item("6","test","cube", [100,100,100], 20, 2, 400, True, "green")
+
+        testPacker1.addBin(testBin1)
+        testPacker1.addItem(testItem1)
+        testPacker1.addItem(testItem2)
+        testPacker1.addItem(testItem3)
+        testPacker1.addItem(testItem5)
+        testPacker1.addItem(testItem4)
+        testPacker1.addItem(testItem6)
+
+        testPacker1.pack(True,True,True,True,0.75,[],0)
+
+        self.assertEqual(retStr(testBin1), ['6', '1', '4', '3', '2'])
+
+        # False,False,True,True,0.75,[],0
+        testPacker1 = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+
+        testItem1 = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","test","cube", [5,50,5], 5, 2, 400, True, "red")
+        testItem3 = Item("3","test","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","test","cube", [1,100,2], 20, 2, 400, True, "yellow")
+        testItem5 = Item("5","test","cube", [10,120,10], 20, 2, 400, True, "purple")
+        testItem6 = Item("6","test","cube", [100,100,100], 20, 2, 400, True, "green")
+
+        testPacker1.addBin(testBin1)
+        testPacker1.addItem(testItem1)
+        testPacker1.addItem(testItem2)
+        testPacker1.addItem(testItem3)
+        testPacker1.addItem(testItem5)
+        testPacker1.addItem(testItem4)
+        testPacker1.addItem(testItem6)
+
+        testPacker1.pack(False,False,True,True,0.75,[],0)
+
+        self.assertEqual(retStr(testBin1), ['4', '2', '3', '1', '5'])
+
+        testPacker1 = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+
+        testItem1 = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","test","cube", [5,50,5], 5, 2, 400, True, "red")
+        testItem3 = Item("3","test","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","test","cube", [1,100,2], 20, 2, 400, True, "yellow")
+        testItem5 = Item("5","test","cube", [10,120,10], 20, 2, 400, True, "purple")
+        testItem6 = Item("6","test","cube", [100,100,100], 20, 2, 400, True, "green")
+
+        testPacker1.addBin(testBin1)
+        testPacker1.addItem(testItem1)
+        testPacker1.addItem(testItem2)
+        testPacker1.addItem(testItem3)
+        testPacker1.addItem(testItem5)
+        testPacker1.addItem(testItem4)
+        testPacker1.addItem(testItem6)
+
+        testPacker1.pack(True,False,True,True,0.75,[],0)
+
+        self.assertEqual(retStr(testBin1),['6', '1', '4', '3', '2'])
+
+        # False,True,False,True,0.75,[],0
+        testPacker1 = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+
+        testItem1 = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","test","cube", [5,50,5], 5, 2, 400, True, "red")
+        testItem3 = Item("3","test","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","test","cube", [1,100,2], 20, 2, 400, True, "yellow")
+        testItem5 = Item("5","test","cube", [10,120,10], 20, 2, 400, True, "purple")
+        testItem6 = Item("6","test","cube", [100,100,100], 20, 2, 400, True, "green")
+
+        testPacker1.addBin(testBin1)
+        testPacker1.addItem(testItem1)
+        testPacker1.addItem(testItem2)
+        testPacker1.addItem(testItem3)
+        testPacker1.addItem(testItem5)
+        testPacker1.addItem(testItem4)
+        testPacker1.addItem(testItem6)
+
+        testPacker1.pack(False,True,False,True,0.75,[],0)
+
+        self.assertEqual(retStr(testBin1), ['4', '2', '3', '1', '5'])
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -111,7 +111,7 @@ class Bin:
         partno      - unique id of the bin
         WHD         - an array consisting of width, height and depth in that order
         max_weight  - maximum weight of the bin
-        corner      - size of containter corner
+        corner      - size of container corner
                         -Containers usually have a section of the corner blocked off to leave space for hooks to attach to the container from the outsided
         put_type    - (1 : general & 2 : open top), Set the bin to open top or general, and the returned results are sorted according to this method.
 
@@ -126,6 +126,7 @@ class Bin:
         self.max_weight = max_weight
         self.corner = corner
         self.items = []
+        # not too sure what this does
         self.fit_items = np.array([[0,WHD[0],0,WHD[1],0,0]])
         self.unfitted_items = []
         # number of decimals for formatting
@@ -192,7 +193,7 @@ class Bin:
         for i in range(0, len(rotate)):
             item.rotation_type = i
             dimension = item.getDimension()
-            # rotatate
+            # rotate
             if (
                 self.width < pivot[0] + dimension[0] or
                 self.height < pivot[1] + dimension[1] or
@@ -280,15 +281,22 @@ class Bin:
         z_ = [[0,0],[float(self.depth),float(self.depth)]]
         for j in self.fit_items:
             # creat x set
-            x_bottom = set([i for i in range(int(j[0]),int(j[1]))])
-            x_top = set([i for i in range(int(unfix_point[0]),int(unfix_point[1]))])
+            x_bottom = set([i for i in range(int(j[0]),int(j[1]))]) # creates a list of every number from j[0] to j[1]
+            x_top = set([i for i in range(int(unfix_point[0]),int(unfix_point[1]))]) # creates a list of every number from unfix_point[0] to unfix_point[1]
+
+
             # creat y set
-            y_bottom = set([i for i in range(int(j[2]),int(j[3]))])
-            y_top = set([i for i in range(int(unfix_point[2]),int(unfix_point[3]))])
+            y_bottom = set([i for i in range(int(j[2]),int(j[3]))]) # creates a list of every number from j[2] to j[3]
+            y_top = set([i for i in range(int(unfix_point[2]),int(unfix_point[3]))]) # creates a list of every number from unfix_point[2] to unfix_point[3]
+
+
             # find intersection on x set and y set.
             if len(x_bottom & x_top) != 0 and len(y_bottom & y_top) != 0 :
                 z_.append([float(j[4]),float(j[5])])
+
         top_depth = unfix_point[5] - unfix_point[4]
+
+
         # find diff set on z_.
         z_ = sorted(z_, key = lambda z_ : z_[1])
         for j in range(len(z_)-1):
@@ -343,7 +351,11 @@ class Bin:
 
 
     def addCorner(self):
-        '''add container coner '''
+        '''add container corner '''
+        '''
+        self.corner only holds the size of the corner
+        this func returns a list of corners
+        '''
         if self.corner != 0 :
             corner = set2Decimal(self.corner)
             corner_list = []
@@ -364,7 +376,7 @@ class Bin:
 
 
     def putCorner(self,info,item):
-        '''put coner in bin '''
+        '''put corner in bin '''
         fit = False
         x = set2Decimal(self.width - self.corner)
         y = set2Decimal(self.height - self.corner)
@@ -590,17 +602,20 @@ class Packer:
         return result
 
 
-    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS):
+    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS, test=0):
         '''pack master func '''
 
         """
+        
         bigger_first                        - (boolean) pack bigger items first?
         distribute_items                    - (boolean) distribute items across bins? only works if there are multiple bins
         fix_point                           - (not sure) fix item float problem.
         check_stable                        - (boolean) do we consider stability when packing?
         support_surface_ratio=0.75          - (not sure) set support surface ratio
-        binding                             - (not sure) make a set of items.
+        binding                             - make a set of items.
         number_of_decimals                  - number of decimals for formating values
+
+        test  - Purely for testing purposes
         """
         # set decimals
         for bin in self.bins:
@@ -641,8 +656,9 @@ class Packer:
                 for item in self.items:
                     self.pack2Bin(bin, item,fix_point,check_stable,support_surface_ratio)
             
-            # Deviation Of Cargo Gravity Center 
-            self.bins[idx].gravity = self.gravityCenter(bin)
+            # Deviation Of Cargo Gravity Center
+            if test == 0:
+                self.bins[idx].gravity = self.gravityCenter(bin)
 
             if distribute_items :
                 for bitem in bin.items:
