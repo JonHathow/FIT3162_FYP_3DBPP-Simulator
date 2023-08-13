@@ -1,5 +1,5 @@
 """
-|=====[ Simulation Main (SimuMain) ]====|
+|=====[ Simulation Warehouse Main (SWM) ]====|
 Creation Date: 11/8/2023
 Authors: How Yu Chern, Cheryl Frances Lee, Anson Sameer Lee
 
@@ -8,6 +8,8 @@ Main Program Responsibilities:
 2. Allow user to select 3DBP Solution Algorithm
 3. Output Results
 """
+# Imports
+from cuboids import Container, SKU
 
 # Capture Input
 def handle_input():
@@ -35,6 +37,7 @@ def print_menu():
     
    return None
 
+
 # Main
 def main():
    flag = True
@@ -45,9 +48,6 @@ def main():
 
    return None
 
-
-
-# Main Execution
 if __name__ == "__main__":
    main()
 
