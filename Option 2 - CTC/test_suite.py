@@ -1,4 +1,4 @@
-from test_folder import get_limit_number_of_decimals, set_to_decimal, rect_intersect, intersect, Bin, Item, Packer,  Axis
+from test_folder import get_limit_number_of_decimals, set_to_decimal, rect_intersect, intersect, stack, Bin, Item, Packer, Axis
 import unittest
 '''
 OLD
@@ -168,7 +168,72 @@ class TestAux(unittest.TestCase):
         self.assertEqual(intersect(testItem1, testItem2), False)
     
     def test_stack(self):
-        return None
+        # Both items identical
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        testItem2 = Item('testItem2', 10, 20, 30, 50)
+
+        # Method to return string value of list of items
+        def retStr(lst):
+            if isinstance(lst, list):
+                res = []
+                for item in lst:
+                    res.append(item.string())
+                return res
+            else:
+                return lst.string()
+            
+
+        self.assertEqual(retStr(stack(testItem1,testItem2)), ['testItem1testItem2(20x20x30, weight: 100) pos([0, 0, 0]) rt(0) vol(12000.000)', 'testItem1testItem2(10x40x30, weight: 100) pos([0, 0, 0]) rt(0) vol(12000.000)', 'testItem1testItem2(10x20x60, weight: 100) pos([0, 0, 0]) rt(0) vol(12000.000)'])
+
+        # Identical length and width
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        testItem2 = Item('testItem2', 10, 20, 20, 50)
+
+        self.assertEqual(retStr(stack(testItem1,testItem2)),'testItem1testItem2(10x20x50, weight: 100) pos([0, 0, 0]) rt(0) vol(10000.000)')
+
+        # Identical length and height
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        testItem2 = Item('testItem2', 10, 5, 30, 50)
+
+        self.assertEqual(retStr(stack(testItem1,testItem2)),'testItem1testItem2(10x25x30, weight: 100) pos([0, 0, 0]) rt(0) vol(7500.000)')
+
+        # Identical height and width
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        testItem2 = Item('testItem2', 40, 20, 30, 50)
+
+        self.assertEqual(retStr(stack(testItem1,testItem2)),'testItem1testItem2(50x20x30, weight: 100) pos([0, 0, 0]) rt(0) vol(30000.000)')
+
+        # Identical length
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        testItem2 = Item('testItem2', 10, 70, 15, 50)
+
+        self.assertEqual(retStr(stack(testItem1,testItem2)),'testItem1(10x20x30, weight: 50) pos([0, 0, 0]) rt(0) vol(6000.000)')
+
+        # Identical width
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        testItem2 = Item('testItem2', 40, 20, 100, 50)
+
+        self.assertEqual(retStr(stack(testItem1,testItem2)),'testItem1(10x20x30, weight: 50) pos([0, 0, 0]) rt(0) vol(6000.000)')
+
+        # Identical height
+        testItem1 = Item('testItem1', 10, 23, 30, 50)
+        testItem2 = Item('testItem2', 40, 20, 30, 50)
+
+        self.assertEqual(retStr(stack(testItem1,testItem2)),'testItem1(10x23x30, weight: 50) pos([0, 0, 0]) rt(0) vol(6900.000)')
+
+        # Nothing Identical
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        testItem2 = Item('testItem2', 40, 50, 60, 50)
+
+        self.assertEqual(retStr(stack(testItem1,testItem2)),'testItem1(10x20x30, weight: 50) pos([0, 0, 0]) rt(0) vol(6000.000)')
+
+        with self.assertRaises(AttributeError):
+            stack('testItem1', testItem2)
+            stack(testItem1, 'False')
+            stack(True, testItem2)  
+            stack(testItem1, False)  
+            stack(1, testItem2)
+            stack(testItem1, 2)
     
     # Testing Item Class Methods
 
