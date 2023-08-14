@@ -237,9 +237,74 @@ class TestAux(unittest.TestCase):
     
     # Testing Item Class Methods
 
+    def test_itemConstructor(self):
+        return
+    
+    def test_itemFormatNumbers(self):
+        return
+    
+    def test_itemGetVolume(self):
+        return
+    
+    def test_itemGetDimension(self):
+        return
+    
+    def test_itemString(self):
+        return
+
     # Testing Bin Class Methods
 
+    def test_binConstructor(self):
+        return
+    
+    def test_binFormatNumbers(self):
+        return
+    
+    def test_binGetVolume(self):
+        return
+    
+    def test_binGetTotalWeight(self):
+        return
+    
+    def test_binCanGoldItemWithRotation(self):
+        return
+    
+    def test_binPutItem(self):
+        return
+    
+    def test_binConstructor(self):
+        return
+    
+    def test_binString(self):
+        return
+
     # Testing Packer Class Methods
+
+    def test_packerConstructor(self):
+        return
+    
+    def test_packerAddBin(self):
+        return
+    
+    def test_packerAddItem(self):
+        return
+    
+    def test_packerPivotDict(self):
+        return
+    
+    def test_packerPivotList(self):
+        return
+    
+    def test_packerChoosePivotPoint(self):
+        return
+
+    def test_packerPackToBin(self):
+        return
+    
+    def test_packerPack(self):
+        return
+    
+
 
 
 if __name__ == '__main__':
