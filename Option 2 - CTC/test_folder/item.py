@@ -1,4 +1,5 @@
 from .constants import RotationType, Axis, DEFAULT_NUMBER_OF_DECIMALS, START_POSITION
+from .auxiliary_methods import set_to_decimal
 
 
 class Item:

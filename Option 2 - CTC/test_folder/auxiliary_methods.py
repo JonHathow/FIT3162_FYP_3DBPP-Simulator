@@ -1,6 +1,7 @@
 from decimal import Decimal
 from .constants import RotationType, Axis, DEFAULT_NUMBER_OF_DECIMALS, START_POSITION
 
+
 def get_limit_number_of_decimals(number_of_decimals):
     return Decimal('1.{}'.format('0' * number_of_decimals))
 
@@ -45,6 +46,8 @@ def intersect(item1, item2):
     rect_intersect(item1, item2, Axis.LENGTH, Axis.WIDTH)) # xy dimension
 
 def stack(item1, item2):
+    # has to be in method or circular import error occurs
+    from .item import Item
     """Stack two items with same length, width, height or any two of three sides are same.
     Args:
         item1, item2: any two items in item list.
@@ -57,6 +60,7 @@ def stack(item1, item2):
         item1.width == item2.width and
         item1.height == item2.height
     ):
+        # all possible combinations of how the items can be stacked
         stacked_item_1 = Item(item1.name + item2.name, item1.length + item2.length, 
                               item1.width, item1.height, item1.weight + item2.weight) #(2l, w, h)
         stacked_item_2 = Item(item1.name + item2.name, item1.length, item1.width + item2.width, 
