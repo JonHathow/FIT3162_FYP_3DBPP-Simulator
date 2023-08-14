@@ -14,12 +14,28 @@ NEW
 
 class TestAux(unittest.TestCase):
 
-    # Testing Auxiliary Methods
+    # Testing Auxiliary Methods (Almost identical to option 1)
     def test_get_limit_number_of_decimals(self):
-        return None
+        self.assertEqual(get_limit_number_of_decimals(3), 1.000)
+        self.assertEqual(get_limit_number_of_decimals(0), 1)
+        self.assertEqual(get_limit_number_of_decimals(20), 1.00000000000000000000)
+        self.assertEqual(get_limit_number_of_decimals(-5), 1)
+
+        with self.assertRaises(TypeError):
+            get_limit_number_of_decimals(1.5)
+            get_limit_number_of_decimals('a')
+            get_limit_number_of_decimals(False)
     
     def test_set_to_decimal(self):
-        return None
+        self.assertEqual(set_to_decimal(4, 3), 4.000)
+        self.assertEqual(set_to_decimal(4, 0), 4)
+        self.assertEqual(set_to_decimal(4, 20), 4.00000000000000000000)
+        self.assertEqual(set_to_decimal(4, -5), 4)
+
+        with self.assertRaises(TypeError):
+            set_to_decimal(4, 1.5)
+            set_to_decimal(4, 'a')
+            set_to_decimal(4, True)
     
     def test_rect_intersect(self):
         #name, length, width, height, weight
@@ -83,7 +99,73 @@ class TestAux(unittest.TestCase):
         self.assertEqual(rect_intersect(testItem1, testItem2, Axis.HEIGHT, Axis.LENGTH), False)
     
     def test_intersect(self):
-        return None
+        #name, length, width, height, weight
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        testItem2 = Item('testItem2', 5, 10, 10, 20)
+
+        #default start position     
+        START_POSITION = [0, 0, 0] 
+
+        with self.assertRaises(AttributeError):
+            # only objects of item class have the position attribute
+            intersect(32, testItem2)
+            intersect('a', testItem2)
+            intersect(False, testItem2)
+            intersect(testItem1, 32)
+            intersect(testItem1, 'a')
+            intersect(testItem1, False)
+            
+
+        # All 3 planes intersecting
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+
+        # Changing position of item 2 width
+        #                     W  H  D
+        testItem2.position = [9, 0, 0]
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+        testItem2.position = [10, 0, 0]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+        testItem2.position = [20, 0, 0]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+
+        # Changing position of item 2 height
+        #                     W  H   D
+        testItem2.position = [0, 19, 0]
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+        testItem2.position = [0, 20, 0]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+        testItem2.position = [0, 100, 0]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+
+        # Changing position of item 2 depth
+        #                     W  H  D
+        testItem2.position = [0, 0, 29]
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+        testItem2.position = [0, 0, 30]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+        testItem2.position = [0, 0, 100]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+
+        # Changing position of item 2 for all dimensions
+        #                     W   H   D
+        testItem2.position = [9, 19, 29]
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+        testItem2.position = [10, 20, 30]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+        testItem2.position = [100, 100, 100]
+        self.assertEqual(intersect(testItem1, testItem2), False)
     
     def test_stack(self):
         return None
