@@ -1,5 +1,8 @@
 from test_folder import get_limit_number_of_decimals, set_to_decimal, rect_intersect, intersect, stack, Bin, Item, Packer, Axis
 import unittest
+from decimal import Decimal
+import decimal
+
 '''
 OLD
     WIDTH = 0
@@ -238,19 +241,113 @@ class TestAux(unittest.TestCase):
     # Testing Item Class Methods
 
     def test_itemConstructor(self):
-        return
-    
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        self.assertEqual(testItem1.name, 'testItem1')
+        self.assertEqual(testItem1.length, 10)
+        self.assertEqual(testItem1.width, 20)
+        self.assertEqual(testItem1.height, 30)
+        self.assertEqual(testItem1.weight, 50)
+
+        # Attributes not affected by constructor
+        self.assertEqual(testItem1.rotation_type, 0)
+        self.assertEqual(testItem1.position, [0,0,0])
+        self.assertEqual(testItem1.number_of_decimals, 3)
+
+        # Different name types
+        testItem1 = Item(34, 10, 20, 30, 50)
+        self.assertEqual(testItem1.name, 34)
+
+        testItem1 = Item(False, 10, 20, 30, 50)
+        self.assertEqual(testItem1.name, False)
+
+        testItem2 = Item('testItem2', 30, 30, 30, 90)
+        testItem1 = Item(testItem2, 10, 20, 30, 50)
+        
+        with self.assertRaises(AssertionError):
+            # address of item always changes
+            self.assertEqual(testItem1.name, '<test_folder.item.Item object at 0x000001B90D9E7EB0>(10x20x30')
+
+        # Incorrect Data type measurements
+        testItem1 = Item('testItem1', '10', 20, 30, 50)
+        self.assertEqual(testItem1.length, '10')
+
+        testItem1 = Item('testItem1', 10, '20', 30, 50)
+        self.assertEqual(testItem1.width, '20')
+        
+        testItem1 = Item('testItem1', 10, 20, True, 50)
+        self.assertEqual(testItem1.height, True)
+
+        testItem1 = Item('testItem1', 10, 20, 30, False)
+        self.assertEqual(testItem1.weight, False)
+ 
     def test_itemFormatNumbers(self):
-        return
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        
+        testItem1.format_numbers(5)
+        self.assertEqual(testItem1.length, 10.00000)
+        self.assertEqual(testItem1.width, 20.00000)
+        self.assertEqual(testItem1.height, 30.00000)
+        self.assertEqual(testItem1.weight, 50.00000)
+        self.assertEqual(testItem1.number_of_decimals, 5)
+
+        testItem1.format_numbers(-5)
+        self.assertEqual(testItem1.length, 10.00000)
+        self.assertEqual(testItem1.width, 20)
+        self.assertEqual(testItem1.height, 30)
+        self.assertEqual(testItem1.weight, 50)
+        self.assertEqual(testItem1.number_of_decimals, -5)
+
+        testItem1.format_numbers(0)
+        self.assertEqual(testItem1.length, 10.00000)
+        self.assertEqual(testItem1.width, 20)
+        self.assertEqual(testItem1.height, 30)
+        self.assertEqual(testItem1.weight, 50)
+        self.assertEqual(testItem1.number_of_decimals, 0)
+
+        testItem1.format_numbers(20)
+        self.assertEqual(testItem1.length, 10.00000000000000000000)
+        self.assertEqual(testItem1.width, 20.00000000000000000000)
+        self.assertEqual(testItem1.height, 30.00000000000000000000)
+        self.assertEqual(testItem1.weight, 50.00000000000000000000)
+        self.assertEqual(testItem1.number_of_decimals, 20)
     
     def test_itemGetVolume(self):
-        return
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        self.assertEqual(testItem1.get_volume(), 6000.000)
+
+        # Non-integer values
+        testItem1 = Item('testItem1', 10.5, 20.34, 30.5342, 50)
+        self.assertEqual(testItem1.get_volume(), Decimal('6521.189'))
+
+        # Non-numeric values
+        testItem1 = Item('testItem1', '10', False, 30, 50)
+        with self.assertRaises(decimal.InvalidOperation):
+            self.assertEqual(testItem1.get_volume(), 6000.000)
     
     def test_itemGetDimension(self):
-        return
-    
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        self.assertEqual(testItem1.get_dimension(), [10,20,30])
+
+        testItem1 = Item('testItem1', 10.7, 20.65, 30.655, 50)
+        self.assertEqual(testItem1.get_dimension(), [10.7,20.65,30.655])
+
+        testItem1 = Item('testItem1', '10', False, 30, 50)
+        self.assertEqual(testItem1.get_dimension(), ['10',False,30])
+
     def test_itemString(self):
-        return
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        self.assertEqual(testItem1.string(), 'testItem1(10x20x30, weight: 50) pos([0, 0, 0]) rt(0) vol(6000.000)')
+
+        testItem1 = Item(43, 10.6, 204.5, 30.34, 5043)
+        self.assertEqual(testItem1.string(), '43(10.6x204.5x30.34, weight: 5043) pos([0, 0, 0]) rt(0) vol(65768.018)')
+
+        testItem1 = Item(True, 10, 20, 30, 50)
+        self.assertEqual(testItem1.string(), 'True(10x20x30, weight: 50) pos([0, 0, 0]) rt(0) vol(6000.000)')
+
+        # Invalid measurements
+        testItem1 = Item('testItem1', '10', True, 30, 50)
+        with self.assertRaises(decimal.InvalidOperation):
+            self.assertEqual(testItem1.string(), 'testItem1(10x20x30, weight: 50) pos([0, 0, 0]) rt(0) vol(6000.000)')
 
     # Testing Bin Class Methods
 
