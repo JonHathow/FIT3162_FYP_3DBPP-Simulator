@@ -291,14 +291,14 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testItem1.number_of_decimals, 5)
 
         testItem1.format_numbers(-5)
-        self.assertEqual(testItem1.length, 10.00000)
+        self.assertEqual(testItem1.length, 10)
         self.assertEqual(testItem1.width, 20)
         self.assertEqual(testItem1.height, 30)
         self.assertEqual(testItem1.weight, 50)
         self.assertEqual(testItem1.number_of_decimals, -5)
 
         testItem1.format_numbers(0)
-        self.assertEqual(testItem1.length, 10.00000)
+        self.assertEqual(testItem1.length, 10)
         self.assertEqual(testItem1.width, 20)
         self.assertEqual(testItem1.height, 30)
         self.assertEqual(testItem1.weight, 50)
@@ -352,10 +352,70 @@ class TestAux(unittest.TestCase):
     # Testing Bin Class Methods
 
     def test_binConstructor(self):
-        return
-    
+        testBin = Bin(300, 100, 110, 120, 400)
+
+        self.assertEqual(testBin.size, 300) 
+        self.assertEqual(testBin.length, 100)
+        self.assertEqual(testBin.width, 110)
+        self.assertEqual(testBin.height, 120)
+        self.assertEqual(testBin.capacity, 400)
+
+        # Not affected by constructor
+        self.assertEqual(testBin.total_items, 0) 
+        self.assertEqual(testBin.items, []) 
+        self.assertEqual(testBin.unplaced_items, []) 
+        self.assertEqual(testBin.unfitted_items, []) 
+        self.assertEqual(testBin.number_of_decimals, 3) 
+
+        testBin = Bin('300', 100, 110, 120, 400)
+        self.assertEqual(testBin.size, '300') 
+
+        testBin = Bin(300, False, 110, 120, 400)
+        self.assertEqual(testBin.length, False) 
+
+        testBin = Bin(300, 100, '110', 120, 400)
+        self.assertEqual(testBin.width, '110') 
+
+        testBin = Bin(300, 100, 110, True, 400)
+        self.assertEqual(testBin.height, True) 
+
+        testBin = Bin(300, 100, 110, 120, '400')
+        self.assertEqual(testBin.capacity, '400') 
+ 
     def test_binFormatNumbers(self):
-        return
+        testBin = Bin(300, 100, 110, 120, 400)
+        
+        testBin.format_numbers(5)
+        self.assertEqual(testBin.size, 300.00000)
+        self.assertEqual(testBin.length, 100.00000)
+        self.assertEqual(testBin.width, 110.00000)
+        self.assertEqual(testBin.height, 120.00000)
+        self.assertEqual(testBin.capacity, 400.00000)
+        self.assertEqual(testBin.number_of_decimals, 5)
+
+        testBin.format_numbers(-5)
+        self.assertEqual(testBin.size, 300)
+        self.assertEqual(testBin.length, 100)
+        self.assertEqual(testBin.width, 110)
+        self.assertEqual(testBin.height, 120)
+        self.assertEqual(testBin.capacity, 400)
+        self.assertEqual(testBin.number_of_decimals, -5)
+
+        testBin.format_numbers(0)
+        self.assertEqual(testBin.size, 300)
+        self.assertEqual(testBin.length, 100)
+        self.assertEqual(testBin.width, 110)
+        self.assertEqual(testBin.height, 120)
+        self.assertEqual(testBin.capacity, 400)
+        self.assertEqual(testBin.number_of_decimals, 0)
+
+        testBin.format_numbers(20)
+        self.assertEqual(testBin.size, 300.00000000000000000000)
+        self.assertEqual(testBin.length, 100.00000000000000000000)
+        self.assertEqual(testBin.width, 110.00000000000000000000)
+        self.assertEqual(testBin.height, 120.00000000000000000000)
+        self.assertEqual(testBin.capacity, 400.00000000000000000000)
+        self.assertEqual(testBin.number_of_decimals, 20)
     
     def test_binGetVolume(self):
         return
