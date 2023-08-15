@@ -418,30 +418,141 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testBin.number_of_decimals, 20)
     
     def test_binGetVolume(self):
-        return
+        testBin = Bin(300, 100, 110, 120, 400)
+        self.assertEqual(testBin.get_volume(), 1320000)
+
+        testBin = Bin(300, 10.5, 50.25, 25.75, 400)
+        self.assertEqual(testBin.get_volume(), Decimal('13586.344'))
+
+        with self.assertRaises(decimal.InvalidOperation):
+            testBin = Bin(300, '100', 110, 120, 400)
+            testBin.get_volume()
+
+            testBin = Bin(300, 100, True, 120, 400)
+            testBin.get_volume()
+
+            testBin = Bin(300, 100, 110, '120', 400)
+            testBin.get_volume()
     
     def test_binGetTotalWeight(self):
-        return
-    
-    def test_binCanGoldItemWithRotation(self):
-        return
+        testBin = Bin(300, 100, 110, 120, 400)
+
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        testItem2 = Item('testItem2', 20, 25, 15, 100)
+
+        self.assertEqual(testBin.get_total_weight(), 0)
+
+        testBin.items.append(testItem2)
+
+        self.assertEqual(testBin.get_total_weight(), 100)
+
+        testBin.items.append(testItem1)
+
+        self.assertEqual(testBin.get_total_weight(), 150)
+
+        testBin.items.append('testItem1')
+
+        with self.assertRaises(AttributeError):
+            testBin.get_total_weight()
+  
+    def test_binGetFillingRatio(self):
+        testBin = Bin(300, 100, 110, 120, 400)
+
+        testItem1 = Item('testItem1', 10, 20, 30, 50)
+        testItem2 = Item('testItem2', 20, 25, 15, 100)
+
+        self.assertEqual(testBin.get_filling_ratio(), 0)
+
+        testBin.items.append(testItem2)
+
+        self.assertEqual(testBin.get_filling_ratio(), Decimal('0.006'))
+
+        testBin.items.append(testItem1)
+
+        self.assertEqual(testBin.get_filling_ratio(), Decimal('0.010'))
+
+        testBin.items.append('testItem1')
+
+        with self.assertRaises(AttributeError):
+            testBin.get_filling_ratio()
+
+    def test_binCanHoldItemWithRotation(self):
+        testBin = Bin(300, 100, 110, 120, 400)
+
+        testItem1 = Item('testItem1', 10, 120, 30, 50)
+        self.assertEqual(testBin.can_hold_item_with_rotation(testItem1, [0,0,0]), [1,5])
+
+        testItem1 = Item('testItem1', 10, 3000, 30, 50)
+        self.assertEqual(testBin.can_hold_item_with_rotation(testItem1, [0,0,0]), [])
+
+        testItem1 = Item('testItem1', 110, 100, 120, 50)
+        self.assertEqual(testBin.can_hold_item_with_rotation(testItem1, [0,0,0]), [4])
+
+        testItem1 = Item('testItem1', 10, 10, 10, 50)
+        self.assertEqual(testBin.can_hold_item_with_rotation(testItem1, [0,0,0]), [0,1,2,3,4,5])
+
+        with self.assertRaises(AttributeError):
+            self.assertEqual(testBin.can_hold_item_with_rotation('testItem1', [0,0,0]), [0,1,2,3,4,5])
     
     def test_binPutItem(self):
-        return
-    
-    def test_binConstructor(self):
-        return
+        testBin = Bin(300, 100, 110, 120, 400)
+
+        testItem1 = Item('testItem1', 10, 120, 30, 50)
+        self.assertEqual(testBin.put_item(testItem1, [0,0,0], [0,0,0]), True)
+
+        testItem2 = Item('testItem2', 10, 120, 30, 50)
+        self.assertEqual(testBin.put_item(testItem2, [10,120,30], [10,120,30]), False)
+
+        testItem3 = Item('testItem3', 430, 120, 243, 50)
+        self.assertEqual(testBin.put_item(testItem3, [10,120,30], [0,0,0]), False)
+
+        testItem4 = Item('testItem4', 430, 120, 243, 50)
+        self.assertEqual(testBin.put_item(testItem4, [10,120,30], [430,120,243]), False)
     
     def test_binString(self):
-        return
+        testBin = Bin(300, 300, 300, 300, 400)
+
+        # Before adding any items
+        self.assertEqual(testBin.string(), '300(300x300x300, max_weight:400) vol(27000000.000) item_number(0) filling_ratio(0.000)')
+
+        testItem1 = Item('testItem1', 10, 120, 30, 300)
+
+        testBin.put_item(testItem1, [0,0,0], [0,0,0])
+
+        # After adding items
+        self.assertEqual(testBin.string(), '300(300x300x300, max_weight:400) vol(27000000.000) item_number(1) filling_ratio(0.001)')
+
 
     # Testing Packer Class Methods
 
     def test_packerConstructor(self):
-        return
+        testPacker = Packer()
+
+        self.assertEqual(testPacker.bins,[])
+        self.assertEqual(testPacker.unplaced_items,[])
+        self.assertEqual(testPacker.placed_items,[])
+        self.assertEqual(testPacker.unfit_items,[])
+        self.assertEqual(testPacker.total_items,0)
+        self.assertEqual(testPacker.total_used_bins,0)
+        self.assertEqual(testPacker.used_bins,[])
     
     def test_packerAddBin(self):
-        return
+        testPacker = Packer()
+        testBin = Bin(300, 300, 300, 300, 400)
+        testPacker.add_bin(testBin)
+
+        # Function to return string method of bin
+        def retStr(bins):
+            res = []
+            for bin in bins:
+                res.append(bin.string())
+            return res
+        
+        self.assertEqual(retStr(testPacker.bins), ['300(300x300x300, max_weight:400) vol(27000000.000) item_number(0) filling_ratio(0.000)'])
+
+        testBin2 = Bin(1000, 200, 500, 700, 20000)
+        testPacker.add_bin(testBin2)
+        self.assertEqual(retStr(testPacker.bins), ['300(300x300x300, max_weight:400) vol(27000000.000) item_number(0) filling_ratio(0.000)', '1000(200x500x700, max_weight:20000) vol(70000000.000) item_number(0) filling_ratio(0.000)'])
     
     def test_packerAddItem(self):
         return
