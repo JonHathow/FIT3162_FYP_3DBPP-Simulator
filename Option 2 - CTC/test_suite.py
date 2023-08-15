@@ -584,17 +584,103 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(AttributeError):
             retStr(testPacker.unplaced_items)
 
+    # Not Done
     def test_packerPivotDict(self):
-        return
+        testPacker = Packer()
+        testBin = Bin(2000, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 100, 10, 40, 50)
+        testItem3 = Item('testItem3', 55, 120, 30, 50)
+        testItem4 = Item('testItem4', 140, 120, 120, 50)
+
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.add_item(testItem3)
+        testPacker.add_item(testItem4)
+        # not working, might be because items aren't actually being put in bin yet
+        # print(testPacker.pivot_dict(testBin, testItem1))
+        # print(testPacker.pivot_dict(testBin, testItem2))
+        # print(testPacker.pivot_dict(testBin, testItem3))
+        # print(testPacker.pivot_dict(testBin, testItem4))
     
+    # Not Done
     def test_packerPivotList(self):
-        return
+        testPacker = Packer()
+        testBin = Bin(2000, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 100, 10, 40, 50)
+        testItem3 = Item('testItem3', 55, 120, 30, 50)
+        testItem4 = Item('testItem4', 140, 120, 120, 50)
+
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.add_item(testItem3)
+        testPacker.add_item(testItem4)
+        # not working, might be because items aren't actually being put in bin yet
+        # print(testPacker.pivot_list(testBin, testItem1))
+        # print(testPacker.pivot_list(testBin, testItem2))
+        # print(testPacker.pivot_list(testBin, testItem3))
+        # print(testPacker.pivot_list(testBin, testItem4))
     
+    # Not Done
     def test_packerChoosePivotPoint(self):
-        return
+        testPacker = Packer()
+        testBin = Bin(2000, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 100, 10, 40, 50)
+        testItem3 = Item('testItem3', 55, 120, 30, 50)
+        testItem4 = Item('testItem4', 140, 120, 120, 50)
+
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.add_item(testItem3)
+        testPacker.add_item(testItem4)
+
+        # print(testPacker.choose_pivot_point(testBin, testItem1))
+        # print(testPacker.choose_pivot_point(testBin, testItem2))
+        # print(testPacker.choose_pivot_point(testBin, testItem3))
+        # print(testPacker.choose_pivot_point(testBin, testItem4))
 
     def test_packerPackToBin(self):
-        return
+        testPacker = Packer()
+        testBin = Bin(2000, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 100, 10, 40, 50)
+        testItem3 = Item('testItem3', 55, 120, 30, 50)
+        testItem4 = Item('testItem4', 500, 500, 500, 50)
+
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.add_item(testItem3)
+        testPacker.add_item(testItem4)
+
+        # Method to return string value of list of items
+        def retStr(lst):
+            if isinstance(lst, list):
+                res = []
+                for item in lst:
+                    res.append(item.string())
+                return res
+            else:
+                return lst.string()
+        
+        testPacker.pack_to_bin(testBin, testItem1)
+        self.assertEqual(retStr(testBin.items), ['testItem1(10x10x30, weight: 50) pos([0, 0, 0]) rt(0) vol(3000.000)'])
+
+        testPacker.pack_to_bin(testBin, testItem2)
+        self.assertEqual(retStr(testBin.items), ['testItem1(10x10x30, weight: 50) pos([0, 0, 0]) rt(0) vol(3000.000)', 'testItem2(100x10x40, weight: 50) pos([10, 0, 0]) rt(2) vol(40000.000)'])
+
+        testPacker.pack_to_bin(testBin, testItem3)
+        self.assertEqual(retStr(testBin.items), ['testItem1(10x10x30, weight: 50) pos([0, 0, 0]) rt(0) vol(3000.000)', 'testItem2(100x10x40, weight: 50) pos([10, 0, 0]) rt(2) vol(40000.000)', 'testItem3(55x120x30, weight: 50) pos([0, 10, 0]) rt(5) vol(198000.000)'])
+
+        # Item4 should not be fitted into bin (too big)
+        testPacker.pack_to_bin(testBin, testItem4)
+        self.assertEqual(retStr(testBin.items), ['testItem1(10x10x30, weight: 50) pos([0, 0, 0]) rt(0) vol(3000.000)', 'testItem2(100x10x40, weight: 50) pos([10, 0, 0]) rt(2) vol(40000.000)', 'testItem3(55x120x30, weight: 50) pos([0, 10, 0]) rt(5) vol(198000.000)'])
+        self.assertEqual(retStr(testBin.unfitted_items), ['testItem4(500x500x500, weight: 50) pos([0, 10, 120]) rt(5) vol(125000000.000)'])
     
     def test_packerPack(self):
         return
