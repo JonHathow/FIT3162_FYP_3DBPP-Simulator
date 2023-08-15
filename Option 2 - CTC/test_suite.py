@@ -683,7 +683,41 @@ class TestAux(unittest.TestCase):
         self.assertEqual(retStr(testBin.unfitted_items), ['testItem4(500x500x500, weight: 50) pos([0, 10, 120]) rt(5) vol(125000000.000)'])
     
     def test_packerPack(self):
-        return
+        #1 Bin
+        testPacker = Packer()
+        testBin = Bin(2000, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 100, 10, 40, 50)
+        testItem3 = Item('testItem3', 55, 120, 30, 50)
+        testItem4 = Item('testItem4', 500, 500, 500, 50)
+
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.add_item(testItem3)
+        testPacker.add_item(testItem4)
+
+        testPacker.pack()
+
+        print("///////////////////////////////////////////////////////")
+
+        # 2 Bins
+        testPacker = Packer()
+        testBin1 = Bin(2000, 300, 400, 200, 4000)
+        testBin2 = Bin(2000, 1000, 600, 800, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 100, 10, 40, 50)
+        testItem3 = Item('testItem3', 55, 120, 30, 50)
+        testItem4 = Item('testItem4', 500, 500, 500, 50)
+
+        testPacker.add_bin(testBin1)
+        testPacker.add_bin(testBin2)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.add_item(testItem3)
+        testPacker.add_item(testItem4)
+
+        testPacker.pack()
     
 
 

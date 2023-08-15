@@ -404,9 +404,9 @@ class Packer:
             response = bin.put_item(item, pivot_point, distance_3D)
             return  
             
-    def pack(
-        self, bigger_first=True, number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS):
-        """For a list of items and a list of bins, perform the whole pack process.
+    def pack(self, bigger_first=True, number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS):
+        """
+        For a list of items and a list of bins, perform the whole pack process.
         Args:
             bin: a bin in bin list that a certain item will be placed into.
             item: an unplaced item in item list.
