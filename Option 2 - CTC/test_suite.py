@@ -584,25 +584,29 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(AttributeError):
             retStr(testPacker.unplaced_items)
 
-    # Not Done
     def test_packerPivotDict(self):
         testPacker = Packer()
         testBin = Bin(2000, 300, 400, 200, 4000)
         testItem1 = Item('testItem1', 10, 10, 30, 50)
-        testItem2 = Item('testItem2', 100, 10, 40, 50)
-        testItem3 = Item('testItem3', 55, 120, 30, 50)
-        testItem4 = Item('testItem4', 140, 120, 120, 50)
+        testItem2 = Item('testItem2', 10, 10, 30, 50)
+
 
         testPacker.add_bin(testBin)
         testPacker.add_item(testItem1)
         testPacker.add_item(testItem2)
-        testPacker.add_item(testItem3)
-        testPacker.add_item(testItem4)
-        # not working, might be because items aren't actually being put in bin yet
-        # print(testPacker.pivot_dict(testBin, testItem1))
-        # print(testPacker.pivot_dict(testBin, testItem2))
-        # print(testPacker.pivot_dict(testBin, testItem3))
-        # print(testPacker.pivot_dict(testBin, testItem4))
+
+        self.assertEqual(testPacker.pivot_dict(testBin, testItem1), {})
+        self.assertEqual(testPacker.pivot_dict(testBin, testItem2), {})
+
+        testBin.put_item(testItem2, [0,0,0],[0,0,0])
+
+        # There must be an item already in the bin
+        self.assertEqual(testPacker.pivot_dict(testBin, testItem1), {(10, 0, 0): [290, 400, 200], (0, 10, 0): [300, 390, 200], (0, 0, 30): [300, 400, 170]})
+
+        # Already in a bin
+        self.assertEqual(testPacker.pivot_dict(testBin, testItem2), {})
+        
+
     
     # Not Done
     def test_packerPivotList(self):
@@ -682,42 +686,42 @@ class TestAux(unittest.TestCase):
         self.assertEqual(retStr(testBin.items), ['testItem1(10x10x30, weight: 50) pos([0, 0, 0]) rt(0) vol(3000.000)', 'testItem2(100x10x40, weight: 50) pos([10, 0, 0]) rt(2) vol(40000.000)', 'testItem3(55x120x30, weight: 50) pos([0, 10, 0]) rt(5) vol(198000.000)'])
         self.assertEqual(retStr(testBin.unfitted_items), ['testItem4(500x500x500, weight: 50) pos([0, 10, 120]) rt(5) vol(125000000.000)'])
     
-    def test_packerPack(self):
-        #1 Bin
-        testPacker = Packer()
-        testBin = Bin(2000, 300, 400, 200, 4000)
-        testItem1 = Item('testItem1', 10, 10, 30, 50)
-        testItem2 = Item('testItem2', 100, 10, 40, 50)
-        testItem3 = Item('testItem3', 55, 120, 30, 50)
-        testItem4 = Item('testItem4', 500, 500, 500, 50)
+    # def test_packerPack(self):
+    #     #1 Bin
+    #     testPacker = Packer()
+    #     testBin = Bin(2000, 300, 400, 200, 4000)
+    #     testItem1 = Item('testItem1', 10, 10, 30, 50)
+    #     testItem2 = Item('testItem2', 100, 10, 40, 50)
+    #     testItem3 = Item('testItem3', 55, 120, 30, 50)
+    #     testItem4 = Item('testItem4', 500, 500, 500, 50)
 
-        testPacker.add_bin(testBin)
-        testPacker.add_item(testItem1)
-        testPacker.add_item(testItem2)
-        testPacker.add_item(testItem3)
-        testPacker.add_item(testItem4)
+    #     testPacker.add_bin(testBin)
+    #     testPacker.add_item(testItem1)
+    #     testPacker.add_item(testItem2)
+    #     testPacker.add_item(testItem3)
+    #     testPacker.add_item(testItem4)
 
-        testPacker.pack()
+    #     testPacker.pack()
 
-        print("///////////////////////////////////////////////////////")
+    #     print("///////////////////////////////////////////////////////")
 
-        # 2 Bins
-        testPacker = Packer()
-        testBin1 = Bin(2000, 300, 400, 200, 4000)
-        testBin2 = Bin(2000, 1000, 600, 800, 4000)
-        testItem1 = Item('testItem1', 10, 10, 30, 50)
-        testItem2 = Item('testItem2', 100, 10, 40, 50)
-        testItem3 = Item('testItem3', 55, 120, 30, 50)
-        testItem4 = Item('testItem4', 500, 500, 500, 50)
+    #     # 2 Bins
+    #     testPacker = Packer()
+    #     testBin1 = Bin(2000, 300, 400, 200, 4000)
+    #     testBin2 = Bin(2000, 1000, 600, 800, 4000)
+    #     testItem1 = Item('testItem1', 10, 10, 30, 50)
+    #     testItem2 = Item('testItem2', 100, 10, 40, 50)
+    #     testItem3 = Item('testItem3', 55, 120, 30, 50)
+    #     testItem4 = Item('testItem4', 500, 500, 500, 50)
 
-        testPacker.add_bin(testBin1)
-        testPacker.add_bin(testBin2)
-        testPacker.add_item(testItem1)
-        testPacker.add_item(testItem2)
-        testPacker.add_item(testItem3)
-        testPacker.add_item(testItem4)
+    #     testPacker.add_bin(testBin1)
+    #     testPacker.add_bin(testBin2)
+    #     testPacker.add_item(testItem1)
+    #     testPacker.add_item(testItem2)
+    #     testPacker.add_item(testItem3)
+    #     testPacker.add_item(testItem4)
 
-        testPacker.pack()
+    #     testPacker.pack()
     
 
 
