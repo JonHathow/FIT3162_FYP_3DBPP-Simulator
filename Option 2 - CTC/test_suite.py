@@ -605,28 +605,28 @@ class TestAux(unittest.TestCase):
 
         # Already in a bin
         self.assertEqual(testPacker.pivot_dict(testBin, testItem2), {})
-        
-
-    
-    # Not Done
+     
     def test_packerPivotList(self):
         testPacker = Packer()
         testBin = Bin(2000, 300, 400, 200, 4000)
         testItem1 = Item('testItem1', 10, 10, 30, 50)
-        testItem2 = Item('testItem2', 100, 10, 40, 50)
-        testItem3 = Item('testItem3', 55, 120, 30, 50)
-        testItem4 = Item('testItem4', 140, 120, 120, 50)
+        testItem2 = Item('testItem2', 10, 10, 30, 50)
+
 
         testPacker.add_bin(testBin)
         testPacker.add_item(testItem1)
         testPacker.add_item(testItem2)
-        testPacker.add_item(testItem3)
-        testPacker.add_item(testItem4)
-        # not working, might be because items aren't actually being put in bin yet
-        # print(testPacker.pivot_list(testBin, testItem1))
-        # print(testPacker.pivot_list(testBin, testItem2))
-        # print(testPacker.pivot_list(testBin, testItem3))
-        # print(testPacker.pivot_list(testBin, testItem4))
+
+        self.assertEqual(testPacker.pivot_list(testBin, testItem1), [])
+        self.assertEqual(testPacker.pivot_list(testBin, testItem2), [])
+
+        testBin.put_item(testItem2, [0,0,0],[0,0,0])
+
+        # There must be an item already in the bin
+        self.assertEqual(testPacker.pivot_list(testBin, testItem1), [[10, 0, 0], [0, 10, 0], [0, 0, 30]])
+
+        # Already in a bin
+        self.assertEqual(testPacker.pivot_list(testBin, testItem2), [[10, 0, 0], [0, 10, 0], [0, 0, 30]])
     
     # Not Done
     def test_packerChoosePivotPoint(self):
