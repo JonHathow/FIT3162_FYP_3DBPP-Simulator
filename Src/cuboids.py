@@ -70,7 +70,7 @@ class SKU(Cuboid):
 
 # Main
 def main():
-   print("This is not the main file. Please run Main.py instead.")
+   print("This is not the main file. Please run warehouse_main.py instead.")
    return None
 
 if __name__ == "__main__":
