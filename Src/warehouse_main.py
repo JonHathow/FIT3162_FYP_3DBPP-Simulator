@@ -12,6 +12,7 @@ To Do - Capture and properly handle all Input Parameters - R1 from Requirement T
 # Imports
 import random
 from cuboids import Container, SKU
+from ui import Input_Window
 
 class Warehouse():
 
@@ -54,12 +55,19 @@ def handle_input():
 
 # Print Menu
 def print_menu():
+   """
    print("==================================================================")
    print("Please select an option (1, 2) to choose your solution algorithm")
    print("1. Back Bottom-Left Fill Heuristic - Genetic Algorithm")
    print("2. Corner To Center Heuristic - Genetic Algorithm")
+   """
+   iw = Input_Window()
+
+   print("Data Retrieved")
+   data = iw.get_data()
+   print(data)
     
-   return None
+   return data
 
 
 # Main
@@ -71,10 +79,10 @@ def main():
    print("Welcome to Warehouse simulation for Storage Optimization in Automated Fulfillment Centers.")
    print("Problem To Simulate: 3 Dimensional Bin Packing Problem")
 
-   # Basic Menu
-   while not flag:
-      print_menu()
-      flag = handle_input()
+   # Input Menu
+   data = print_menu()
+   random_seed = data[0]
+   print(random_seed)
 
    return None
 
