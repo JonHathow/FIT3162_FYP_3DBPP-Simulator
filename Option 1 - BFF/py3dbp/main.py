@@ -442,7 +442,7 @@ class Packer:
 
 
     # Possible changes
-    def pack2Bin(self, bin, item,fix_point,check_stable,support_surface_ratio):
+    def pack2Bin(self, bin, item,fix_point,check_stable,support_surface_ratio, variation = [False]):
         ''' pack item to bin '''
         # When true, exit for loop
         fitted = False
@@ -459,7 +459,15 @@ class Packer:
                 bin.putCorner(i,corner_lst[i])
 
         # Could make this if not elif
-        elif not bin.items:
+        elif not variation[0] and not bin.items:
+            response = bin.putItem(item, item.position)
+
+            # if item cant be put in bin, put in unfitted items list
+            if not response:
+                bin.unfitted_items.append(item)
+            return
+        
+        if variation[0] and not bin.items:
             response = bin.putItem(item, item.position)
 
             # if item cant be put in bin, put in unfitted items list
@@ -639,7 +647,7 @@ class Packer:
         return result
 
 
-    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS, Variation = False):
+    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS, Variation = [False, False]):
         '''pack master func '''
 
         """
@@ -652,7 +660,7 @@ class Packer:
         binding                             - make a set of items.
         number_of_decimals                  - number of decimals for formating values
 
-        test  - Purely for testing purposes
+        Variation  - [gravityCenter, distribute_items]
         """
         # format bins
         for bin in self.bins:
@@ -698,20 +706,20 @@ class Packer:
                     self.pack2Bin(bin, item,fix_point,check_stable,support_surface_ratio)
             
             # Deviation Of Cargo Gravity Center
-            if test == 0:
+            if not Variation[0]:
                 self.bins[idx].gravity = self.gravityCenter(bin)
 
-            # possible heuristic change
-            if distribute_items :
-                # loop through each item in the bin
-                for bitem in bin.items:
-                    no = bitem.partno
-                    # loop through items in this packer class
-                    for item in self.items :
-                        if item.partno == no :
-                            # remove duplicates
-                            self.items.remove(item)
-                            break
+            if not Variation[1]:
+                if distribute_items :
+                    # loop through each item in the bin
+                    for bitem in bin.items:
+                        no = bitem.partno
+                        # loop through items in this packer class
+                        for item in self.items :
+                            if item.partno == no :
+                                # remove duplicates
+                                self.items.remove(item)
+                                break
 
         # put order of items
         self.putOrder()
