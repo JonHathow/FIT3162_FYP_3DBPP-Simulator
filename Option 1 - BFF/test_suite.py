@@ -803,7 +803,7 @@ class TestAux(unittest.TestCase):
         testPacker1.addItem(testItem4)
         testPacker1.addItem(testItem6)
 
-        testPacker1.pack(False, True, True, True, 0.75, [], 0)
+        testPacker1.pack(False, True, True, True, 0.75, [])
 
         #print bin items
         def retStr(bin):
@@ -834,7 +834,7 @@ class TestAux(unittest.TestCase):
         testPacker1.addItem(testItem4)
         testPacker1.addItem(testItem6)
 
-        testPacker1.pack(True,True,True,True,0.75,[],0)
+        testPacker1.pack(True,True,True,True,0.75,[])
 
         self.assertEqual(retStr(testBin1), ['6', '1', '4', '3', '2'])
 
@@ -857,7 +857,7 @@ class TestAux(unittest.TestCase):
         testPacker1.addItem(testItem4)
         testPacker1.addItem(testItem6)
 
-        testPacker1.pack(False,False,True,True,0.75,[],0)
+        testPacker1.pack(False,False,True,True,0.75,[])
 
         self.assertEqual(retStr(testBin1), ['4', '2', '3', '1', '5'])
 
@@ -879,7 +879,7 @@ class TestAux(unittest.TestCase):
         testPacker1.addItem(testItem4)
         testPacker1.addItem(testItem6)
 
-        testPacker1.pack(True,False,True,True,0.75,[],0)
+        testPacker1.pack(True,False,True,True,0.75,[])
 
         self.assertEqual(retStr(testBin1),['6', '1', '4', '3', '2'])
 
@@ -902,7 +902,7 @@ class TestAux(unittest.TestCase):
         testPacker1.addItem(testItem4)
         testPacker1.addItem(testItem6)
 
-        testPacker1.pack(False,True,False,True,0.75,[],0)
+        testPacker1.pack(False,True,False,True,0.75,[])
 
         self.assertEqual(retStr(testBin1), ['4', '2', '3', '1', '5'])
 

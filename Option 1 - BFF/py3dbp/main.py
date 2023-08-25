@@ -185,16 +185,27 @@ class Bin:
 
 
     # possible change
-    def putItem(self, item, pivot,axis=None):
+    def putItem(self, item, pivot,axis=None, variation = False):
         ''' put item in bin '''
+
         fit = False
+
+        # stores item current position
         valid_item_position = item.position
+
+        # new pos is input var pivot
         item.position = pivot
+
+        # rotate holds list of possible rotations that depend on if the item can be placed upside down
         rotate = RotationType.ALL if item.updown == True else RotationType.Notupdown
+
+        # loop through every rotation
         for i in range(0, len(rotate)):
             item.rotation_type = i
             dimension = item.getDimension()
+
             # rotate
+            # If any of these are true, then go to the next rotation
             if (
                 self.width < pivot[0] + dimension[0] or
                 self.height < pivot[1] + dimension[1] or
@@ -202,20 +213,23 @@ class Bin:
             ):
                 continue
 
+            # if the previous checks failed then set fit to true
             fit = True
 
+            # loop through all items in bin
             for current_item_in_bin in self.items:
+                # if new item intersects with any existing items, set fit to false
                 if intersect(current_item_in_bin, item):
                     fit = False
                     break
 
             if fit:
-                # cal total weight
+                # calc total weight
                 if self.getTotalWeight() + item.weight > self.max_weight:
                     fit = False
                     return fit
                 
-                # fix point float prob
+                # fix point float prob (Should usually be false)
                 if self.fix_point == True :
                         
                     [w,h,d] = dimension
@@ -263,10 +277,12 @@ class Bin:
                     self.fit_items = np.append(self.fit_items,np.array([[x,x+float(w),y,y+float(h),z,z+float(d)]]),axis=0)
                     item.position = [set2Decimal(x),set2Decimal(y),set2Decimal(z)]
 
+                # if fit is still true after prev checks, finally add to bins item list
                 if fit :
                     self.items.append(copy.deepcopy(item))
 
             else :
+                # reset item position
                 item.position = valid_item_position
 
             return fit
@@ -425,6 +441,7 @@ class Packer:
         return self.items.append(item)
 
 
+    # Possible changes
     def pack2Bin(self, bin, item,fix_point,check_stable,support_surface_ratio):
         ''' pack item to bin '''
         # When true, exit for loop
@@ -622,7 +639,7 @@ class Packer:
         return result
 
 
-    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS, test=0):
+    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS, Variation = False):
         '''pack master func '''
 
         """
