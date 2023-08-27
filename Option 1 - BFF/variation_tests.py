@@ -7,9 +7,6 @@ import numpy as np
 
 class TestAux(unittest.TestCase):
     
-    def test_putItemVariation(self):
-        return
-    
     def test_pack2Bin(self):
         """
         variation = [if/elif swap]

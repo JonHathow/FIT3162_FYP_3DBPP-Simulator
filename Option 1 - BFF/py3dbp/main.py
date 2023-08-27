@@ -185,7 +185,7 @@ class Bin:
 
 
     # possible change
-    def putItem(self, item, pivot,axis=None, variation = [False]):
+    def putItem(self, item, pivot,axis=None):
         ''' put item in bin '''
 
         fit = False
