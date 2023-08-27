@@ -184,16 +184,28 @@ class Bin:
         return set2Decimal(total_weight, self.number_of_decimals)
 
 
+    # possible change
     def putItem(self, item, pivot,axis=None):
         ''' put item in bin '''
+
         fit = False
+
+        # stores item current position
         valid_item_position = item.position
+
+        # new pos is input var pivot
         item.position = pivot
+
+        # rotate holds list of possible rotations that depend on if the item can be placed upside down
         rotate = RotationType.ALL if item.updown == True else RotationType.Notupdown
+
+        # loop through every rotation
         for i in range(0, len(rotate)):
             item.rotation_type = i
             dimension = item.getDimension()
+
             # rotate
+            # If any of these are true, then go to the next rotation
             if (
                 self.width < pivot[0] + dimension[0] or
                 self.height < pivot[1] + dimension[1] or
@@ -201,20 +213,23 @@ class Bin:
             ):
                 continue
 
+            # if the previous checks failed then set fit to true
             fit = True
 
+            # loop through all items in bin
             for current_item_in_bin in self.items:
+                # if new item intersects with any existing items, set fit to false
                 if intersect(current_item_in_bin, item):
                     fit = False
                     break
 
             if fit:
-                # cal total weight
+                # calc total weight
                 if self.getTotalWeight() + item.weight > self.max_weight:
                     fit = False
                     return fit
                 
-                # fix point float prob
+                # fix point float prob (Should usually be false)
                 if self.fix_point == True :
                         
                     [w,h,d] = dimension
@@ -262,10 +277,12 @@ class Bin:
                     self.fit_items = np.append(self.fit_items,np.array([[x,x+float(w),y,y+float(h),z,z+float(d)]]),axis=0)
                     item.position = [set2Decimal(x),set2Decimal(y),set2Decimal(z)]
 
+                # if fit is still true after prev checks, finally add to bins item list
                 if fit :
                     self.items.append(copy.deepcopy(item))
 
             else :
+                # reset item position
                 item.position = valid_item_position
 
             return fit
@@ -424,47 +441,71 @@ class Packer:
         return self.items.append(item)
 
 
-    def pack2Bin(self, bin, item,fix_point,check_stable,support_surface_ratio):
+    # Possible changes
+    def pack2Bin(self, bin, item,fix_point,check_stable,support_surface_ratio, variation = [False]):
         ''' pack item to bin '''
+        # When true, exit for loop
         fitted = False
+        
+        # change bin attributes
         bin.fix_point = fix_point
         bin.check_stable = check_stable
         bin.support_surface_ratio = support_surface_ratio
 
-        # first put item on (0,0,0) , if corner exist ,first add corner in box. 
+        # if corner exist ,first add corner in box. 
         if bin.corner != 0 and not bin.items:
             corner_lst = bin.addCorner()
             for i in range(len(corner_lst)) :
                 bin.putCorner(i,corner_lst[i])
 
-        elif not bin.items:
+        # Could make this if not elif
+        elif not variation[0] and not bin.items:
             response = bin.putItem(item, item.position)
 
+            # if item cant be put in bin, put in unfitted items list
+            if not response:
+                bin.unfitted_items.append(item)
+            return
+        
+        if variation[0] and not bin.items:
+            response = bin.putItem(item, item.position)
+
+            # if item cant be put in bin, put in unfitted items list
             if not response:
                 bin.unfitted_items.append(item)
             return
 
+        # loop through all axis
         for axis in range(0, 3):
             items_in_bin = bin.items
+            # loop through all items in the bin
             for ib in items_in_bin:
                 pivot = [0, 0, 0]
+                # width, height, depth of item
                 w, h, d = ib.getDimension()
+                # pivot becomes the items original position, but w,h,d increases by the items dimensions
+                # axis == 0
                 if axis == Axis.WIDTH:
                     pivot = [ib.position[0] + w,ib.position[1],ib.position[2]]
+                # axis == 1
                 elif axis == Axis.HEIGHT:
                     pivot = [ib.position[0],ib.position[1] + h,ib.position[2]]
+                # axis == 2
                 elif axis == Axis.DEPTH:
                     pivot = [ib.position[0],ib.position[1],ib.position[2] + d]
                     
+                # tries to put item in bin with new pivot, if success then leave the for loop
                 if bin.putItem(item, pivot, axis):
                     fitted = True
                     break
             if fitted:
                 break
+        # Once all possible rotations are tried, if still cant fit then add it to the unfitted items list
         if not fitted:
             bin.unfitted_items.append(item)
 
 
+    # We shouldn't really use this
     def sortBinding(self,bin):
         ''' sorted by binding '''
         """
@@ -506,11 +547,13 @@ class Packer:
         for i in self.bins:
             # open top container
             if i.put_type == 2:
+                # sort by width, then height, then depth
                 i.items.sort(key=lambda item: item.position[0], reverse=False)
                 i.items.sort(key=lambda item: item.position[1], reverse=False)
                 i.items.sort(key=lambda item: item.position[2], reverse=False)
             # general container
             elif i.put_type == 1:
+                # sort by height, then depth, then width
                 i.items.sort(key=lambda item: item.position[1], reverse=False)
                 i.items.sort(key=lambda item: item.position[2], reverse=False)
                 i.items.sort(key=lambda item: item.position[0], reverse=False)
@@ -519,10 +562,12 @@ class Packer:
         return
 
 
+    # very confusing, try to avoid using?
     def gravityCenter(self,bin):
         ''' 
         Deviation Of Cargo gravity distribution
         ''' 
+        # bin dimensions
         w = int(bin.width)
         h = int(bin.height)
         d = int(bin.depth)
@@ -602,7 +647,7 @@ class Packer:
         return result
 
 
-    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS, test=0):
+    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS, Variation = [False, False]):
         '''pack master func '''
 
         """
@@ -615,36 +660,40 @@ class Packer:
         binding                             - make a set of items.
         number_of_decimals                  - number of decimals for formating values
 
-        test  - Purely for testing purposes
+        Variation  - [gravityCenter, distribute_items]
         """
-        # set decimals
+        # format bins
         for bin in self.bins:
             bin.formatNumbers(number_of_decimals)
 
+        # format items
         for item in self.items:
             item.formatNumbers(number_of_decimals)
 
             
         # add binding attribute
         self.binding = binding
+        
         # Bin : sorted by volumn
         self.bins.sort(key=lambda bin: bin.getVolume(), reverse=bigger_first)
-        # Item : sorted by volumn -> sorted by loadbear -> sorted by level -> binding
+        
+        # Item : sorted by volumn -> sorted by loadbear -> sorted by level
         self.items.sort(key=lambda item: item.getVolume(), reverse=bigger_first)
         # self.items.sort(key=lambda item: item.getMaxArea(), reverse=bigger_first)
         self.items.sort(key=lambda item: item.loadbear, reverse=True)
         self.items.sort(key=lambda item: item.level, reverse=False)
+        
         # sorted by binding
         if binding != []:
             self.sortBinding(bin)
 
         for idx,bin in enumerate(self.bins):
-            # pack item to bin
+            # loop through each bin and try to pack items into each
             for item in self.items:
                 self.pack2Bin(bin, item, fix_point, check_stable, support_surface_ratio)
 
             if binding != []:
-                # resorted
+                # resorted items by volume -> load bear -> level
                 self.items.sort(key=lambda item: item.getVolume(), reverse=bigger_first)
                 self.items.sort(key=lambda item: item.loadbear, reverse=True)
                 self.items.sort(key=lambda item: item.level, reverse=False)
@@ -657,20 +706,25 @@ class Packer:
                     self.pack2Bin(bin, item,fix_point,check_stable,support_surface_ratio)
             
             # Deviation Of Cargo Gravity Center
-            if test == 0:
+            if not Variation[0]:
                 self.bins[idx].gravity = self.gravityCenter(bin)
 
-            if distribute_items :
-                for bitem in bin.items:
-                    no = bitem.partno
-                    for item in self.items :
-                        if item.partno == no :
-                            self.items.remove(item)
-                            break
+            if not Variation[1]:
+                if distribute_items :
+                    # loop through each item in the bin
+                    for bitem in bin.items:
+                        no = bitem.partno
+                        # loop through items in this packer class
+                        for item in self.items :
+                            if item.partno == no :
+                                # remove duplicates
+                                self.items.remove(item)
+                                break
 
         # put order of items
         self.putOrder()
 
+        # makes a deepcopy of all remaining items and put in unfit items list, empty packer item list
         if self.items != []:
             self.unfit_items = copy.deepcopy(self.items)
             self.items = []
@@ -808,4 +862,3 @@ class Painter:
         ax.set_xlim3d([x_middle - plot_radius, x_middle + plot_radius])
         ax.set_ylim3d([y_middle - plot_radius, y_middle + plot_radius])
         ax.set_zlim3d([z_middle - plot_radius, z_middle + plot_radius])
-

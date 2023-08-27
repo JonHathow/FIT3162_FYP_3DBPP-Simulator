@@ -630,16 +630,39 @@ class TestAux(unittest.TestCase):
 
     # Not sure why this method has an error
     def test_packerPack2Bin(self):
+
+        #print bin items
+        def retStr(bin):
+            res = []
+            for item in bin.items:
+                if item.name != 'corner':
+                    res.append(item.partno)
+            return res
+        
         testPacker1 = Packer()
         testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 0)
         testItem1 = Item("testItem1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+
 
         testPacker1.addBin(testBin1)
 
         testPacker1.addItem(testItem1)
 
-        with self.assertRaises(TypeError):
-            testPacker1.pack2Bin(testBin1, testItem1, True, False, 0)
+        # format bins
+        for bin in testPacker1.bins:
+            bin.formatNumbers(3)
+
+        # format items
+        for item in testPacker1.items:
+            item.formatNumbers(3)
+
+        testPacker1.pack2Bin(testBin1, testItem1, True, False, 0)
+
+        # print(retStr(testBin1))
+
+
+
+
 
     def test_packerSortBinding(self):
         """
@@ -736,8 +759,8 @@ class TestAux(unittest.TestCase):
         testPacker1.addItem(testItem4)
         testPacker1.addItem(testItem6)
 
-        # final input is determins if we run gravity control or not, 1 = No , 0 = Yes
-        testPacker1.pack(False,True,True,True,0.75,[],0,1)
+        # final input is variation, variation[0] determines if we use variation or not
+        testPacker1.pack(False,True,True,True,0.75,[],0,[False, False])
         
         # #print bin items
         # def retStr(bin):
@@ -756,7 +779,7 @@ class TestAux(unittest.TestCase):
             return res
 
         # no gravity distribution with as we stopped it from running
-        self.assertEqual(testBin1.gravity, [])
+        self.assertEqual(testBin1.gravity, [96.48, 0.0, 3.52, 0.0])
 
         # remaking all of the items, bins and packer
         testPacker1 = Packer()
@@ -778,9 +801,9 @@ class TestAux(unittest.TestCase):
         testPacker1.addItem(testItem6)
 
 
-        testPacker1.pack(False,True,True,True,0.75,[],0,0)
+        testPacker1.pack(False,True,True,True,0.75,[],0,[True,False])
 
-        self.assertEqual(testBin1.gravity, [96.48, 0.0, 3.52, 0.0])
+        self.assertEqual(testBin1.gravity, [])
 
     def test_packerPack(self):
         
@@ -803,7 +826,7 @@ class TestAux(unittest.TestCase):
         testPacker1.addItem(testItem4)
         testPacker1.addItem(testItem6)
 
-        testPacker1.pack(False, True, True, True, 0.75, [], 0)
+        testPacker1.pack(False, True, True, True, 0.75, [])
 
         #print bin items
         def retStr(bin):
@@ -834,7 +857,7 @@ class TestAux(unittest.TestCase):
         testPacker1.addItem(testItem4)
         testPacker1.addItem(testItem6)
 
-        testPacker1.pack(True,True,True,True,0.75,[],0)
+        testPacker1.pack(True,True,True,True,0.75,[])
 
         self.assertEqual(retStr(testBin1), ['6', '1', '4', '3', '2'])
 
@@ -857,7 +880,7 @@ class TestAux(unittest.TestCase):
         testPacker1.addItem(testItem4)
         testPacker1.addItem(testItem6)
 
-        testPacker1.pack(False,False,True,True,0.75,[],0)
+        testPacker1.pack(False,False,True,True,0.75,[])
 
         self.assertEqual(retStr(testBin1), ['4', '2', '3', '1', '5'])
 
@@ -879,7 +902,7 @@ class TestAux(unittest.TestCase):
         testPacker1.addItem(testItem4)
         testPacker1.addItem(testItem6)
 
-        testPacker1.pack(True,False,True,True,0.75,[],0)
+        testPacker1.pack(True,False,True,True,0.75,[])
 
         self.assertEqual(retStr(testBin1),['6', '1', '4', '3', '2'])
 
@@ -902,7 +925,7 @@ class TestAux(unittest.TestCase):
         testPacker1.addItem(testItem4)
         testPacker1.addItem(testItem6)
 
-        testPacker1.pack(False,True,False,True,0.75,[],0)
+        testPacker1.pack(False,True,False,True,0.75,[])
 
         self.assertEqual(retStr(testBin1), ['4', '2', '3', '1', '5'])
 
