@@ -1,57 +1,60 @@
-""" Derived from example#.py code provided in original repository. """
+""" Handles writing and reading of CSV files for Option 1. """
 
-import os
 import time
-from manage_input_csv.constants import FILEBIN, FILEBOX
-from manage_input_csv.write_input_csv import write_input_bin, write_input_box
-from manage_input_csv.read_input_csv import read_input
-from py3dbp import Packer, Bin, Item, Painter
-os.chdir('Option 1 - BFF')
+from manage_csv.constants import Mode, Option, MENU_INPUT, MENU_INVALID, MENU_BIN_NOTLOADED, MENU_END, FILE_BIN_1, FILE_BOX_1
+from manage_csv.write_input_bin import write_input_bin
+from manage_csv.write_input_box import write_input_box
+from manage_csv.read_input_csv import read_input
+from Option1_package import Packer, Bin, Item, Painter
 
 bins_loaded = False
 while True:
 
-    response = input("\n1: Generate bin CSV file" +
-                     "\n2: Generate box CSV file" +
-                     "\n3: Read from bin CSV file" +
-                     "\n4: Read from box CSV file" +
-                     "\n0: Exit" +
-                     "\nRESPONSE: ")
-    
+    response = input(MENU_INPUT)
+
+    # Write a CSV file for bins.
     if response == "1":
-        write_input_bin()
+        write_input_bin(Option.OPTION1)
 
+    # Write a CSV file for boxes.
     elif response == "2":
-        write_input_box()
+        write_input_box(Option.OPTION1)
 
+    # Read a CSV file for bins.
     elif response == "3":
-        bin_params = read_input(FILEBIN)
+        bin_params = read_input(FILE_BIN_1, Mode.BIN)
 
         if bin_params is not None:
-            # Initialize backing function
+
+            # Initialize packing function.
             packer = Packer()
 
-            # Initialize bins
+            # Initialize bins.
             for b in bin_params:
                 partno = b[0]
-                WHD = (int(b[1]), int(b[2]), int(b[3]))
-                max_weight = int(b[4])
+                WHD = (float(b[1]), float(b[2]), float(b[3]))
+                max_weight = b[4]
                 packer.addBin(Bin(partno, WHD, max_weight))
 
             bins_loaded = True
 
+    # Read a CSV file for boxes.
     elif response == "4":
-        if bins_loaded == True:
-            start = time.time()
-            item_params = read_input(FILEBOX)
+
+        if not bins_loaded:
+            print(MENU_BIN_NOTLOADED)
+
+        else:
+            item_params = read_input(FILE_BOX_1, Mode.BOX)
 
             if item_params is not None:
+
                 for item in item_params:
                     partno = item[0]
                     name = item[1]
                     typeof = item[2]
-                    WHD = (int(item[3]), int(item[4]), int(item[5]))
-                    weight = int(item[6])
+                    WHD = (float(item[3]), float(item[4]), float(item[5]))
+                    weight = float(item[6])
                     level = int(item[7])
                     loadbear = int(item[8])
                     updown = bool(item[9])
@@ -59,6 +62,7 @@ while True:
                     packer.addItem(Item(partno, name, typeof, WHD, weight, level, loadbear, updown, color))
 
                 #region Calculate packing
+                start = time.time()                
                 packer.pack(
                     bigger_first=True,
                     distribute_items=False,
@@ -67,6 +71,7 @@ while True:
                     support_surface_ratio=0.75,
                     number_of_decimals=0
                 )
+                stop = time.time()
 
                 # print result
                 print("***************************************************")
@@ -120,18 +125,14 @@ while True:
                 print('unpack item : ',unfitted_name)
                 print('unpack item volumn : ',volume_f)
 
-                stop = time.time()
                 print('used time : ',stop - start)
 
                 fig.show()
                 #endregion
 
-        else:
-            print("Please load a CSV of bins first!\n")
-
     elif response == "0":
-        print("End execution.\n")
+        print(MENU_END)
         break
 
     else:
-        print("Invalid input.\n")
+        print(MENU_INVALID)
