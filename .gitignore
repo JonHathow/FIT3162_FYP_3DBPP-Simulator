@@ -4,31 +4,12 @@ Option 1/3D-bin-packing-master/py3dbp/__pycache__/__init__.cpython-310.pyc
 Option 1/3D-bin-packing-master/py3dbp/__pycache__/auxiliary_methods.cpython-310.pyc
 Option 1/3D-bin-packing-master/py3dbp/__pycache__/constants.cpython-310.pyc
 Option 1/3D-bin-packing-master/py3dbp/__pycache__/main.cpython-310.pyc
-Option 2 - CTC/manage_input_csv/__pycache__/__init__.cpython-310.pyc
-Option 2 - CTC/manage_input_csv/__pycache__/constants.cpython-310.pyc
-Option 2 - CTC/manage_input_csv/__pycache__/input_parameters.cpython-310.pyc
-Option 2 - CTC/manage_input_csv/__pycache__/prompts.cpython-310.pyc
-Option 2 - CTC/manage_input_csv/__pycache__/read_input_csv.cpython-310.pyc
-Option 2 - CTC/manage_input_csv/__pycache__/write_input_csv.cpython-310.pyc
 Option 2 - CTC/test_folder/__pycache__/__init__.cpython-310.pyc
 Option 2 - CTC/test_folder/__pycache__/auxiliary_methods.cpython-310.pyc
 Option 2 - CTC/test_folder/__pycache__/bin.cpython-310.pyc
 Option 2 - CTC/test_folder/__pycache__/constants.cpython-310.pyc
 Option 2 - CTC/test_folder/__pycache__/item.cpython-310.pyc
 Option 2 - CTC/test_folder/__pycache__/packer.cpython-310.pyc
-Option 1 - BFF/input_csv/fileBinCount.txt
-Option 1 - BFF/input_csv/fileBoxCount.txt
-Option 1 - BFF/input_csv/inputBins1.csv
-Option 1 - BFF/input_csv/inputBins2.csv
-Option 1 - BFF/input_csv/inputBins3.csv
-Option 1 - BFF/input_csv/inputBoxes1.csv
-Option 1 - BFF/input_csv/inputBoxes2.csv
-Option 1 - BFF/input_csv/inputBoxes3.csv
-Option 2 - CTC/input_csv/fileBinCount.txt
-Option 2 - CTC/input_csv/fileBoxCount.txt
-Option 2 - CTC/input_csv/inputBins1.csv
-Option 2 - CTC/input_csv/inputBoxes1.csv
-Option 1 - BFF/input_csv/inputBins4.csv
 program/manage_csv/__pycache__/__init__.cpython-310.pyc
 program/manage_csv/__pycache__/constants.cpython-310.pyc
 program/manage_csv/__pycache__/input_parameters.cpython-310.pyc
