@@ -1,4 +1,3 @@
-#Testing suite designed to test all of the methods in the auxiliary_methods.py folder in the py3dbp folder
 from py3dbp import rectIntersect, intersect, getLimitNumberOfDecimals, set2Decimal, Item, Bin, Packer, Axis
 from decimal import Decimal
 import decimal
