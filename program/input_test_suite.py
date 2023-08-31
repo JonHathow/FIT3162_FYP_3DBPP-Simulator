@@ -6,9 +6,9 @@ import numpy as np
 
 class TestAux(unittest.TestCase):
     
-    #                   #
-    # manage_csv tests  #
-    #                   #
+    #                    #
+    #  manage_csv tests  #
+    #                    #
 
     # input_parameters.py
     def test_inputBinParametersConstructor(self):
@@ -72,6 +72,11 @@ class TestAux(unittest.TestCase):
         testClass2 = InputBoxParameters("3", False, 'c', 46.78, InputBoxParameters(0, 0, 0, 0, 0, 0, 0), 50, 300)
         self.assertEqual(testClass2.__str__(),"\ntypes: 3\nqty_lo: False, qty_hi: c\ndim_lo: 46.78, dim_hi: \ntypes: 0\nqty_lo: 0, qty_hi: 0\ndim_lo: 0, dim_hi: 0\nwgt_lo: 0, wgt_hi: 0\nlevel_var: False\nloadbear_var: False\nupdown_var: False\nupdown: False\n\nwgt_lo: 50, wgt_hi: 300\nlevel_var: False\nloadbear_var: False\nupdown_var: False\nupdown: False\n")
 
+    # manage_filecount.py
+    # need more time to research and implement tests for external files
+
+    # prompts.py
+    # need more time to research and implement tests for prompts
 
     # Option1_input tests
     def test_pack2Bin(self):
