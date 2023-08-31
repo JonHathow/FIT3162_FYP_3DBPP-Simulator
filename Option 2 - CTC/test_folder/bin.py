@@ -1,13 +1,13 @@
-from .constants import RotationType, Axis, DEFAULT_NUMBER_OF_DECIMALS, START_POSITION
-from .auxiliary_methods import set_to_decimal, intersect
+from constants import RotationType, Axis, DEFAULT_NUMBER_OF_DECIMALS, START_POSITION
+from auxiliary_methods import set_to_decimal, intersect
 
 class Bin:
     def __init__(self, size, length, width, height, capacity):
-        self.size = size 
+        self.size = size # Jon's Comment: Supposed to be "Name" according to Janet Documentation
         self.length = length
         self.width = width
         self.height = height
-        self.capacity = capacity
+        self.capacity = capacity # Jon's Comment: Weight of Item
         self.total_items = 0 # number of total items in one bin
         self.items = [] # item in one bin -- a blank list initially
         self.unplaced_items = []
@@ -200,6 +200,7 @@ class Bin:
                         
                         p += 1
         
+    # To Change: Optimize Output Format
     def string(self):
         return "%s(%sx%sx%s, max_weight:%s) vol(%s) item_number(%s) filling_ratio(%s)" % (
             self.size, self.length, self.width, self.height, self.capacity,

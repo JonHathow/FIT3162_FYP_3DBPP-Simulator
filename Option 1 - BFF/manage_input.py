@@ -8,7 +8,7 @@ from manage_input_csv.read_input_csv import read_input
 from py3dbp import Packer, Bin, Item, Painter
 os.chdir('Option 1 - BFF')
 
-bins_loaded = False
+bins_loaded = False  
 while True:
 
     response = input("\n1: Generate bin CSV file" +

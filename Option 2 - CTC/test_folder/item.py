@@ -1,5 +1,5 @@
-from .constants import RotationType, Axis, DEFAULT_NUMBER_OF_DECIMALS, START_POSITION
-from .auxiliary_methods import set_to_decimal
+from constants import RotationType, Axis, DEFAULT_NUMBER_OF_DECIMALS, START_POSITION
+from auxiliary_methods import set_to_decimal
 
 
 class Item:
@@ -41,7 +41,8 @@ class Item:
             dimension = []
         
         return dimension
-        
+
+    # To Change: Optimize Output Format
     def string(self):
         return "%s(%sx%sx%s, weight: %s) pos(%s) rt(%s) vol(%s)" % (
             self.name, self.length, self.width, self.height, self.weight,
