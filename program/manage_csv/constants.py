@@ -43,13 +43,13 @@ FOLDER_INPUTS_2     = f'{FOLDER_OPTION2}\csv_inputs'
 FOLDER_OUTPUTS_1    = f'{FOLDER_OPTION1}\csv_outputs'
 FOLDER_OUTPUTS_2    = f'{FOLDER_OPTION2}\csv_outputs'
 
-# File names
+# Input file names
 FILE_BINCOUNT       = 'fileBinCount.txt'
 FILE_BOXCOUNT       = 'fileBoxCount.txt'
 FILE_BIN            = 'inputBins'
 FILE_BOX            = 'inputBoxes'
 
-# File paths
+# Input file paths
 FILE_BINCOUNT_1     = f'{FOLDER_INPUTS_1}\{FILE_BINCOUNT}'
 FILE_BINCOUNT_2     = f'{FOLDER_INPUTS_2}\{FILE_BINCOUNT}'
 FILE_BOXCOUNT_1     = f'{FOLDER_INPUTS_1}\{FILE_BOXCOUNT}'
@@ -58,6 +58,22 @@ FILE_BIN_1          = f'{FOLDER_INPUTS_1}\{FILE_BIN}'
 FILE_BIN_2          = f'{FOLDER_INPUTS_2}\{FILE_BIN}'
 FILE_BOX_1          = f'{FOLDER_INPUTS_1}\{FILE_BOX}'
 FILE_BOX_2          = f'{FOLDER_INPUTS_2}\{FILE_BOX}'
+
+# Output file names
+FILE_LASTBIN        = 'lastBinFile.txt'
+FILE_LASTBOX        = 'lastBoxFile.txt'
+FILE_FITTED         = 'outputFitted'
+FILE_UNFITTED       = 'outputUnfitted'
+
+# Output file paths
+FILE_LASTBIN_1      = f'{FOLDER_OUTPUTS_1}\{FILE_LASTBIN}'
+FILE_LASTBIN_2      = f'{FOLDER_OUTPUTS_2}\{FILE_LASTBIN}'
+FILE_LASTBOX_1      = f'{FOLDER_OUTPUTS_1}\{FILE_LASTBOX}'
+FILE_LASTBOX_2      = f'{FOLDER_OUTPUTS_2}\{FILE_LASTBOX}'
+FILE_FITTED_1       = f'{FOLDER_OUTPUTS_1}\{FILE_FITTED}'
+FILE_FITTED_2       = f'{FOLDER_OUTPUTS_2}\{FILE_FITTED}'
+FILE_UNFITTED_1     = f'{FOLDER_OUTPUTS_1}\{FILE_UNFITTED}'
+FILE_UNFITTED_2     = f'{FOLDER_OUTPUTS_2}\{FILE_UNFITTED}'
 
 # Interchangeable prompts for bin inputs
 PROMPT_QTY_BIN      = "# of bins"
