@@ -1,9 +1,10 @@
 #Testing suite designed to test all of the methods in the auxiliary_methods.py folder in the py3dbp folder
-from manage_csv import InputBinParameters, InputBoxParameters, prompt_range, prompt_number, prompt_boolean, prompt_integer, get_input
-from decimal import Decimal
+from manage_csv import InputBinParameters, InputBoxParameters, prompt_range, prompt_number, prompt_boolean, prompt_integer, get_input, prompt_input_bins, write_input_bin_func
+from manage_csv import Option, Mode, MENU_INPUT, MENU_INVALID, MENU_END, MENU_BIN_NOTLOADED, FILE_BIN_1, FILE_BOX_1
 from unittest.mock import patch
 import unittest
-import numpy as np
+import csv
+import os
 
 class TestAux(unittest.TestCase):
     
@@ -143,12 +144,10 @@ class TestAux(unittest.TestCase):
         # mock_get_input.return_value = "[42]"
         # self.assertEqual(prompt_integer("dimension"), "ERROR: Invalid numeric input.")
 
-    @patch('manage_csv.prompts.get_input2')
     @patch('manage_csv.prompts.get_input')
-    def test_promptRange(self, mock_get_input1, mock_get_input2):
+    def test_promptRange(self, mock_get_input1):
 
-        mock_get_input1.return_value = "1"
-        mock_get_input2.return_value = "10"
+        mock_get_input1.side_effect = ["1", "10"]
         self.assertEqual(prompt_range("containers needed"), (1,10))
 
         #                       Infinite Loop
@@ -186,15 +185,62 @@ class TestAux(unittest.TestCase):
         
 
     # write_input_bin.py
-    def test_writeInputBin(self):
-        return
+    @patch('manage_csv.write_input_bin.prompt_number')
+    @patch('manage_csv.write_input_bin.prompt_integer')
+    def test_writeIBin_promptIBin(self, mock_prompt_integer, mock_prompt_number):
+
+        # func to return the string func of input_parameters
+        def retstr(item):
+            return item.__str__()
+
+        mock_prompt_integer.return_value = 4
+        mock_prompt_number.side_effect = [2, 3.5, 4, 5.66]
+        self.assertEqual(retstr(prompt_input_bins()),"\nqty: 4\nwidth: 2\nheight: 3.5\ndepth: 4\ncapacity: 5.66\n")
+
+        # func to return the string func of input_parameters
+        def retstr(item):
+            return item.__str__()
+
+        # would never happen
+        mock_prompt_integer.return_value = 4.5
+        mock_prompt_number.side_effect = [2.8, "3.5", -4.5, "hello"]
+        self.assertEqual(retstr(prompt_input_bins()),"\nqty: 4.5\nwidth: 2.8\nheight: 3.5\ndepth: -4.5\ncapacity: hello\n")
+
+    @patch('manage_csv.write_input_bin.fetch_filecount')
+    @patch('manage_csv.write_input_bin.prompt_input_bins')
+    def test_writeIBin_writeIBinFunc(self, mock_prompt_input_bins, mock_fetch_filecount):
+        mock_prompt_input_bins.return_value = InputBinParameters(4, 100, 200, 500, 10000)
+        mock_fetch_filecount.return_value = 0
+        write_input_bin_func(1)
+        self.assertEqual(os.path.exists('files_Option1\csv_inputs\inputBins1.csv'), True)
+
+        mock_prompt_input_bins.return_value = InputBinParameters(4, 100, 200, 500, 10000)
+        mock_fetch_filecount.return_value = 1
+        write_input_bin_func(1)
+        self.assertEqual(os.path.exists('files_Option1\csv_inputs\inputBins2.csv'), True)
+        
+
+        mock_prompt_input_bins.return_value = InputBinParameters(4, 100, 200, 500, 10000)
+        mock_fetch_filecount.return_value = 0
+        write_input_bin_func(2)
+        self.assertEqual(os.path.exists('files_Option2\csv_inputs\inputBins1.csv'), True)
+        
+        
+        mock_prompt_input_bins.return_value = InputBinParameters(4, 100, 200, 500, 10000)
+        mock_fetch_filecount.return_value = 0
+        write_input_bin_func(3)
+        self.assertEqual(os.path.exists('files_Option3\csv_inputs\inputBins1.csv'), False)
+        self.assertEqual(os.path.exists('files_Option2\csv_inputs\inputBins2.csv'), False)
 
     # write_input_box.py
     def test_writeInputBox(self):
         return
     
+    # read_input_csv.py
+    def test_readcsv(self):
+        return
+    
     # manage_filecount.py
-    # need more time to research and implement tests for external files
 
     
 
