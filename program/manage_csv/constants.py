@@ -60,12 +60,15 @@ FILE_BOX_1          = f'{FOLDER_INPUTS_1}\{FILE_BOX}'
 FILE_BOX_2          = f'{FOLDER_INPUTS_2}\{FILE_BOX}'
 
 # Output file names
+FILE_OUTCOUNT       = 'fileOutCount.txt'
 FILE_LASTBIN        = 'lastBinFile.txt'
 FILE_LASTBOX        = 'lastBoxFile.txt'
 FILE_FITTED         = 'outputFitted'
 FILE_UNFITTED       = 'outputUnfitted'
 
 # Output file paths
+FILE_OUTCOUNT_1     = f'{FOLDER_OUTPUTS_1}\{FILE_OUTCOUNT}'
+FILE_OUTCOUNT_2     = f'{FOLDER_OUTPUTS_2}\{FILE_OUTCOUNT}'
 FILE_LASTBIN_1      = f'{FOLDER_OUTPUTS_1}\{FILE_LASTBIN}'
 FILE_LASTBIN_2      = f'{FOLDER_OUTPUTS_2}\{FILE_LASTBIN}'
 FILE_LASTBOX_1      = f'{FOLDER_OUTPUTS_1}\{FILE_LASTBOX}'
