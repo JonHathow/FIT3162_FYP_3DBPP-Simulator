@@ -5,3 +5,4 @@ from .write_input_box import write_input_box
 
 # imports needed for test suite
 from .input_parameters import InputBinParameters, InputBoxParameters
+from .prompts import prompt_boolean, prompt_integer, prompt_number, prompt_range, get_input
