@@ -41,8 +41,9 @@ def write_input_bin_func(option: Option) -> None:
               Option 1 or Option 2, used to determine file path,
               file name, and the header to be printed
     """
-    
-    if option == Option.OPTION1:
+
+    #if option == Option.OPTION1:
+    if option == Option.OPTION1.value:
         folder_path     = FOLDER_INPUTS_1
         file_bincount   = FILE_BINCOUNT_1
         filename        = FILE_BIN_1

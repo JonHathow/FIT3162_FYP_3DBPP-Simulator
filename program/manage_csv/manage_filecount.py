@@ -55,7 +55,8 @@ def fetch_filecount(filename: str, mode: Mode) -> int:
                   is prompted for a file count
     """
 
-    prompt = PROMPT_LASTFILE_BIN if mode == Mode.BIN else PROMPT_LASTFILE_BOX
+    # enum error Mode.BIN
+    prompt = PROMPT_LASTFILE_BIN if mode == Mode.BIN.value else PROMPT_LASTFILE_BOX
 
     while True:
         try:
