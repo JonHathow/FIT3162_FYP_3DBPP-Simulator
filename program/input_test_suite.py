@@ -1,7 +1,8 @@
 #Testing suite designed to test all of the methods in the auxiliary_methods.py folder in the py3dbp folder
 from manage_csv import InputBinParameters, InputBoxParameters, prompt_range, prompt_number, prompt_boolean, prompt_integer, get_input, prompt_input_bins, write_input_bin_func
-from manage_csv import Option, Mode, MENU_INPUT, MENU_INVALID, MENU_END, MENU_BIN_NOTLOADED, FILE_BIN_1, FILE_BOX_1
+from manage_csv import Option, Mode, MENU_INPUT, MENU_INVALID, MENU_END, MENU_BIN_NOTLOADED, FILE_BIN_1, FILE_BOX_1, FILE_BOX_2, PROMPT_TYPE_BOX
 from manage_csv import prompt_input_boxes, write_input_box_func
+from manage_csv import fetch_filename, read_input
 from unittest.mock import patch
 import unittest
 import csv
@@ -188,7 +189,7 @@ class TestAux(unittest.TestCase):
     # write_input_bin.py
     @patch('manage_csv.write_input_bin.prompt_number')
     @patch('manage_csv.write_input_bin.prompt_integer')
-    def test_writeIBin_promptIBin(self, mock_prompt_integer, mock_prompt_number):
+    def test_promptIBin(self, mock_prompt_integer, mock_prompt_number):
 
         # func to return the string func of input_parameters
         def retstr(item):
@@ -205,7 +206,7 @@ class TestAux(unittest.TestCase):
 
     @patch('manage_csv.write_input_bin.fetch_filecount')
     @patch('manage_csv.write_input_bin.prompt_input_bins')
-    def test_writeIBin_writeIBinFunc(self, mock_prompt_input_bins, mock_fetch_filecount):
+    def test_writeIBinFunc(self, mock_prompt_input_bins, mock_fetch_filecount):
         mock_prompt_input_bins.return_value = InputBinParameters(4, 100, 200, 500, 10000)
         mock_fetch_filecount.return_value = 0
         write_input_bin_func(1)
@@ -233,7 +234,7 @@ class TestAux(unittest.TestCase):
     @patch('manage_csv.write_input_box.prompt_boolean')
     @patch('manage_csv.write_input_box.prompt_range')
     @patch('manage_csv.write_input_box.prompt_integer')
-    def test_writeIBox_promptIBoxes(self, mock_prompt_integer, mock_prompt_range,mock_prompt_bool):
+    def test_promptIBoxes(self, mock_prompt_integer, mock_prompt_range,mock_prompt_bool):
 
         def retstr(item):
             return item.__str__()
@@ -262,7 +263,7 @@ class TestAux(unittest.TestCase):
     
     @patch('manage_csv.write_input_box.fetch_filecount')
     @patch('manage_csv.write_input_box.prompt_input_boxes')
-    def test_writeIBox_writeIBoxFunc(self, mock_prompt_input_boxes, mock_fetch_filecount):
+    def test_writeIBoxFunc(self, mock_prompt_input_boxes, mock_fetch_filecount):
         mock_prompt_input_boxes.return_value = InputBoxParameters(3, 1, 10, 100, 1000, 50, 300)
         mock_fetch_filecount.return_value = 0
         write_input_box_func(1)
@@ -284,10 +285,34 @@ class TestAux(unittest.TestCase):
         self.assertEqual(os.path.exists('files_Option3\csv_inputs\inputBoxes1.csv'), False)
         self.assertEqual(os.path.exists('files_Option2\csv_inputs\inputBoxes2.csv'), False)
 
+
     # read_input_csv.py
-    def test_readcsv(self):
-        return
+    @patch('manage_csv.read_input_csv.prompt_integer')
+    def test_fetch_filename(self, mock_prompt_integer):
+        mock_prompt_integer.return_value = 1
+        self.assertEqual(fetch_filename(FILE_BOX_1, PROMPT_TYPE_BOX), "files_Option1\csv_inputs\inputBoxes1.csv")
+
+        mock_prompt_integer.return_value = 123456
+        self.assertEqual(fetch_filename("My IQ ----->", "Doesnt really matter"), "My IQ ----->123456.csv")
+
+        mock_prompt_integer.return_value = 456
+        self.assertEqual(fetch_filename(123, "Doesnt really matter"), "123456.csv")
+
+        mock_prompt_integer.return_value = 1
+        self.assertEqual(fetch_filename(True, "Doesnt really matter"), "True1.csv")
     
+
+    @patch('manage_csv.read_input_csv.fetch_filename')
+    def test_read_input(self, mock_fetch_filename):
+        mock_fetch_filename.return_value = "files_Option2\csv_inputs\inputBoxes1.csv"
+        self.assertNotEqual(read_input("files_Option2\csv_inputs\inputBoxes", 2), None)
+
+        mock_fetch_filename.return_value = "files_Option1\csv_inputs\inputBins1.csv"
+        self.assertNotEqual(read_input("files_Option1\csv_inputs\inputBins", 1), None)
+
+        mock_fetch_filename.return_value = "files_Option2\csv_inputs\inputBins10.csv"
+        self.assertEqual(read_input("files_Option2\csv_inputs\inputBins", 1), None)
+
     # manage_filecount.py
     def test_mngfilecount(self):
         return
