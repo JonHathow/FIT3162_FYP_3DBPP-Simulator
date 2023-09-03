@@ -289,7 +289,8 @@ class TestAux(unittest.TestCase):
         return
     
     # manage_filecount.py
-
+    def test_mngfilecount(self):
+        return
     
 
     # Option1_input tests
