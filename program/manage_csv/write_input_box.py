@@ -39,7 +39,7 @@ def prompt_input_boxes(option: Option) -> InputBoxParameters:
                            min(dim_lo, dim_hi), max(dim_lo, dim_hi), min(wgt_lo, wgt_hi), max(wgt_lo, wgt_hi))
 
     # Inputs specific to Option 1
-    if option == Option.OPTION1:
+    if option == Option.OPTION1.value:
         # Prompt user for whether they desire variation in loading priority level.
         level_var: bool = prompt_boolean(PROMPT_LEVEL_VAR)
 
@@ -58,7 +58,7 @@ def prompt_input_boxes(option: Option) -> InputBoxParameters:
 
     return input_params
 
-def write_input_box(option: Option) -> None:
+def write_input_box_func(option: Option) -> None:
     """
     Produce a CSV file with random values for boxes in the ranges specified by the user's inputs.
 
@@ -66,7 +66,7 @@ def write_input_box(option: Option) -> None:
               Option 1 or Option 2, used to determine file path,
               file name, and the header to be printed
     """
-    if option == Option.OPTION1:
+    if option == Option.OPTION1.value:
         folder_path     = FOLDER_INPUTS_1
         file_boxcount   = FILE_BOXCOUNT_1
         filename        = FILE_BOX_1
@@ -106,7 +106,7 @@ def write_input_box(option: Option) -> None:
                 depth = uniform(inputs.dim_lo, inputs.dim_hi)
                 weight = uniform(inputs.wgt_lo, inputs.wgt_hi)
 
-                if option == Option.OPTION1:
+                if option == Option.OPTION1.value:
                     # Attributes specific to Option 1
                     shape = "cube"
                     level = 1 if not inputs.level_var else randint(1, 3)
