@@ -1,6 +1,7 @@
 #Testing suite designed to test all of the methods in the auxiliary_methods.py folder in the py3dbp folder
 from manage_csv import InputBinParameters, InputBoxParameters, prompt_range, prompt_number, prompt_boolean, prompt_integer, get_input, prompt_input_bins, write_input_bin_func
 from manage_csv import Option, Mode, MENU_INPUT, MENU_INVALID, MENU_END, MENU_BIN_NOTLOADED, FILE_BIN_1, FILE_BOX_1
+from manage_csv import prompt_input_boxes, write_input_box_func
 from unittest.mock import patch
 import unittest
 import csv
@@ -197,10 +198,6 @@ class TestAux(unittest.TestCase):
         mock_prompt_number.side_effect = [2, 3.5, 4, 5.66]
         self.assertEqual(retstr(prompt_input_bins()),"\nqty: 4\nwidth: 2\nheight: 3.5\ndepth: 4\ncapacity: 5.66\n")
 
-        # func to return the string func of input_parameters
-        def retstr(item):
-            return item.__str__()
-
         # would never happen
         mock_prompt_integer.return_value = 4.5
         mock_prompt_number.side_effect = [2.8, "3.5", -4.5, "hello"]
@@ -233,9 +230,60 @@ class TestAux(unittest.TestCase):
         self.assertEqual(os.path.exists('files_Option2\csv_inputs\inputBins2.csv'), False)
 
     # write_input_box.py
-    def test_writeInputBox(self):
-        return
+    @patch('manage_csv.write_input_box.prompt_boolean')
+    @patch('manage_csv.write_input_box.prompt_range')
+    @patch('manage_csv.write_input_box.prompt_integer')
+    def test_writeIBox_promptIBoxes(self, mock_prompt_integer, mock_prompt_range,mock_prompt_bool):
+
+        def retstr(item):
+            return item.__str__()
+        
+        # works but should never happen since prompt range always returns int
+        mock_prompt_bool.side_effect = [False, False, False]
+        mock_prompt_range.side_effect = [(1,10),(1.5,10.2),(1,10)]
+        mock_prompt_integer.return_value = 3
+        self.assertEqual(retstr(prompt_input_boxes(1)), "\ntypes: 3\nqty_lo: 1, qty_hi: 10\ndim_lo: 1.5, dim_hi: 10.2\nwgt_lo: 1, wgt_hi: 10\nlevel_var: False\nloadbear_var: False\nupdown_var: False\nupdown: False\n")
+
+        mock_prompt_bool.side_effect = [True, True, True]
+        mock_prompt_range.side_effect = [(1,10),(1,10),(1,10)]
+        mock_prompt_integer.return_value = 4
+        self.assertEqual(retstr(prompt_input_boxes(1)), "\ntypes: 4\nqty_lo: 1, qty_hi: 10\ndim_lo: 1, dim_hi: 10\nwgt_lo: 1, wgt_hi: 10\nlevel_var: True\nloadbear_var: False\nupdown_var: True\nupdown: False\n")
+
+        mock_prompt_bool.side_effect = [False, True, False]
+        mock_prompt_range.side_effect = [(1,10),(1,10),(1,10)]
+        mock_prompt_integer.return_value = 5
+        self.assertEqual(retstr(prompt_input_boxes(2)), "\ntypes: 5\nqty_lo: 1, qty_hi: 10\ndim_lo: 1, dim_hi: 10\nwgt_lo: 1, wgt_hi: 10\nlevel_var: False\nloadbear_var: False\nupdown_var: False\nupdown: False\n")
+
+
+        mock_prompt_range.side_effect = [(1.2,10.2),(1.5,10.2),(1,10)]
+        # Should give error, documentation shows quantity and weight should be int and dim is float
+        # with self.assertRaises(TypeError):
+        #     self.assertEqual(retstr(prompt_input_boxes(1)), "\ntypes: 3\nqty_lo: 1.2, qty_hi: 10.2\ndim_lo: 1.5, dim_hi: 10.2\nwgt_lo: 1, wgt_hi: 10\nlevel_var: False\nloadbear_var: False\nupdown_var: False\nupdown: False\n")
     
+    @patch('manage_csv.write_input_box.fetch_filecount')
+    @patch('manage_csv.write_input_box.prompt_input_boxes')
+    def test_writeIBox_writeIBoxFunc(self, mock_prompt_input_boxes, mock_fetch_filecount):
+        mock_prompt_input_boxes.return_value = InputBoxParameters(3, 1, 10, 100, 1000, 50, 300)
+        mock_fetch_filecount.return_value = 0
+        write_input_box_func(1)
+        self.assertEqual(os.path.exists('files_Option1\csv_inputs\inputBoxes1.csv'), True)
+
+        mock_prompt_input_boxes.return_value = InputBoxParameters(3, 1, 10, 100, 1000, 50, 300)
+        mock_fetch_filecount.return_value = 1
+        write_input_box_func(1)
+        self.assertEqual(os.path.exists('files_Option1\csv_inputs\inputBoxes2.csv'), True)
+
+        mock_prompt_input_boxes.return_value = InputBoxParameters(3, 1, 10, 100, 1000, 50, 300)
+        mock_fetch_filecount.return_value = 0
+        write_input_box_func(2)
+        self.assertEqual(os.path.exists('files_Option2\csv_inputs\inputBoxes1.csv'), True)
+
+        mock_prompt_input_boxes.return_value = InputBoxParameters(3, 1, 10, 100, 1000, 50, 300)
+        mock_fetch_filecount.return_value = 0
+        write_input_box_func(3)
+        self.assertEqual(os.path.exists('files_Option3\csv_inputs\inputBoxes1.csv'), False)
+        self.assertEqual(os.path.exists('files_Option2\csv_inputs\inputBoxes2.csv'), False)
+
     # read_input_csv.py
     def test_readcsv(self):
         return
