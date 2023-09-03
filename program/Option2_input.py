@@ -1,8 +1,8 @@
 """ Handles writing and reading of CSV files for Option 2. """
 
 from manage_csv.constants import Mode, Option, MENU_INPUT, MENU_INVALID, MENU_BIN_NOTLOADED, MENU_END, FILE_BIN_2, FILE_BOX_2
-from manage_csv.write_input_bin import write_input_bin
-from manage_csv.write_input_box import write_input_box
+from manage_csv.write_input_bin import write_input_bin_func
+from manage_csv.write_input_box import write_input_box_func
 from manage_csv.read_input_csv import read_input
 from Option2_package import Packer, Bin, Item
 
@@ -13,11 +13,11 @@ while True:
 
     # Write a CSV file for bins.
     if response == "1":
-        write_input_bin(Option.OPTION2)
+        write_input_bin_func(Option.OPTION2)
 
     # Write a CSV file for boxes.
     elif response == "2":
-        write_input_box(Option.OPTION2)
+        write_input_box_func(Option.OPTION2)
 
     # Read a CSV file for bins.
     elif response == "3":

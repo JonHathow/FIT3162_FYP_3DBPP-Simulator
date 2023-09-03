@@ -32,7 +32,7 @@ def read_input(filename: str, mode: Mode) -> Optional[List[str]]:
                   prompted for a file to read
     """
     
-    prompt = PROMPT_CSVFILE_BIN if mode == Mode.BIN else PROMPT_CSVFILE_BOX
+    prompt = PROMPT_CSVFILE_BIN if mode == Mode.BIN.value else PROMPT_CSVFILE_BOX
     filename = fetch_filename(filename, prompt)
 
     try:
