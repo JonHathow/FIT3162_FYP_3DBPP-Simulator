@@ -1,8 +1,10 @@
 #Testing suite designed to test all of the methods in the auxiliary_methods.py folder in the py3dbp folder
 from manage_csv import InputBinParameters, InputBoxParameters, prompt_range, prompt_number, prompt_boolean, prompt_integer, get_input, prompt_input_bins, write_input_bin_func
-from manage_csv import Option, Mode, MENU_INPUT, MENU_INVALID, MENU_END, MENU_BIN_NOTLOADED, FILE_BIN_1, FILE_BOX_1, FILE_BOX_2, PROMPT_TYPE_BOX
+from manage_csv import Option, Mode, MENU_INPUT, MENU_INVALID, MENU_END, MENU_BIN_NOTLOADED, FILE_BIN_1, FILE_BOX_1, FILE_BOX_2, PROMPT_TYPE_BOX, FILE_BINCOUNT_1, FILE_BOXCOUNT_1
+from manage_csv import PROMPT_LASTFILE_BIN, PROMPT_LASTFILE_BOX, FILE_BOXCOUNT_2
 from manage_csv import prompt_input_boxes, write_input_box_func
 from manage_csv import fetch_filename, read_input
+from manage_csv import update_filecount, fix_filecount, fetch_filecount
 from unittest.mock import patch
 import unittest
 import csv
@@ -314,9 +316,40 @@ class TestAux(unittest.TestCase):
         self.assertEqual(read_input("files_Option2\csv_inputs\inputBins", 1), None)
 
     # manage_filecount.py
-    def test_mngfilecount(self):
-        return
-    
+    def test_update_filecount(self):
+
+        def retstr(filename):
+            with open(filename, mode = 'r') as csvfile:
+                reader = csv.reader(csvfile)
+                for row in reader:
+                    return row
+
+        update_filecount(FILE_BINCOUNT_1 , 4)
+        self.assertEqual(retstr(FILE_BINCOUNT_1), ['5'])
+
+        update_filecount(FILE_BOXCOUNT_1 , 7)
+        self.assertEqual(retstr(FILE_BOXCOUNT_1), ['8'])
+
+    @patch('manage_csv.manage_filecount.prompt_integer')
+    def test_fix_filecount(self, mock_prompt_integer):
+        def retstr(filename):
+            with open(filename, mode = 'r') as csvfile:
+                reader = csv.reader(csvfile)
+                for row in reader:
+                    return row
+
+        mock_prompt_integer.return_value = 4
+        fix_filecount(FILE_BINCOUNT_1 , PROMPT_LASTFILE_BIN)
+        self.assertEqual(retstr(FILE_BINCOUNT_1), ['4'])
+
+        mock_prompt_integer.return_value = 7
+        fix_filecount(FILE_BOXCOUNT_1 , PROMPT_LASTFILE_BOX)
+        self.assertEqual(retstr(FILE_BOXCOUNT_1), ['7'])
+
+    def test_fetch_filecount(self):
+        self.assertEqual(fetch_filecount(FILE_BINCOUNT_1, 1), 2)
+        self.assertEqual(fetch_filecount(FILE_BOXCOUNT_2, 2), 1)
+
 
     # Option1_input tests
     def test_pack2Bin(self):
