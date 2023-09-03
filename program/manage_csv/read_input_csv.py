@@ -3,8 +3,9 @@
 
 import csv
 from typing import Optional, List
-from .constants import Mode, PROMPT_CSVFILE_BIN, PROMPT_CSVFILE_BOX, CSVFILE_ERROR_NOTFOUND
+from .constants import Option, Mode, PROMPT_CSVFILE_BIN, PROMPT_CSVFILE_BOX, CSVFILE_ERROR_NOTFOUND
 from .prompts import prompt_integer
+from .manage_lastfile import update_lastfile
 
 def fetch_filename(filename: str, prompt: str) -> str:
     """
@@ -21,7 +22,7 @@ def fetch_filename(filename: str, prompt: str) -> str:
     """
     return f"{filename}{prompt_integer(prompt)}.csv"
 
-def read_input(filename: str, mode: Mode) -> Optional[List[str]]:
+def read_input(filename: str, mode: Mode, option: Option) -> Optional[List[str]]:
     """
     Reads from a CSV file of inputs for either bins or boxes.
 
@@ -34,6 +35,7 @@ def read_input(filename: str, mode: Mode) -> Optional[List[str]]:
     
     prompt = PROMPT_CSVFILE_BIN if mode == Mode.BIN else PROMPT_CSVFILE_BOX
     filename = fetch_filename(filename, prompt)
+    update_lastfile(filename, option, mode)
 
     try:
         with open(filename, mode = 'r') as csvfile:
