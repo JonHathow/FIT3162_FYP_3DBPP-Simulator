@@ -2,7 +2,7 @@
 
 import time
 from manage_csv.constants import Mode, Option, MENU_INPUT, MENU_INVALID, MENU_BIN_NOTLOADED, MENU_END, FILE_BIN_1, FILE_BOX_1
-from manage_csv.write_input_bin import write_input_bin
+from manage_csv.write_input_bin import write_input_bin_func
 from manage_csv.write_input_box import write_input_box
 from manage_csv.read_input_csv import read_input
 from Option1_package import Packer, Bin, Item, Painter
@@ -14,7 +14,7 @@ while True:
 
     # Write a CSV file for bins.
     if response == "1":
-        write_input_bin(Option.OPTION1)
+        write_input_bin_func(Option.OPTION1)
 
     # Write a CSV file for boxes.
     elif response == "2":
