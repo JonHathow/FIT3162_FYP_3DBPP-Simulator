@@ -12,10 +12,6 @@ from typing import Tuple
 def get_input(prompt: str) -> str:
     return input(prompt)
 
-# needed for testing
-def get_input2(prompt: str) -> str:
-    return input(prompt)
-
 def prompt_number(prompt: str) -> float:
     """ Reusable function to prompt user for a single numerical input. """
 
@@ -48,7 +44,7 @@ def prompt_range(prompt: str) -> Tuple[int, int]:
         try:
             print(f"\nUsing only integers, declare the range of {prompt}: ")
             a = int(get_input("Lower bound: "))
-            b = int(get_input2("Upper bound: "))
+            b = int(get_input("Upper bound: "))
             break
         except ValueError:
             print(ERROR_INTEGER)
