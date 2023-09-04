@@ -6,13 +6,12 @@ Authors: How Yu Chern
 Main Program Responsibilities:
 1. Run Simulation
 2. Allow user to select 3DBP Solution Algorithm
-
-To Do - Capture and properly handle all Input Parameters - R1 from Requirement Tracability Matrix
 """
 # Imports
 import random
 from cuboids import Container, SKU
 from ui import Input_Window
+from program import Option1_input
 
 class Warehouse():
 
@@ -63,9 +62,16 @@ def print_menu():
    """
    iw = Input_Window()
 
+   # Retrieve Data from Input Window
    print("Data Retrieved")
-   data = iw.get_data()
-   print(data)
+   r_seed, no_sku, batch_size, approach = iw.get_data()
+
+   # Invoke relevant Subroutines 
+   if approach == 'Back Bottom Left Fill':
+      pass
+   elif approach == 'Best Match Fill':
+      pass
+   
     
    return data
 

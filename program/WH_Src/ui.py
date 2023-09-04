@@ -30,9 +30,7 @@ class Input_Window():
       self.r_seed_field = Entry(self.window)
       self.no_sku_field = Entry(self.window)
       self.batch_size_field = Entry(self.window)
-      self.approach_field, self.a_select = self.create_dropdown(["Back Bottom Left Fill", "Corner To Center"])
-      self.run_state_field, self.r_select = self.create_dropdown(["Immediate", "Iterate"])
-      self.t_cond_field, self.t_select = self.create_dropdown(["Warehouse Full", "75 percent full", "50 percent full", "25 percent full"])
+      self.approach_field, self.a_select = self.create_dropdown(["Back Bottom Left Fill", "Best Match Fill"])
 
       # Data
       self.data = []
@@ -59,8 +57,6 @@ class Input_Window():
       no_sku = Label(self.window, text="No. of SKUs")
       batch_size = Label(self.window, text="Batch Size")
       approach = Label(self.window, text="Approach")
-      run_state = Label(self.window, text="Run State")
-      t_cond = Label(self.window, text="Terminate When")
 
       # Label Grid Layout
       heading.grid(row=0, column=1)
@@ -68,16 +64,12 @@ class Input_Window():
       no_sku.grid(row=2, column=0)
       batch_size.grid(row=3, column=0)
       approach.grid(row=4, column=0)
-      run_state.grid(row=5, column=0)
-      t_cond.grid(row=6, column=0)
-
+   
       # Input Field Grid Layout
       self.r_seed_field.grid(row=1, column=1, ipadx="100")
       self.no_sku_field.grid(row=2, column=1, ipadx="100")
       self.batch_size_field.grid(row=3, column=1, ipadx="100")
       self.approach_field.grid(row=4, column=1, ipadx="100")
-      self.run_state_field.grid(row=5, column=1, ipadx="100")
-      self.t_cond_field.grid(row=6, column=1, ipadx="100")
 
       # Buttons
       compute_button = Button( self.window , text = "Compute" , command = self.fetch )
@@ -99,10 +91,8 @@ class Input_Window():
          no_sku = self.no_sku_field.get()
          batch_size = self.batch_size_field.get()
          approach = self.a_select.get()
-         r_state = self.r_select.get()
-         t_cond = self.t_select.get()
 
-         self.data = [r_seed, no_sku, batch_size, approach, r_state, t_cond]
+         self.data = [r_seed, no_sku, batch_size, approach]
          # print(self.data)
 
          # Destroy window mainloop and pass control back to main
