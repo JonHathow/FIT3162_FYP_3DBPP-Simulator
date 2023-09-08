@@ -4,3 +4,27 @@ Option 1/3D-bin-packing-master/py3dbp/__pycache__/__init__.cpython-310.pyc
 Option 1/3D-bin-packing-master/py3dbp/__pycache__/auxiliary_methods.cpython-310.pyc
 Option 1/3D-bin-packing-master/py3dbp/__pycache__/constants.cpython-310.pyc
 Option 1/3D-bin-packing-master/py3dbp/__pycache__/main.cpython-310.pyc
+Option 2 - CTC/test_folder/__pycache__/__init__.cpython-310.pyc
+Option 2 - CTC/test_folder/__pycache__/auxiliary_methods.cpython-310.pyc
+Option 2 - CTC/test_folder/__pycache__/bin.cpython-310.pyc
+Option 2 - CTC/test_folder/__pycache__/constants.cpython-310.pyc
+Option 2 - CTC/test_folder/__pycache__/item.cpython-310.pyc
+Option 2 - CTC/test_folder/__pycache__/packer.cpython-310.pyc
+program/manage_csv/__pycache__/__init__.cpython-310.pyc
+program/manage_csv/__pycache__/constants.cpython-310.pyc
+program/manage_csv/__pycache__/input_parameters.cpython-310.pyc
+program/manage_csv/__pycache__/manage_filecount.cpython-310.pyc
+program/manage_csv/__pycache__/prompts.cpython-310.pyc
+program/manage_csv/__pycache__/read_input_csv.cpython-310.pyc
+program/manage_csv/__pycache__/write_input_bin.cpython-310.pyc
+program/manage_csv/__pycache__/write_input_box.cpython-310.pyc
+program/Option1_package/__pycache__/__init__.cpython-310.pyc
+program/Option1_package/__pycache__/auxiliary_methods.cpython-310.pyc
+program/Option1_package/__pycache__/constants.cpython-310.pyc
+program/Option1_package/__pycache__/main.cpython-310.pyc
+program/Option2_package/__pycache__/__init__.cpython-310.pyc
+program/Option2_package/__pycache__/auxiliary_methods.cpython-310.pyc
+program/Option2_package/__pycache__/bin.cpython-310.pyc
+program/Option2_package/__pycache__/constants.cpython-310.pyc
+program/Option2_package/__pycache__/item.cpython-310.pyc
+program/Option2_package/__pycache__/packer.cpython-310.pyc
