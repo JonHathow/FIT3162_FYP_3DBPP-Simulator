@@ -5,7 +5,9 @@ from manage_csv import PROMPT_LASTFILE_BIN, PROMPT_LASTFILE_BOX, FILE_BOXCOUNT_2
 from manage_csv import prompt_input_boxes, write_input_box_func
 from manage_csv import fetch_filename, read_input
 from manage_csv import update_filecount, fix_filecount, fetch_filecount
+from Option1_input import O1_input, O1_input_test
 from unittest.mock import patch
+import shutil
 import unittest
 import csv
 import os
@@ -350,15 +352,10 @@ class TestAux(unittest.TestCase):
         self.assertEqual(fetch_filecount(FILE_BINCOUNT_1, 1), 2)
         self.assertEqual(fetch_filecount(FILE_BOXCOUNT_2, 2), 1)
 
-
-    # Option1_input tests
-    def test_pack2Bin(self):
-        pass
-
-    # Option2_input tests
-    def test_pack2Bin(self):
-        pass
-
-
 if __name__ == '__main__':
+    try:
+        shutil.rmtree('files_Option1')
+        shutil.rmtree('files_Option2')
+    except OSError as e:
+        pass
     unittest.main()

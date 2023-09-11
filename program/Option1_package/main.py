@@ -602,7 +602,7 @@ class Packer:
         return result
 
 
-    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS, test=0):
+    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS, Variation = [True, False]):
         '''pack master func '''
 
         """
@@ -657,16 +657,17 @@ class Packer:
                     self.pack2Bin(bin, item,fix_point,check_stable,support_surface_ratio)
             
             # Deviation Of Cargo Gravity Center
-            if test == 0:
+            if not Variation[0]:
                 self.bins[idx].gravity = self.gravityCenter(bin)
 
-            if distribute_items :
-                for bitem in bin.items:
-                    no = bitem.partno
-                    for item in self.items :
-                        if item.partno == no :
-                            self.items.remove(item)
-                            break
+            if not Variation[1]:
+                if distribute_items :
+                    for bitem in bin.items:
+                        no = bitem.partno
+                        for item in self.items :
+                            if item.partno == no :
+                                self.items.remove(item)
+                                break
 
         # put order of items
         self.putOrder()

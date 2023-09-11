@@ -7,132 +7,235 @@ from manage_csv.write_input_box import write_input_box_func
 from manage_csv.read_input_csv import read_input
 from Option1_package import Packer, Bin, Item, Painter
 
-bins_loaded = False
-while True:
 
-    response = input(MENU_INPUT)
+def O1_input():
+        
+    bins_loaded = False
+    while True:
 
-    # Write a CSV file for bins.
-    if response == "1":
-        write_input_bin_func(Option.OPTION1)
+        response = input(MENU_INPUT)
 
-    # Write a CSV file for boxes.
-    elif response == "2":
-        write_input_box_func(Option.OPTION1)
+        # Write a CSV file for bins.
+        if response == "1":
+            write_input_bin_func(Option.OPTION1.value)
 
-    # Read a CSV file for bins.
-    elif response == "3":
-        bin_params = read_input(FILE_BIN_1, Mode.BIN)
+        # Write a CSV file for boxes.
+        elif response == "2":
+            write_input_box_func(Option.OPTION1.value)
 
-        if bin_params is not None:
+        # Read a CSV file for bins.
+        elif response == "3":
+            bin_params = read_input(FILE_BIN_1, Mode.BIN.value)
 
-            # Initialize packing function.
-            packer = Packer()
+            if bin_params is not None:
 
-            # Initialize bins.
-            for b in bin_params:
-                partno = b[0]
-                WHD = (float(b[1]), float(b[2]), float(b[3]))
-                max_weight = b[4]
-                packer.addBin(Bin(partno, WHD, max_weight))
+                # Initialize packing function.
+                packer = Packer()
 
-            bins_loaded = True
+                # Initialize bins.
+                for b in bin_params:
+                    partno = b[0]
+                    WHD = (float(b[1]), float(b[2]), float(b[3]))
+                    max_weight = b[4]
+                    packer.addBin(Bin(partno, WHD, max_weight))
 
-    # Read a CSV file for boxes.
-    elif response == "4":
+                bins_loaded = True
 
-        if not bins_loaded:
-            print(MENU_BIN_NOTLOADED)
+        # Read a CSV file for boxes.
+        elif response == "4":
 
-        else:
-            item_params = read_input(FILE_BOX_1, Mode.BOX)
+            if not bins_loaded:
+                print(MENU_BIN_NOTLOADED)
 
-            if item_params is not None:
+            else:
+                item_params = read_input(FILE_BOX_1, Mode.BOX.value)
 
-                for item in item_params:
-                    partno = item[0]
-                    name = item[1]
-                    typeof = item[2]
-                    WHD = (float(item[3]), float(item[4]), float(item[5]))
-                    weight = float(item[6])
-                    level = int(item[7])
-                    loadbear = int(item[8])
-                    updown = bool(item[9])
-                    color = item[10]
-                    packer.addItem(Item(partno, name, typeof, WHD, weight, level, loadbear, updown, color))
+                if item_params is not None:
 
-                #region Calculate packing
-                start = time.time()                
-                packer.pack(
-                    bigger_first=True,
-                    distribute_items=False,
-                    fix_point=True,
-                    check_stable=True,
-                    support_surface_ratio=0.75,
-                    number_of_decimals=0
-                )
-                stop = time.time()
+                    for item in item_params:
+                        partno = item[0]
+                        name = item[1]
+                        typeof = item[2]
+                        WHD = (float(item[3]), float(item[4]), float(item[5]))
+                        weight = float(item[6])
+                        level = int(item[7])
+                        loadbear = int(item[8])
+                        updown = bool(item[9])
+                        color = item[10]
+                        packer.addItem(Item(partno, name, typeof, WHD, weight, level, loadbear, updown, color))
 
-                # print result
-                print("***************************************************")
-                for idx,b in enumerate(packer.bins) :
-                    print("**", b.string(), "**")
+                    #region Calculate packing
+                    start = time.time()                
+                    packer.pack(
+                        bigger_first=True,
+                        distribute_items=False,
+                        fix_point=True,
+                        check_stable=True,
+                        support_surface_ratio=0.75,
+                        number_of_decimals=0
+                    )
+                    stop = time.time()
+
+                    # print result
                     print("***************************************************")
-                    print("FITTED ITEMS:")
+                    for idx,b in enumerate(packer.bins) :
+                        print("**", b.string(), "**")
+                        print("***************************************************")
+                        print("FITTED ITEMS:")
+                        print("***************************************************")
+                        volume = b.width * b.height * b.depth
+                        volume_t = 0
+                        volume_f = 0
+                        unfitted_name = ''
+                        for item in b.items:
+                            print("partno : ",item.partno)
+                            print("color : ",item.color)
+                            print("position : ",item.position)
+                            print("rotation type : ",item.rotation_type)
+                            print("W*H*D : ",str(item.width) +' * '+ str(item.height) +' * '+ str(item.depth))
+                            print("volume : ",float(item.width) * float(item.height) * float(item.depth))
+                            print("weight : ",float(item.weight))
+                            volume_t += float(item.width) * float(item.height) * float(item.depth)
+                            print("***************************************************")
+                        
+                        print('space utilization : {}%'.format(round(volume_t / float(volume) * 100 ,2)))
+                        print('residual volumn : ', float(volume) - volume_t )
+                        print("gravity distribution : ",b.gravity)
+                        print("***************************************************")
+                        # draw results
+                        painter = Painter(b)
+                        fig = painter.plotBoxAndItems(
+                            title=b.partno,
+                            alpha=0.8,
+                            write_num=False,
+                            fontsize=10
+                        )
+
                     print("***************************************************")
-                    volume = b.width * b.height * b.depth
-                    volume_t = 0
-                    volume_f = 0
-                    unfitted_name = ''
-                    for item in b.items:
+                    print("UNFITTED ITEMS:")
+                    for item in packer.unfit_items:
+                        print("***************************************************")
+                        print('name : ',item.name)
                         print("partno : ",item.partno)
                         print("color : ",item.color)
-                        print("position : ",item.position)
-                        print("rotation type : ",item.rotation_type)
                         print("W*H*D : ",str(item.width) +' * '+ str(item.height) +' * '+ str(item.depth))
                         print("volume : ",float(item.width) * float(item.height) * float(item.depth))
                         print("weight : ",float(item.weight))
-                        volume_t += float(item.width) * float(item.height) * float(item.depth)
+                        volume_f += float(item.width) * float(item.height) * float(item.depth)
+                        unfitted_name += '{},'.format(item.partno)
                         print("***************************************************")
-                    
-                    print('space utilization : {}%'.format(round(volume_t / float(volume) * 100 ,2)))
-                    print('residual volumn : ', float(volume) - volume_t )
-                    print("gravity distribution : ",b.gravity)
                     print("***************************************************")
-                    # draw results
-                    painter = Painter(b)
-                    fig = painter.plotBoxAndItems(
-                        title=b.partno,
-                        alpha=0.8,
-                        write_num=False,
-                        fontsize=10
+                    print('unpack item : ',unfitted_name)
+                    print('unpack item volumn : ',volume_f)
+
+                    print('used time : ',stop - start)
+
+                    fig.show()
+                    #endregion
+
+        elif response == "0":
+            print(MENU_END)
+            break
+
+        else:
+            print(MENU_INVALID)
+            
+def O1_input_test():
+    bins_loaded = False
+    while True:
+        response = input(MENU_INPUT)
+        if response == "1":
+            write_input_bin_func(Option.OPTION1.value)
+        elif response == "2":
+            write_input_box_func(Option.OPTION1.value)
+        elif response == "3":
+            bin_params = read_input(FILE_BIN_1, Mode.BIN.value)
+            if bin_params is not None:
+                packer = Packer()
+                for b in bin_params:
+                    partno = b[0]
+                    WHD = (float(b[1]), float(b[2]), float(b[3]))
+                    max_weight = b[4]
+                    packer.addBin(Bin(partno, WHD, max_weight))
+                bins_loaded = True
+        elif response == "4":
+            if not bins_loaded:
+                return MENU_BIN_NOTLOADED
+            else:
+                item_params = read_input(FILE_BOX_1, Mode.BOX.value)
+                if item_params is not None:
+                    for item in item_params:
+                        partno = item[0]
+                        name = item[1]
+                        typeof = item[2]
+                        WHD = (float(item[3]), float(item[4]), float(item[5]))
+                        weight = float(item[6])
+                        level = int(item[7])
+                        loadbear = int(item[8])
+                        updown = bool(item[9])
+                        color = item[10]
+                        packer.addItem(Item(partno, name, typeof, WHD, weight, level, loadbear, updown, color))
+                    start = time.time()                
+                    packer.pack(
+                        bigger_first=True,
+                        distribute_items=False,
+                        fix_point=True,
+                        check_stable=True,
+                        support_surface_ratio=0.75,
+                        number_of_decimals=0
                     )
-
-                print("***************************************************")
-                print("UNFITTED ITEMS:")
-                for item in packer.unfit_items:
-                    print("***************************************************")
-                    print('name : ',item.name)
-                    print("partno : ",item.partno)
-                    print("color : ",item.color)
-                    print("W*H*D : ",str(item.width) +' * '+ str(item.height) +' * '+ str(item.depth))
-                    print("volume : ",float(item.width) * float(item.height) * float(item.depth))
-                    print("weight : ",float(item.weight))
-                    volume_f += float(item.width) * float(item.height) * float(item.depth)
-                    unfitted_name += '{},'.format(item.partno)
-                    print("***************************************************")
-                print("***************************************************")
-                print('unpack item : ',unfitted_name)
-                print('unpack item volumn : ',volume_f)
-
-                print('used time : ',stop - start)
-
-                fig.show()
-                #endregion
-
-    elif response == "0":
-        print(MENU_END)
-        break
-
-    else:
-        print(MENU_INVALID)
+                    stop = time.time()
+                    res = ("***************************************************\n")
+                    for idx,b in enumerate(packer.bins) :
+                        res += ("**" + b.string() + "**\n")
+                        res += ("***************************************************\n")
+                        res += ("FITTED ITEMS:\n")
+                        res += ("***************************************************\n")
+                        volume = b.width * b.height * b.depth
+                        volume_t = 0
+                        volume_f = 0
+                        unfitted_name = ''
+                        for item in b.items:
+                            res += ("partno : " + item.partno + "\n")
+                            res += ("color : " + item.color + "\n")
+                            res += ("position : " + item.position + "\n")
+                            res += ("rotation type : " + item.rotation_type + "\n")
+                            res += ("W*H*D : " + str(item.width) +' * '+ str(item.height) +' * '+ str(item.depth) + "\n")
+                            res += ("volume : " + float(item.width) * float(item.height) * float(item.depth) + "\n")
+                            res += ("weight : " + float(item.weight) + "\n")
+                            volume_t += float(item.width) * float(item.height) * float(item.depth)
+                            res += ("***************************************************\n")
+                        res += ('space utilization : {}%'.format(round(volume_t / float(volume) * 100 ,2)) + "\n")
+                        res += ('residual volumn : ' +  str(float(volume) - volume_t)  + "\n")
+                        res += ("gravity distribution : " + str(b.gravity) + "\n")
+                        res += ("***************************************************\n")
+                        painter = Painter(b)
+                        fig = painter.plotBoxAndItems(
+                            title=b.partno,
+                            alpha=0.8,
+                            write_num=False,
+                            fontsize=10
+                        )
+                    res += ("***************************************************\n")
+                    res += ("UNFITTED ITEMS:\n")
+                    for item in packer.unfit_items:
+                        res += ("***************************************************\n")
+                        res += ('name : ' + item.name + "\n")
+                        res += ("partno : " + item.partno + "\n")
+                        res += ("color : " + item.color + "\n")
+                        res += ("W*H*D : " + str(item.width) +' * '+ str(item.height) +' * '+ str(item.depth) + "\n")
+                        res += ("volume : " + str(float(item.width) * float(item.height) * float(item.depth)) + "\n")
+                        res += ("weight : " + str(item.weight) + "\n")
+                        volume_f += float(item.width) * float(item.height) * float(item.depth)
+                        unfitted_name += '{},'.format(item.partno)
+                        res += ("***************************************************\n")
+                    res += ("***************************************************\n")
+                    res += ('unpack item : ' + unfitted_name + "\n")
+                    res += ('unpack item volumn : ' + str(volume_f) + "\n")
+                    res += ('used time : ' + str(stop - start) + "\n")
+                    fig.show()
+                    return res
+        elif response == "0":
+            return MENU_END
+        else:
+            return MENU_INVALID
