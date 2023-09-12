@@ -6,33 +6,106 @@ import unittest
 import numpy as np
 
 """
-_summary_
-Test suite to test and validate all the functions in this open source code
-
-Author: Anson Lee
+Black  Box Testing for Option 1, Jerry's Algorithm
 """
-'''
-Option 1 Dimensions
-    WIDTH = 0
-    HEIGHT = 1
-    DEPTH = 2
 
-Option 2 Dimensions
-    LENGTH = 0
-    WIDTH = 1
-    HEIGHT = 2
-'''
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+                                        
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
 
 class TestAux(unittest.TestCase):
     
-    # Auxiliary Methods
+    #                   #
+    # Auxiliary Methods #
+    #                   #
+
+    # BB Done
     def test_rectIntersect(self):
         testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
         testItem2 = Item(2,"test","cube", [5,10,10], 25, 2, 400, False, "orange")
 
-        #default start position     
-        START_POSITION = [0, 0, 0] 
 
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
+
+
+        # 2 Items that intersect on all planes
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), True)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), True)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), True)
+
+        # 2 Items that intersect on D & H planes
+        #                     W   H  D
+        testItem2.position = [30, 0, 0]
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), True)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), False)
+
+        # 2 Items that intersect on D & W planes
+        #                     W  H   D
+        testItem2.position = [0, 30, 0]
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), True)
+
+        # 2 Items that intersect on W & H planes
+        #                     W  H  D
+        testItem2.position = [0, 0, 30]
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), True)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), False)
+
+        # One Item Inside Another
+        testItem2.position = [2.5, 5, 10]
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), True)
+
+
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+
+        # 2 Items barely do not intersect at the edges
+        testItem2.position = [10, 20, 30]
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), False)
+
+        # 2 Items barely intersect at the edges
+        testItem2.position = [9, 19, 29]
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), True)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), True)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), True)
+
+
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+
+        # 2 Items that do not intersect
+        testItem2.position = [50, 50, 50]
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), False)
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), False)
+
+        # Zero-Dimensional Item
+        testItem1 = Item(1, 'test', 'cube', (0, 0, 0), 0.0, 1, 50, False, 'silver')
+        testItem2.position = [0, 0, 0]
+        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), False)
+
+
+        # Invalid Item types
         with self.assertRaises(AttributeError):
             # only objects of item class have the position attribute
             rectIntersect(32, testItem2, Axis.WIDTH, Axis.HEIGHT)
@@ -42,6 +115,7 @@ class TestAux(unittest.TestCase):
             rectIntersect(testItem1, 'a', Axis.WIDTH, Axis.HEIGHT)
             rectIntersect(testItem1, False, Axis.WIDTH, Axis.HEIGHT)
 
+        # Invalid Dimension Values
         with self.assertRaises(IndexError):
             # position array holds 3 values, x, y and z. Any index above 2 is out of range
             rectIntersect(testItem1, testItem2, 11, Axis.HEIGHT)
@@ -49,50 +123,50 @@ class TestAux(unittest.TestCase):
             rectIntersect(testItem1, testItem2, Axis.WIDTH, 11)
             rectIntersect(testItem1, testItem2, Axis.WIDTH, -11)
 
+        # Invalid Dimension Types
         with self.assertRaises(TypeError):
             rectIntersect(testItem1, testItem2, "hello", Axis.HEIGHT)
             rectIntersect(testItem1, testItem2, Axis.WIDTH, "hello")
-            
-        # All 3 planes intersecting
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), True)
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), True)
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), True)
 
-        # Changing position of item 2 (1 plane intersecting)
-        #                     W   H  D
-        testItem2.position = [30, 0, 0]
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), False)
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), True)
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), False)
-
-        # Changing position of item 2 (1 plane intersecting)
-        #                     W  H   D
-        testItem2.position = [0, 30, 0]
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), False)
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), False)
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), True)
-
-        # Changing position of item 2 (1 plane intersecting)
-        #                     W  H  D
-        testItem2.position = [0, 0, 30]
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), True)
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), False)
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), False)
-
-        # Changing position of item 2 (no planes intersecting)
-        #                     W   H   D
-        testItem2.position = [50, 50, 50]
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.WIDTH, Axis.HEIGHT), False)
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.HEIGHT), False)
-        self.assertEqual(rectIntersect(testItem1, testItem2, Axis.DEPTH, Axis.WIDTH), False)
-
+    # BB Done
     def test_intersect(self):
         testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
         testItem2 = Item(2,"test","cube", [20,10,10], 25, 2, 400, False, "orange")
 
-        #default start position     
-        START_POSITION = [0, 0, 0] 
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
 
+        # All 3 planes intersecting
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+        # Changing position of item 2 for all dimensions
+        #                     W   H   D
+        testItem2.position = [9, 19, 29]
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+        # Item 2 barely intersects with Item 1
+        testItem2.position = [9,19,29]   
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+        # Item 2 barely does not intersect with Item 1
+        testItem2.position = [10,20,30] 
+        self.assertEqual(intersect(testItem1, testItem2), False)
+                         
+
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+        # Item 2 does not intersect with Item 1
+        testItem2.position = [10, 20, 30]
+        self.assertEqual(intersect(testItem1, testItem2), False)
+
+        # Invalid item types
         with self.assertRaises(AttributeError):
             # only objects of item class have the position attribute
             intersect(32, testItem2)
@@ -101,83 +175,94 @@ class TestAux(unittest.TestCase):
             intersect(testItem1, 32)
             intersect(testItem1, 'a')
             intersect(testItem1, False)
-            
-
-        # All 3 planes intersecting
-        self.assertEqual(intersect(testItem1, testItem2), True)
-
-
-        # Changing position of item 2 width
-        #                     W   H  D
-        testItem2.position = [9, 0, 0]
-        self.assertEqual(intersect(testItem1, testItem2), True)
-
-        testItem2.position = [10, 0, 0]
-        self.assertEqual(intersect(testItem1, testItem2), False)
-
-        testItem2.position = [20, 0, 0]
-        self.assertEqual(intersect(testItem1, testItem2), False)
-
-
-        # Changing position of item 2 height
-        #                     W  H   D
-        testItem2.position = [0, 19, 0]
-        self.assertEqual(intersect(testItem1, testItem2), True)
-
-        testItem2.position = [0, 20, 0]
-        self.assertEqual(intersect(testItem1, testItem2), False)
-
-        testItem2.position = [0, 100, 0]
-        self.assertEqual(intersect(testItem1, testItem2), False)
-
-
-        # Changing position of item 2 depth
-        #                     W  H  D
-        testItem2.position = [0, 0, 29]
-        self.assertEqual(intersect(testItem1, testItem2), True)
-
-        testItem2.position = [0, 0, 30]
-        self.assertEqual(intersect(testItem1, testItem2), False)
-
-        testItem2.position = [0, 0, 100]
-        self.assertEqual(intersect(testItem1, testItem2), False)
-
-
-        # Changing position of item 2 for all dimensions
-        #                     W   H   D
-        testItem2.position = [9, 19, 29]
-        self.assertEqual(intersect(testItem1, testItem2), True)
-
-        testItem2.position = [10, 20, 30]
-        self.assertEqual(intersect(testItem1, testItem2), False)
-
-        testItem2.position = [100, 100, 100]
-        self.assertEqual(intersect(testItem1, testItem2), False)
-
+        
+    # BB Done
     def test_getLimitNumberOfDecimals(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+        # Positive number of decimals
         self.assertEqual(getLimitNumberOfDecimals(3), 1.000)
+
+        # Zero decimals
         self.assertEqual(getLimitNumberOfDecimals(0), 1)
+
+        # Large number of decimals
         self.assertEqual(getLimitNumberOfDecimals(20), 1.00000000000000000000)
+
+        # Negative number of decimals
         self.assertEqual(getLimitNumberOfDecimals(-5), 1)
-
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+                        
+        # Invalid type for number of decimals
         with self.assertRaises(TypeError):
-            getLimitNumberOfDecimals(1.5)
+            getLimitNumberOfDecimals(1.0)
+            getLimitNumberOfDecimals(2.4)
             getLimitNumberOfDecimals('a')
+            getLimitNumberOfDecimals(False)
 
+    # BB Done
     def test_set2Decimal(self):
-        self.assertEqual(set2Decimal(4, 3), 4.000)
-        self.assertEqual(set2Decimal(4, 0), 4)
-        self.assertEqual(set2Decimal(4, 20), 4.00000000000000000000)
-        self.assertEqual(set2Decimal(4, -5), 4)
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
 
+        # Integer value with default number of decimals
+        self.assertEqual(set2Decimal(10), Decimal('10'))
+
+        # Float value with default number of decimals
+        self.assertEqual(set2Decimal(3.14159), Decimal('3'))
+
+        # Negative value with default number of decimals
+        self.assertEqual(set2Decimal(-7), Decimal('-7'))
+
+        # Integer value with custom number of decimals
+        self.assertEqual(set2Decimal(4, 3), Decimal('4.000'))
+
+        # Float value with custom number of decimals
+        self.assertEqual(set2Decimal(2.71828, 4), Decimal('2.7183'))
+
+        # Negative value with custom number of decimals
+        self.assertEqual(set2Decimal(-7, 2), Decimal('-7.00'))
+
+        # Integer value with a large custom number of decimals
+        self.assertEqual(set2Decimal(4, 20), Decimal('4.00000000000000000000'))
+
+        # Integer value with a negative custom number of decimals
+        self.assertEqual(set2Decimal(4, -5), Decimal('4'))
+
+        # False value with a custom number of decimals
+        self.assertEqual(set2Decimal(False, 1), Decimal('0.0'))
+
+        # String integer value with a custom number of decimals
+        self.assertEqual(set2Decimal("4", 1), Decimal('4.0'))
+
+        # String float value with a custom number of decimals
+        self.assertEqual(set2Decimal("4.64", 3), Decimal('4.640'))
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+        # Invalid number of decimals type
         with self.assertRaises(TypeError):
             set2Decimal(4, 1.5)
             set2Decimal(4, 'a')
 
-    # Item Class Methods
-    def test_itemConstructor(self):
-        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        # Invalid value type
+        with self.assertRaises(decimal.InvalidOperation):
+            self.assertEqual(set2Decimal("Hello", 1), Decimal('Hello'))
 
+
+    #                    #
+    # Item Class Methods #
+    #                    #
+
+    # BB Done
+    def test_itemConstructor(self):
         '''
         self.partno = partno
         self.name = name
@@ -194,6 +279,14 @@ class TestAux(unittest.TestCase):
         self.position = START_POSITION
         self.number_of_decimals = DEFAULT_NUMBER_OF_DECIMALS
         '''
+
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+                                        
+
+        # Cube Item
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.partno, 1)
         self.assertEqual(testItem.name, "test")
         self.assertEqual(testItem.typeof, "cube")
@@ -205,20 +298,52 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testItem.loadbear, 400)
         self.assertEqual(testItem.updown, True)
         self.assertEqual(testItem.color, "orange")
-
-        # Attributes not affected by constructor
+            # Attributes not affected by constructor
         self.assertEqual(testItem.rotation_type, 0)
         self.assertEqual(testItem.position, [0,0,0])
         self.assertEqual(testItem.number_of_decimals, 0)
 
-        # Testing if these attributes change correctly
-        testItem.rotation_type = 5
-        testItem.position = [-75,455,11]
-        testItem.number_of_decimals = 4
+        # Cylinder Item
+        testItem = Item(2, 'Cup', 'cylinder', (8, 8, 4), 0.3, 1, 50, False, 'blue')
+        assert testItem.partno == 2
+        assert testItem.name == 'Cup'
+        assert testItem.typeof == 'cylinder'
+        assert testItem.width == 8
+        assert testItem.height == 8
+        assert testItem.depth == 4
+        assert testItem.weight == 0.3
+        assert testItem.level == 1
+        assert testItem.loadbear == 50
+        assert testItem.updown == False
+        assert testItem.color == 'blue'
 
-        self.assertEqual(testItem.rotation_type, 5)
-        self.assertEqual(testItem.position, [-75,455,11])
-        self.assertEqual(testItem.number_of_decimals, 4)
+        # Random input types
+        testItem = Item("¯\_(ツ)_/¯", False, 'Hexagon', (8.5, -34, 4.55), '0.3', (1,2,4,8), True, 'Maybe', 'blue')
+        assert testItem.partno == "¯\_(ツ)_/¯"
+        assert testItem.name == False
+        assert testItem.typeof == 'Hexagon'
+        assert testItem.width == 8.5
+        assert testItem.height == -34
+        assert testItem.depth == 4.55
+        assert testItem.weight == '0.3'
+        assert testItem.level == (1,2,4,8)
+        assert testItem.loadbear == True
+        assert testItem.updown == False
+        assert testItem.color == 'blue'
+
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+        # Invalid item dimensions array length
+        with self.assertRaises(IndexError):
+            testItem = Item(1,"test","cube", (10,20), 25, 2, 400, True, "orange")
+
+        # Invalid item dimensions type
+        with self.assertRaises(TypeError):
+            testItem = Item(1,"test","cube", 10, 25, 2, 400, True, "orange")
+            testItem = Item(1,"test","cube", False, 25, 2, 400, True, "orange")
+            testItem = Item(1,"test","cube", "(10, 20, 30)", 25, 2, 400, True, "orange")
 
     def test_itemFormatNumbers(self):
         testItem = Item(1,"test","cube", [10.23423,20.3,30], 25., 2, 400, True, "orange")
