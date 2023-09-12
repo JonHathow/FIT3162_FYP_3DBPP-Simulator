@@ -114,10 +114,6 @@ class Bin:
         corner      - size of container corner
                         -Containers usually have a section of the corner blocked off to leave space for hooks to attach to the container from the outsided
         put_type    - (1 : general & 2 : open top), Set the bin to open top or general, and the returned results are sorted according to this method.
-
-
-        !!!Document mentioned that 0 is general and 2 is open top, but in the putOrder function in the packer class states that 1 is general and 2 is open top!!!
-
         '''
         self.partno = partno
         self.width = WHD[0]
@@ -126,7 +122,6 @@ class Bin:
         self.max_weight = max_weight
         self.corner = corner
         self.items = []
-        # not too sure what this does
         self.fit_items = np.array([[0,WHD[0],0,WHD[1],0,0]])
         self.unfitted_items = []
         # number of decimals for formatting
@@ -184,7 +179,6 @@ class Bin:
         return set2Decimal(total_weight, self.number_of_decimals)
 
 
-    # possible change
     def putItem(self, item, pivot,axis=None):
         ''' put item in bin '''
 

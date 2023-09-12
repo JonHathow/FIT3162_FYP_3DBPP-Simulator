@@ -1,5 +1,5 @@
 #Testing suite designed to test all of the methods in the auxiliary_methods.py folder in the py3dbp folder
-from py3dbp import rectIntersect, intersect, getLimitNumberOfDecimals, set2Decimal, Item, Bin, Packer, Axis
+from py3dbp import rectIntersect, intersect, getLimitNumberOfDecimals, set2Decimal, Item, Bin, Packer, Axis, RotationType
 from decimal import Decimal
 import decimal
 import unittest
@@ -23,9 +23,9 @@ Black  Box Testing for Option 1, Jerry's Algorithm
 
 class TestAux(unittest.TestCase):
     
-    #                   #
-    # Auxiliary Methods #
-    #                   #
+    #                     #
+    #  Auxiliary Methods  #
+    #                     #
 
     # BB Done
     def test_rectIntersect(self):
@@ -257,34 +257,17 @@ class TestAux(unittest.TestCase):
             self.assertEqual(set2Decimal("Hello", 1), Decimal('Hello'))
 
 
-    #                    #
-    # Item Class Methods #
-    #                    #
+    #                      #
+    #  Item Class Methods  #
+    #                      #
 
     # BB Done
     def test_itemConstructor(self):
-        '''
-        self.partno = partno
-        self.name = name
-        self.typeof = typeof
-        self.width = WHD[0]
-        self.height = WHD[1]
-        self.depth = WHD[2]
-        self.weight = weight
-        self.level = level
-        self.loadbear = loadbear
-        self.updown = updown if typeof == 'cube' else False
-        self.color = color
-        self.rotation_type = 0
-        self.position = START_POSITION
-        self.number_of_decimals = DEFAULT_NUMBER_OF_DECIMALS
-        '''
 
                                         #                #
                                         # Positive Cases #
                                         #                #
                                         
-
         # Cube Item
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.partno, 1)
@@ -376,7 +359,20 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testItem.depth, Decimal('30.0000000000'))
         self.assertEqual(testItem.weight, Decimal('25.0000000000'))
         self.assertEqual(testItem.number_of_decimals, 10)
+
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
                                         
+        # Number of decimals is 0
+        testItem = Item(1,"test","cube", [10.23423,20.3,30], 25., 2, 400, True, "orange")
+        testItem.formatNumbers(0)
+        self.assertEqual(testItem.width, Decimal('10'))
+        self.assertEqual(testItem.height, Decimal('20'))
+        self.assertEqual(testItem.depth, Decimal('30'))
+        self.assertEqual(testItem.weight, Decimal('25'))
+        self.assertEqual(testItem.number_of_decimals, 0)
+
                                         #                #
                                         # Negative Cases #
                                         #                #
@@ -395,13 +391,13 @@ class TestAux(unittest.TestCase):
         testItem = Item(1,"test","cube", [10.23423,20.3,30], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.string(), "1(10.23423x20.3x30, weight: 25) pos([0, 0, 0]) rt(0) vol(6233)")
 
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
         # Item construction with random values and datatypes (except dimensions)
         testItem = Item("1",34 ,33, [10.23423,20.3,30], False, True, "400", 22, "orange")
         self.assertEqual(testItem.string(), "1(10.23423x20.3x30, weight: False) pos([0, 0, 0]) rt(0) vol(6233)")
-
-        # Valid Item construction and changed position
-        testItem.position = [100, 200, 50]
-        self.assertEqual(testItem.string(), "1(10.23423x20.3x30, weight: False) pos([100, 200, 50]) rt(0) vol(6233)")
                                         
                                         #                #
                                         # Negative Cases #
@@ -503,13 +499,18 @@ class TestAux(unittest.TestCase):
         testItem = Item(1,"test","cube", ["10",False,30.3], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.getDimension(), ["10",False,30.3])
 
+    #                     #
+    #  Bin Class Methods  #
+    #                     #
 
-
-    # Bin Class Methods
+    # BB Done
     def test_binConstructor(self):
-  
-        testbin = Bin(1, [100,200,100], 5000)
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
 
+        # Valid Bin Construction using default values
+        testbin = Bin(1, [100,200,100], 5000)
         self.assertEqual(testbin.partno, 1)
         self.assertEqual(testbin.width, 100)
         self.assertEqual(testbin.height, 200)
@@ -517,8 +518,8 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.max_weight, 5000)
         self.assertEqual(testbin.corner, 0)
         self.assertEqual(testbin.put_type, 1)
-
-        # Attributes not affected by constructor
+        self.assertEqual(testbin.fit_items.tolist(), [[0, 100, 0, 200, 0, 0]])
+            # Attributes not affected by constructor
         self.assertEqual(testbin.items, [])
         self.assertEqual(testbin.unfitted_items, [])
         self.assertEqual(testbin.number_of_decimals, 0)
@@ -527,9 +528,8 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.support_surface_ratio, 0)
         self.assertEqual(testbin.gravity, [])
       
-
+        # Valid Bin Construction not using default values
         testbin = Bin(1, [100,200,100], 5000, 1, 0)
-
         self.assertEqual(testbin.partno, 1)
         self.assertEqual(testbin.width, 100)
         self.assertEqual(testbin.height, 200)
@@ -537,8 +537,8 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.max_weight, 5000)
         self.assertEqual(testbin.corner, 1)
         self.assertEqual(testbin.put_type, 0)
-
-        # Attributes not affected by constructor
+        self.assertEqual(testbin.fit_items.tolist(), [[0, 100, 0, 200, 0, 0]])
+            # Attributes not affected by constructor
         self.assertEqual(testbin.items, [])
         self.assertEqual(testbin.unfitted_items, [])
         self.assertEqual(testbin.number_of_decimals, 0)
@@ -547,9 +547,8 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.support_surface_ratio, 0)
         self.assertEqual(testbin.gravity, [])
 
-
+        # Random input types
         testbin = Bin(1, ["100",13.4,False], [2232,54], False, "true")
-
         self.assertEqual(testbin.partno, 1)
         self.assertEqual(testbin.width, "100")
         self.assertEqual(testbin.height, 13.4)
@@ -557,23 +556,29 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.max_weight, [2232,54])
         self.assertEqual(testbin.corner, False)
         self.assertEqual(testbin.put_type, "true")
+        self.assertEqual(testbin.fit_items.tolist(), [['0', "100", '0', '13.4', '0', '0']])
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
 
-        # Attributes not affected by constructor
-        self.assertEqual(testbin.items, [])
-        self.assertEqual(testbin.unfitted_items, [])
-        self.assertEqual(testbin.number_of_decimals, 0)
-        self.assertEqual(testbin.fix_point, False)
-        self.assertEqual(testbin.check_stable, False)
-        self.assertEqual(testbin.support_surface_ratio, 0)
-        self.assertEqual(testbin.gravity, [])
+        # Invalid Dimensions Length
+        with self.assertRaises(IndexError):
+            testbin = Bin(1, [100,200], 4000, False, "true")
 
-        #just changing dimensions from array to int
+        # Invalid Dimensions type
         with self.assertRaises(TypeError):
-            testbin = Bin(1, 100, [2232,54], False, "true")
+            testbin = Bin(1, 100, 4000, False, "true")
+            testbin = Bin(1, "100", 4000, False, "true")
 
+    # BB Done
     def test_binFormatNumbers(self):
-        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
 
+        # Integer number of decimals
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
         testbin.formatNumbers(3)
         self.assertEqual(testbin.width, 100.000)
         self.assertEqual(testbin.height, 200.000)
@@ -581,13 +586,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.max_weight, 5000.000)
         self.assertEqual(testbin.number_of_decimals, 3)
 
-        testbin.formatNumbers(0)
-        self.assertEqual(testbin.width, 100)
-        self.assertEqual(testbin.height, 200)
-        self.assertEqual(testbin.depth, 100)
-        self.assertEqual(testbin.max_weight, 5000)
-        self.assertEqual(testbin.number_of_decimals, 0)
-
+        # Negative number of decimals
         testbin.formatNumbers(-1)
         self.assertEqual(testbin.width, 100)
         self.assertEqual(testbin.height, 200)
@@ -595,6 +594,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.max_weight, 5000)
         self.assertEqual(testbin.number_of_decimals, -1)
 
+        # Large number of decimals
         testbin.formatNumbers(10)
         self.assertEqual(testbin.width, 100.0000000000)
         self.assertEqual(testbin.height, 200.0000000000)
@@ -602,152 +602,497 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.max_weight, 5000.0000000000)
         self.assertEqual(testbin.number_of_decimals, 10)
 
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+        # Number of decimals is 0                     
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+        testbin.formatNumbers(0)
+        self.assertEqual(testbin.width, 100)
+        self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.depth, 100)
+        self.assertEqual(testbin.max_weight, 5000)
+        self.assertEqual(testbin.number_of_decimals, 0)
+
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+        # Invalid number of decimals data type
         with self.assertRaises(TypeError):
             testbin.formatNumbers("potato")
             testbin.formatNumbers(False)
+            testbin.formatNumbers(13.2)
 
+    # BB Done
     def test_binString(self):
-        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
 
+        # Valid Item Construction
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
         self.assertEqual(testbin.string(), "1(100x200x100, max_weight:5000) vol(2000000)")
 
-        # does list items for some reason
+                                        
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
 
         testbin = Bin("454", [100,200,100], False, "1")
+        self.assertEqual(testbin.string(), "454(100x200x100, max_weight:False) vol(2000000)")    
 
-        self.assertEqual(testbin.string(), "454(100x200x100, max_weight:False) vol(2000000)")
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
 
+        # Item construction with invalid dimension data types
+        testbin = Bin(1, ["100",False,(2,33)], 5000, 1, 0)
+        with self.assertRaises(TypeError):
+            testbin.string()
+
+    # BB Done
     def test_binGetVolume(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+        # Valid Bin Construction
         testbin = Bin(1, [100,200,100], 5000, 1, 0)
-    
         self.assertEqual(testbin.getVolume(), 2000000)
 
-        testbin.formatNumbers(3)
-        self.assertEqual(testbin.getVolume(), 2000000.000)
+        # Bin Construction Random Data Types (except Dimensions)
+        testbin = Bin("1", [100,200,100], False, "1", (22,0))
+        self.assertEqual(testbin.getVolume(), 2000000)
 
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+        # Bin Construction with 0 dimensions
+        testbin = Bin("1", [0, 0, 0], False, "1", (22,0))
+        self.assertEqual(testbin.getVolume(), 0)
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+        # Invalid Dimension Types
+        testbin = Bin(1, ["100",False,(100, 22)], 5000, 1, 0)
+        with self.assertRaises(TypeError):
+            self.assertEqual(testbin.getVolume(), 2000000.000)
+
+    # BB Done
     def test_binGetTotalWeight(self):
-        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
 
+        # 3 Light Items
+        testbin = Bin(1, [2000,2000,2000], 5000, 1, 0)
+        testItem1 = Item(1,"test1","cube", [10,20,30], 10, 2, 400, True, "orange")
+        testItem2 = Item(2,"test2","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testItem3 = Item(3,"test3","cube", [10,20,30], 11, 2, 400, True, "orange")
+        testbin.putItem(testItem1, [0,0,0])
+        testbin.putItem(testItem2, [50,50,50])
+        testbin.putItem(testItem3, [100,100,100])
+        self.assertEqual(testbin.getTotalWeight(), 46)
+
+        # 3 Heavy Items
+        testbin = Bin(1, [2000,2000,2000], 5000, 1, 0)
+        testItem1 = Item(1,"test1","cube", [10,20,30], 1000, 2, 400, True, "orange")
+        testItem2 = Item(2,"test2","cube", [10,20,30], 500, 2, 400, True, "orange")
+        testItem3 = Item(3,"test3","cube", [10,20,30], 2500, 2, 400, True, "orange")
+        testbin.putItem(testItem1, [0,0,0])
+        testbin.putItem(testItem2, [50,50,50])
+        testbin.putItem(testItem3, [100,100,100])
+        self.assertEqual(testbin.getTotalWeight(), 4000)
+                                        
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+                                        
+        # Empty Bin
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
         self.assertEqual(testbin.getTotalWeight(), 0)
 
+        # 1 Item
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
         testbin.putItem(testItem, [0,0,0])
-
         self.assertEqual(testbin.getTotalWeight(), 25)
 
-        testItem2 = Item(2,"test","cube", [10,20,30], 75, 2, 400, False, "blue")
-        testbin.putItem(testItem2, [50,0,50])
-
-        self.assertEqual(testbin.getTotalWeight(), 100)
-
-        testItem3 = Item(3,"test","cube", [10,20,30], 75, 2, 400, False, "red")
-        testbin.putItem(testItem3, [0,0,0])
-        #items cant overlap
-        self.assertEqual(testbin.getTotalWeight(), 100)
-
+    # BB Done
     def test_binPutItem(self):
+
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
+        # Item Fits
         testbin = Bin(1, [100,200,100], 5000, 1, 0)
-
-        self.assertEqual(testbin.items, [])
-
-        testItem = Item("testItem1","test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
         testbin.putItem(testItem, [0,0,0])
+        self.assertEqual(len(testbin.items), 1)
 
-        #func to print all items in bin
-        def retItems(bin):
-            final = []
-            for item in bin.items:
-                final.append(item.string())
-            return final
+        # Item fits only after rotation
+        testbin = Bin(3, (20, 20, 20), 100)
+        testItem = Item(3, 'Item3', 'cube', (10, 5, 10), 1.5, 1, 50, True, 'green')
+        testItem.formatNumbers(1)
+        testbin.putItem(testItem, [5, 5, 5])
+        assert len(testbin.items) == 1  # The item should be placed in the bin with a rotation
+                                        
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
 
-        self.assertEqual(retItems(testbin), ['testItem1(10x20x30, weight: 25) pos([0, 0, 0]) rt(0) vol(6000)'])
+        # Two items that barely fit together
+        testbin = Bin(3, (20, 10, 10), 100)
+        testItem1 = Item(2, 'testItem1', 'cube', [10, 10, 10], 2.0, 2, 75, True, 'blue')
+        testItem2 = Item(2, 'testItem2', 'cube', [10, 10, 10], 2.0, 2, 75, True, 'red')
+        testItem1.formatNumbers(1)
+        testItem2.formatNumbers(1)
+        testbin.putItem(testItem1, [0,0,0])
+        testbin.putItem(testItem2, [10,0,0])
+        self.assertEqual(len(testbin.items), 2)
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
 
-        testItem2 = Item("testItem2","test","cube", [5,14,10], 50, 2, 400, True, "blue")
-        testbin.putItem(testItem2, [50,50,50])
+        # Item doesn't fit
+        testbin = Bin(3, (5, 5, 5), 100)
+        testItem = Item(2, 'testItem', 'cube', [15, 15, 15], 2.0, 2, 75, True, 'blue')
+        testItem.formatNumbers(1)
+        testbin.putItem(testItem, [0, 0, 0])
+        self.assertEqual(len(testbin.items), 0)
 
-        self.assertEqual(retItems(testbin), ['testItem1(10x20x30, weight: 25) pos([0, 0, 0]) rt(0) vol(6000)', 'testItem2(5x14x10, weight: 50) pos([50, 50, 50]) rt(0) vol(700)'])
+        # Item weight exceeds bin max weight
+        testbin = Bin(1, (20, 20, 20), 2)
+        testItem = Item(1, 'testItem', 'cube', (10, 10, 10), 3.0, 1, 50, True, 'purple')
+        testItem.formatNumbers(1)
+        testbin.putItem(testItem, [5, 5, 5])
+        self.assertEqual(len(testbin.items), 0)
 
+        # Invalid Pivot Type
+        testItem = Item(2, 'testItem', 'cube', [15, 15, 15], 2.0, 2, 75, True, 'blue')
+        testItem.formatNumbers(1)
+        with self.assertRaises(TypeError):
+            testbin.putItem(testItem, ["hello", 23, False])
 
+        # Invalid Item Types
         testbin2 = Bin("testBin2", [100,200,100], 5000, 1, 0)
         with self.assertRaises(AttributeError):
             testbin.putItem("hello", [80, 90, 80])
             testbin.putItem(5, [80, 90, 80])
             testbin.putItem(testbin2, [80, 90, 80])
 
-
-    # Honestly not sure what these next three functions do          
+    # BB Done       
     def test_binCheckDepth(self):
-        testbin = Bin(1, [100,200,100], 5000, 1, 0)
-
-        self.assertEqual(testbin.checkDepth([0,10,0,20,0,20]), 0.0)
-
-    def test_binCheckWidth(self):
-        testbin = Bin(1, [100,200,100], 5000, 1, 0)
-
-        self.assertEqual(testbin.checkWidth([0,10,0,20,0,20]), 0.0)
-
-    def test_binCheckHeight(self):
-        testbin = Bin(1, [100,200,100], 5000, 1, 0)
-
-        self.assertEqual(testbin.checkHeight([0,10,0,20,0,20]), 0.0)
 
 
-    def test_binAddCorner(self):
-        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
 
-        # a function to return the contents of list and not the list object
-        def retList(lst):
-            res = []
-            for item in lst:
-                res.append(item.string())
-            return res
+        # Valid item and bin
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (10, 10, 10), 100)
+        testbin.items.append(testItem)
+        unfix_point = [0, 10, 0, 10, 0, 10]
+        self.assertEqual(testbin.checkDepth(unfix_point), 0.0)
 
-        self.assertEqual(retList(testbin.addCorner()), ['corner0(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner1(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner2(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner3(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner4(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner5(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner6(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', 'corner7(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)'])
-        
-    def test_binPutCorner(self):
-        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+        # Multiple items
+        testItem1 = Item(1, 'testItem1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testItem2 = Item(2, 'testItem2', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'blue')
+        testbin = Bin(3, (10, 10, 10), 100)
+        testbin.items.append(testItem1)
+        testbin.items.append(testItem2)
+        unfix_point = [0, 10, 0, 10, 0, 10]
+        self.assertEqual(testbin.checkDepth(unfix_point), 0.0)
 
-        #create corner items
-        corners = testbin.addCorner()
-        for count in range(len(corners)):
-            testbin.putCorner(count, corners[count])
+        # Top depth exceeds available space
+        testItem = Item(1, 'testItem', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(4, (10, 10, 10), 100)
+        testbin.items.append(testItem)
+        unfix_point4 = [0, 10, 0, 10, 0, 15]
+        self.assertEqual(testbin.checkDepth(unfix_point4), 0.0)
 
-        # a function to return the contents of list and not the list object
-        def retList(lst):
-            res = []
-            for item in lst:
-                res.append(item.string())
-            return res
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
 
-        self.assertEqual(retList(testbin.items), ['corner0(1x1x1, weight: 0) pos([0, 0, 0]) rt(0) vol(1)', "corner1(1x1x1, weight: 0) pos([0, 0, Decimal('99')]) rt(0) vol(1)", "corner2(1x1x1, weight: 0) pos([0, Decimal('199'), Decimal('99')]) rt(0) vol(1)", "corner3(1x1x1, weight: 0) pos([0, Decimal('199'), 0]) rt(0) vol(1)", "corner4(1x1x1, weight: 0) pos([Decimal('99'), Decimal('199'), 0]) rt(0) vol(1)", "corner5(1x1x1, weight: 0) pos([Decimal('99'), 0, 0]) rt(0) vol(1)", "corner6(1x1x1, weight: 0) pos([Decimal('99'), 0, Decimal('99')]) rt(0) vol(1)", "corner7(1x1x1, weight: 0) pos([Decimal('99'), Decimal('199'), Decimal('99')]) rt(0) vol(1)"])
-        
-        testbin2 = Bin("testbin2", [100,200,100], 5000, 1, 0)
+        # Empty Bin
+        testbin = Bin(1, (10, 10, 10), 100)
+        unfix_point = [0, 5, 0, 5, 0, 5]
+        self.assertEqual(testbin.checkDepth(unfix_point), 0.0)
 
-        with self.assertRaises(TypeError):
-            testbin2.putCorner("count", corners[count])
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
 
-        # adds only the last corner in the list
-        testbin2.putCorner(True, corners[count])
+        # Invalid unfix_point data type
+        testbin = Bin(8, (10, 10, 10), 100)
+        unfix_point = "0 5 0 5 0 5"
+        with self.assertRaises(ValueError):
+            testbin.checkDepth(unfix_point)
 
-        self.assertEqual(retList(testbin2.items), ["corner7(1x1x1, weight: 0) pos([0, 0, Decimal('99')]) rt(0) vol(1)"])
-
+        # Insufficient unfix_point elements
+        testbin = Bin(8, (10, 10, 10), 100)
+        unfix_point = [0, 5, 0, 5, 0]
         with self.assertRaises(IndexError):
-            testbin2.putCorner(8, "corner")
-            testbin2.putCorner(8, True)
+            testbin.checkDepth(unfix_point)
 
+    # BB Done
+    def test_binCheckWidth(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+        # Valid item and bin
+        testitem = Item(1, 'testitem', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(5, (10, 10, 10), 100)
+        testbin.items.append(testitem)
+        unfix_point = [0, 10, 0, 10, 0, 10]
+        self.assertEqual(testbin.checkWidth(unfix_point), 0)
+
+        # Multiple items
+        testItem1 = Item(1, 'testItem1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testItem2 = Item(2, 'testItem2', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'blue')
+        testbin = Bin(6, (10, 10, 10), 100)
+        testbin.items.extend([testItem1, testItem2])
+        unfix_pounfix_pointint6 = [0, 10, 0, 10, 0, 10]
+        self.assertEqual(testbin.checkWidth(unfix_point), 0)
+
+        # Top Width Exceeds Available Space
+        testitem = Item(1, 'testitem', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(7, (10, 10, 10), 100)
+        testbin.items.append(testitem)
+        unfix_point = [0, 10, 0, 10, 0, 15]
+        self.assertEqual(testbin.checkWidth(unfix_point), 0)
+                                        
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+        # Empty Bin
+        testbin = Bin(1, (10, 10, 10), 100)
+        unfix_point = [0, 5, 0, 5, 0, 5]
+        self.assertEqual(testbin.checkWidth(unfix_point), 0)
+               
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+        # Invalid unfix_point data type
+        testbin = Bin(3, (10, 10, 10), 100)
+        unfix_point = "0 5 0 5 0 5"
+        with self.assertRaises(ValueError):
+            self.assertEqual(testbin.checkWidth(unfix_point), 0)
+
+        # Insufficient unfix_point elements
+        testbin = Bin(3, (10, 10, 10), 100)
+        unfix_point = [0, 5, 0, 5]
+        with self.assertRaises(IndexError):
+            self.assertEqual(testbin.checkWidth(unfix_point), 0)
+
+    # BB Done
+    def test_binCheckHeight(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
+        # Valid item and bin
+        testitem = Item(1, 'testitem', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(5, (10, 10, 10), 100)
+        testbin.items.append(testitem)
+        unfix_point = [0, 10, 0, 10, 0, 10]
+        self.assertEqual(testbin.checkHeight(unfix_point), 0)
+
+        # Multiple items
+        testItem1 = Item(1, 'testItem1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testItem2 = Item(2, 'testItem2', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'blue')
+        testbin = Bin(6, (10, 10, 10), 100)
+        testbin.items.extend([testItem1, testItem2])
+        unfix_pounfix_pointint6 = [0, 10, 0, 10, 0, 10]
+        self.assertEqual(testbin.checkHeight(unfix_point), 0)
+
+        # Top Height Exceeds Available Space
+        testitem = Item(1, 'testitem', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(7, (10, 10, 10), 100)
+        testbin.items.append(testitem)
+        unfix_point = [0, 10, 0, 10, 0, 15]
+        self.assertEqual(testbin.checkHeight(unfix_point), 0)
+
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+        # Empty Bin
+        testbin = Bin(1, (10, 10, 10), 100)
+        unfix_point = [0, 10, 0, 10, 0, 10]
+        self.assertEqual(testbin.checkHeight(unfix_point), 0)
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+        # Invalid unfix_point data type
+        testbin = Bin(3, (10, 10, 10), 100)
+        unfix_point = "0 5 0 5 0 5"
+        with self.assertRaises(ValueError):
+            self.assertEqual(testbin.checkHeight(unfix_point), 0)
+
+        # Insufficient unfix_point elements
+        testbin = Bin(3, (10, 10, 10), 100)
+        unfix_point = [0, 5, 0, 5]
+        with self.assertRaises(IndexError):
+            self.assertEqual(testbin.checkHeight(unfix_point), 0)
+
+    # BB Done
+    def test_binAddCorner(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+                                
+        # Valid Bin
+        testbin = Bin(1, (10, 10, 10), 100, 2)
+        corners = testbin.addCorner()
+        self.assertEqual(len(corners), 8)
+        for corner in corners:
+            self.assertEqual(corner.width, 2)
+            self.assertEqual(corner.height, 2)
+            self.assertEqual(corner.depth, 2)
+
+
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+        # Adding a Corner to a Bin with Existing Items
+        testitem = Item(1, 'testitem', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (10, 10, 10), 100, 3)
+        testbin.items.append(testitem)
+        corners = testbin.addCorner()
+        self.assertEqual(len(corners), 8)
+        for corner in corners:
+            self.assertEqual(corner.width, 3)
+            self.assertEqual(corner.height, 3)
+            self.assertEqual(corner.depth, 3)
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+        # Negative corner size
+        testbin = Bin(2, (10, 10, 10), 100, -3)
+        corners = testbin.addCorner()
+        self.assertEqual(len(corners), 8)
+        for corner in corners:
+            self.assertEqual(corner.width, -3)
+            self.assertEqual(corner.height, -3)
+            self.assertEqual(corner.depth, -3)
+
+        # Corner size is 0
+        testbin = Bin(2, (10, 10, 10), 100, 0)
+        corners = testbin.addCorner()
+        self.assertEqual(corners, None)
+
+    # BB Done
+    def test_binPutCorner(self):
+
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
+        # Valid bin and corners, place all corners
+        testbin = Bin(1, (10, 10, 10), 100, 2)
+        corners = testbin.addCorner()
+        for corner in corners:
+            testbin.putCorner(0, corner)
+        self.assertEqual(len(testbin.items), 8)
+        for count in range(len(corners)):
+            self.assertEqual(testbin.items[count], corners[count])
+                                        
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+        # Valid bin and corners, place 1 corner
+        testbin = Bin(1, (10, 10, 10), 100, 2)
+        corner_item = Item(partno='corner', name='corner', typeof='cube', WHD=(2, 2, 2), weight=0, level=0, loadbear=0, updown=True, color='#000000')
+        testbin.putCorner(0, corner_item)
+        self.assertEqual(len(testbin.items), 1)
+        self.assertEqual(testbin.items[0], corner_item)
+
+        # Placing corner in bin with existing items
+        testitem = Item(1, 'testitem', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (10, 10, 10), 100, 3)
+        testitem.formatNumbers(2)
+        testbin.putItem(testitem, [0, 0, 0])
+        corner_item = Item(partno='corner', name='corner', typeof='cube', WHD=(3, 3, 3), weight=0, level=0, loadbear=0, updown=True, color='#000000')
+        testbin.putCorner(0, corner_item)
+        self.assertEqual(len(testbin.items), 2)
+        self.assertEqual(testbin.items[1], corner_item)
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+            
+        # Info value too high
+        testbin = Bin(3, (10, 10, 10), 100)
+        corner_item = Item(partno='corner', name='corner', typeof='cube', WHD=(2, 2, 2), weight=0, level=0, loadbear=0, updown=True, color='#000000')
+        with self.assertRaises(IndexError):
+            testbin.putCorner(8, corner_item)
+
+        # Invalid info value data type
+        testbin = Bin(3, (10, 10, 10), 100)
+        corner_item = Item(partno='corner', name='corner', typeof='cube', WHD=(2, 2, 2), weight=0, level=0, loadbear=0, updown=True, color='#000000')
+        with self.assertRaises(TypeError):
+            testbin.putCorner("hello world", corner_item)
+
+        # corner size greater than bin size
+        testbin = Bin(4, (10, 10, 10), 100, 15)
+        testbin.corner = 15
+        corner_item = Item(partno='corner', name='corner', typeof='cube', WHD=(15, 15, 15), weight=0, level=0, loadbear=0, updown=True, color='#000000')
+        testbin.putCorner(0, corner_item)
+        self.assertEqual(len(testbin.items), 1)
+
+    # BB Done
     def test_binClearBin(self):
-        testbin1 = Bin("testbin1", [100,200,100], 5000, 1, 0)
 
-        testItem1 = Item("testitem1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
-        testItem2 = Item("testitem2","test","cube", [5,20,10], 100, 2, 200, True, "red")
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+                    
+        # Bin with multiple items
+        testitem1 = Item(1, 'testitem1', 'cube', (4, 4, 4), 1.0, 1, 50, True, 'red')
+        testitem2 = Item(2, 'testitem2', 'cube', (3, 3, 3), 1.0, 1, 50, True, 'blue')
+        testbin = Bin(3, (10, 10, 10), 100)
+        testitem1.formatNumbers(2)
+        testitem2.formatNumbers(2)
+        testbin.putItem(testitem1)
+        testbin.putItem(testitem2)
+        self.assertEqual(len(testbin.items), 2)
+        testbin.clearBin()
+        self.assertEqual(len(testbin.items), 0)
 
-        testbin1.putItem(testItem1 , [0,0,0])
-        testbin1.putItem(testItem2 , [35,35,35])
+                                        
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+        # Empty Bin
+        # Bin with multiple items
+        testbin = Bin(3, (10, 10, 10), 100)
+        self.assertEqual(len(testbin.items), 0)
+        testbin.clearBin()
+        self.assertEqual(len(testbin.items), 0)
 
-        testbin1.clearBin()
-
-        self.assertEqual(testbin1.items,[])
-
+        # Bin with 1 item
+        testitem1 = Item(1, 'testitem1', 'cube', (4, 4, 4), 1.0, 1, 50, True, 'red')
+        testbin = Bin(3, (10, 10, 10), 100)
+        testitem1.formatNumbers(2)
+        testbin.putItem(testitem1)
+        self.assertEqual(len(testbin.items), 1)
+        testbin.clearBin()
+        self.assertEqual(len(testbin.items), 0)
 
     # Packer Class Methods
     def test_packerConstructor(self):
