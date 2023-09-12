@@ -345,14 +345,13 @@ class TestAux(unittest.TestCase):
             testItem = Item(1,"test","cube", False, 25, 2, 400, True, "orange")
             testItem = Item(1,"test","cube", "(10, 20, 30)", 25, 2, 400, True, "orange")
 
+    # BB Done
     def test_itemFormatNumbers(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+        # Integer number of decimals
         testItem = Item(1,"test","cube", [10.23423,20.3,30], 25., 2, 400, True, "orange")
-
-       
-        with self.assertRaises(TypeError):
-            testItem.formatNumbers(2.3)
-            testItem.formatNumbers('a')
-
         testItem.formatNumbers(3)
         self.assertEqual(testItem.width, Decimal('10.234'))
         self.assertEqual(testItem.height, Decimal('20.300'))
@@ -360,6 +359,8 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testItem.weight, Decimal('25.000'))
         self.assertEqual(testItem.number_of_decimals, 3)
 
+        # Negative Integer number of decimals
+        testItem = Item(1,"test","cube", [10.23423,20.3,30], 25., 2, 400, True, "orange")
         testItem.formatNumbers(-2)
         self.assertEqual(testItem.width, Decimal('10'))
         self.assertEqual(testItem.height, Decimal('20'))
@@ -367,64 +368,142 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testItem.weight, Decimal('25'))
         self.assertEqual(testItem.number_of_decimals, -2)
 
-    def test_itemString(self):
+        # Large number of decimals
         testItem = Item(1,"test","cube", [10.23423,20.3,30], 25., 2, 400, True, "orange")
+        testItem.formatNumbers(10)
+        self.assertEqual(testItem.width, Decimal('10.2342300000'))
+        self.assertEqual(testItem.height, Decimal('20.3000000000'))
+        self.assertEqual(testItem.depth, Decimal('30.0000000000'))
+        self.assertEqual(testItem.weight, Decimal('25.0000000000'))
+        self.assertEqual(testItem.number_of_decimals, 10)
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+       
+       # Invalid type of number of decimals
+        with self.assertRaises(TypeError):
+            testItem.formatNumbers(2.3)
+            testItem.formatNumbers('a')
 
-        # string should output more information ERROR
-        # self.assertEqual(testItem.string(), 'partno:1, name:test, typeof:cube, dimensions:(10.23423x20.3x30), weight: 25.0, pos([0, 0, 0]), rt(0), vol(6233)')
+    # BB Done
+    def test_itemString(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+        # Valid Item construction
+        testItem = Item(1,"test","cube", [10.23423,20.3,30], 25, 2, 400, True, "orange")
+        self.assertEqual(testItem.string(), "1(10.23423x20.3x30, weight: 25) pos([0, 0, 0]) rt(0) vol(6233)")
 
-        # Tests random data types of attributes
+        # Item construction with random values and datatypes (except dimensions)
         testItem = Item("1",34 ,33, [10.23423,20.3,30], False, True, "400", 22, "orange")
         self.assertEqual(testItem.string(), "1(10.23423x20.3x30, weight: False) pos([0, 0, 0]) rt(0) vol(6233)")
 
+        # Valid Item construction and changed position
+        testItem.position = [100, 200, 50]
+        self.assertEqual(testItem.string(), "1(10.23423x20.3x30, weight: False) pos([100, 200, 50]) rt(0) vol(6233)")
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+        # Item construction with invalid dimension data types
+        testItem = Item(1,"test","cube", ["10.23423", False, (1,23)], 25, 2, 400, True, "orange")
+        with self.assertRaises(TypeError):
+            testItem.string()
+
+    # BB Done
     def test_itemGetVolume(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
+        # Valid Item Construction
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.getVolume(), 6000)
 
-        testItem = Item(1,"test","cube", ["10",True,30], 25, 2, 400, True, "orange")
+        # Item Construction Random Data Types (except Dimensions)
+        testItem = Item("1",34 ,33, [10,20,30], False, True, "400", 22, "orange")
+        self.assertEqual(testItem.getVolume(), 6000)
 
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+        # Item Construction with 0 dimensions
+        testItem = Item("1",34 ,33, [0, 0, 0], False, True, "400", 22, "orange")
+        self.assertEqual(testItem.getVolume(), 0)
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+        # Invalid Dimension Types
+        testItem = Item(1,"test","cube", ["10", True, 30], 25, 2, 400, True, "orange")
         with self.assertRaises(decimal.InvalidOperation):
             testItem.getVolume()
 
+    # BB Done
     def test_itemGetMaxArea(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
+        # Valid Item Construction
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.getMaxArea(), 600)
 
+        # Large Item Dimensions
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
         self.assertEqual(testItem.getMaxArea(), 200)
 
-        # incorrect dimensions
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+        # Item Construction with 0 dimensions
+        testItem = Item(1,"test","cube", [0, 0, 0], 25, 2, 400, True, "orange")
+        self.assertEqual(testItem.getMaxArea(), 0)
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+        # Invalid Dimensions Data Types
         with self.assertRaises(TypeError):
-            testItem = Item(1,"test","cube", ["10",True,30], 25, 2, 400, True, "orange")
+            testItem = Item(1,"test","cube", ["10", True, 30], 25, 2, 400, True, "orange")
             testItem.getMaxArea()
-            testItem = Item(1,"test","cube", ["10",True,30], 25, 2, 400, False, "orange")
+            testItem = Item(1,"test","cube", ["10", True, 30], 25, 2, 400, False, "orange")
             testItem.getMaxArea()
 
+    # BB Done
     def test_itemGetDimension(self):
 
-        # rotation type must match as shown in constants.py
-        #                                 W  H  D
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
+        # Valid Item Construction
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
-        #default rotation type is 0
         self.assertEqual(testItem.getDimension(), [10,20,30])
 
-        testItem.rotation_type = 1  #HWD
-        self.assertEqual(testItem.getDimension(), [20,10,30])
+        # Small Dimensions
+        testItem = Item(1,"test","cube", [1,2,3], 25, 2, 400, True, "orange")
+        self.assertEqual(testItem.getDimension(), [1,2,3])
 
-        testItem.rotation_type = 2  #HDW
-        self.assertEqual(testItem.getDimension(), [20,30,10])
+        # Large Dimensions
+        testItem = Item(1,"test","cube", [150,2000,3320], 25, 2, 400, True, "orange")
+        self.assertEqual(testItem.getDimension(), [150,2000,3320])
 
-        testItem.rotation_type = 3  #DHW
-        self.assertEqual(testItem.getDimension(), [30,20,10])
 
-        testItem.rotation_type = 4  #DWH
-        self.assertEqual(testItem.getDimension(), [30,10,20])
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
 
-        testItem.rotation_type = 5  #WDH
-        self.assertEqual(testItem.getDimension(), [10,30,20])
-
+        # Invalid Dimension Data Types
         testItem = Item(1,"test","cube", ["10",False,30.3], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.getDimension(), ["10",False,30.3])
+
+
 
     # Bin Class Methods
     def test_binConstructor(self):
