@@ -305,7 +305,6 @@ class TestAux(unittest.TestCase):
     #  Bin Class Methods  #
     #                     #
 
-    # BB Done
     def test_binConstructor(self):
         """
         Conditional testing:-
@@ -351,6 +350,203 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.check_stable, False)
         self.assertEqual(testbin.support_surface_ratio, 0)
         self.assertEqual(testbin.gravity, [])
+
+    def test_binFormatNumbers(self):
+        """
+        Conditional Testing:-
+        No Conditions:
+        
+        100% Path coverage
+        """
+        # Integer number of decimals
+        testbin = Bin(1, [100,200,49.64523], 5000, 1, 0)
+        testbin.formatNumbers(3)
+        self.assertEqual(testbin.width, Decimal('100.000'))
+        self.assertEqual(testbin.height, Decimal('200.000'))
+        self.assertEqual(testbin.depth, Decimal('49.645'))
+        self.assertEqual(testbin.max_weight, Decimal('5000.000'))
+        self.assertEqual(testbin.number_of_decimals, 3)
+
+    def test_binString(self):
+        """
+        Conditional Testing:-
+        No Conditions:
+        
+        100% Path Coverage
+        """
+
+        # Valid Item Construction
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+        self.assertEqual(testbin.string(), "1(100x200x100, max_weight:5000) vol(2000000)")
+
+    def test_binGetVolume(self):
+        """
+        Conditional Testing:-
+        No Conditions:
+        
+        100% Path Coverage
+        """
+        # Valid Bin Construction
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+        self.assertEqual(testbin.getVolume(), 2000000)
+
+    def test_binGetTotalWeight(self):
+        """
+        Loop Testing:-
+        1 Loop:
+        for item in self.items:
+            total_weight += item.weight
+            
+        Path Coverage Testing:-
+        100%
+        """
+        # No items
+        testbin = Bin(1, [2000,2000,2000], 5000, 1, 0)
+        self.assertEqual(testbin.getTotalWeight(), 0)
+        
+        # 1 Item
+        testbin = Bin(1, [2000,2000,2000], 5000, 1, 0)
+        testItem = Item(1,"test","cube", [10,20,30], 10, 2, 400, True, "orange")
+        testbin.putItem(testItem, [0,0,0])
+        self.assertEqual(testbin.getTotalWeight(), 10)
+        
+        # Multiple Items
+        testbin = Bin(1, [2000,2000,2000], 5000, 1, 0)
+        testItem1 = Item(1,"test1","cube", [10,20,30], 10, 2, 400, True, "orange")
+        testItem2 = Item(2,"test2","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testItem3 = Item(3,"test3","cube", [10,20,30], 11, 2, 400, True, "orange")
+        testbin.putItem(testItem1, [0,0,0])
+        testbin.putItem(testItem2, [50,50,50])
+        testbin.putItem(testItem3, [100,100,100])
+        self.assertEqual(testbin.getTotalWeight(), 46)
+
+    def test_binPutItem(self):
+        """
+        Conditional Testing:-
+        8 Conditions:
+        
+        if (
+        self.width < pivot[0] + dimension[0] or
+        self.height < pivot[1] + dimension[1] or
+        self.depth < pivot[2] + dimension[2]
+        ) : else
+            
+        if intersect(current_item_in_bin, item)
+        if self.getTotalWeight() + item.weight > self.max_weight
+        if self.fix_point == True
+        if self.check_stable == True
+        
+        Path Coverage Testing:-
+        100% Path Coverage
+        """
+
+        """
+        if (
+        self.width < pivot[0] + dimension[0] or
+        self.height < pivot[1] + dimension[1] or
+        self.depth < pivot[2] + dimension[2]
+        ) : else
+        """
+        # self.width < pivot[0] + dimension[0] == True
+        testbin = Bin(1, [100,100,100], 5000, 1, 0)
+        testItem = Item(1,"test","cube", [90,20,30], 25, 2, 400, True, "orange")
+        testItem.formatNumbers(2)
+        testbin.putItem(testItem, [100,0,0])
+        self.assertEqual(len(testbin.items), 0)
+        
+        # self.height < pivot[1] + dimension[1] == True
+        testbin = Bin(1, [100,100,100], 5000, 1, 0)
+        testItem = Item(1,"test","cube", [10,90,30], 25, 2, 400, True, "orange")
+        testItem.formatNumbers(2)
+        testbin.putItem(testItem, [0,100,0])
+        self.assertEqual(len(testbin.items), 0)
+
+        # self.depth < pivot[2] + dimension[2] == True
+        testbin = Bin(1, [100,100,100], 5000, 1, 0)
+        testItem = Item(1,"test","cube", [10,20,90], 25, 2, 400, True, "orange")
+        testItem.formatNumbers(2)
+        testbin.putItem(testItem, [0,0,100])
+        self.assertEqual(len(testbin.items), 0)
+        
+        # Else:
+        testbin = Bin(1, [100,100,100], 5000, 1, 0)
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testItem.formatNumbers(2)
+        testbin.putItem(testItem, [0,0,0])
+        self.assertEqual(len(testbin.items), 1)
+        
+        """
+        if intersect(current_item_in_bin, item)
+        """
+        testbin = Bin(1, [500,500,500], 5000, 1, 0)
+        testItem1 = Item(1,"test1","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testItem2 = Item(2,"test2","cube", [10,10,10], 25, 2, 400, True, "orange")
+        testItem1.formatNumbers(2)
+        testItem2.formatNumbers(2)
+        testbin.putItem(testItem1, [0,0,0])
+        testbin.putItem(testItem2, [5,5,5])
+        self.assertEqual(len(testbin.items), 1)
+        
+        """
+        if self.getTotalWeight() + item.weight > self.max_weight
+        """
+        testbin = Bin(1, [500,500,500], 100, 1, 0)
+        testItem1 = Item(1,"test1","cube", [10,20,30], 75, 2, 400, True, "orange")
+        testItem2 = Item(2,"test2","cube", [10,10,10], 50, 2, 400, True, "orange")
+        testItem1.formatNumbers(2)
+        testItem2.formatNumbers(2)
+        testbin.putItem(testItem1, [0,0,0])
+        testbin.putItem(testItem2, [100,100,100])
+        self.assertEqual(len(testbin.items), 1)
+        
+        """
+        if self.fix_point == True
+        """
+        testbin = Bin(1, [500,500,500], 100, 1, 0)
+        testbin.fix_point = True
+        testItem1 = Item(1,"test1","cube", [10,20,30], 75, 2, 400, True, "orange")
+        testItem2 = Item(2,"test2","cube", [10,10,10], 50, 2, 400, True, "orange")
+        testItem1.formatNumbers(2)
+        testItem2.formatNumbers(2)
+        testbin.putItem(testItem1, [0,0,0])
+        testbin.putItem(testItem2, [100,100,100])
+        self.assertEqual(len(testbin.items), 1)
+        
+        """
+        if self.check_stable == True
+        """
+        testbin = Bin(1, [500,500,500], 100, 1, 0)
+        testbin.check_stable = True
+        testItem1 = Item(1,"test1","cube", [10,20,30], 75, 2, 400, True, "orange")
+        testItem2 = Item(2,"test2","cube", [10,10,10], 50, 2, 400, True, "orange")
+        testItem1.formatNumbers(2)
+        testItem2.formatNumbers(2)
+        testbin.putItem(testItem1, [0,0,0])
+        testbin.putItem(testItem2, [100,100,100])
+        self.assertEqual(len(testbin.items), 1)
+        
+    def test_binCheckDepth(self):
+        """
+        Condition Testing:-
+        Conditions:
+        
+        """
+
+        # Valid item and bin
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (10, 10, 10), 100)
+        testbin.items.append(testItem)
+        unfix_point = [0, 10, 0, 10, 0, 10]
+        self.assertEqual(testbin.checkDepth(unfix_point), 0.0)
+
+
+
+
+
+
+
+
+
 
 
 
