@@ -236,11 +236,121 @@ class TestAux(unittest.TestCase):
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.getVolume(), 6000)
 
+    def test_itemGetMaxArea(self):
+        """
+        Conditional testing:-
+        1 Condition:
+        a = sorted([self.width,self.height,self.depth],reverse=True) if self.updown == True else [self.width,self.height,self.depth]
+        
+        100% path Coverage
+        """
+        # self.updown == True
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        self.assertEqual(testItem.getMaxArea(), 600)
+        
+        # self.updown == False
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
+        self.assertEqual(testItem.getMaxArea(), 200)
 
+    def test_itemGetDimension(self):
+        """
+        Conditional Testing:-
+        7 Conditions:
+        if self.rotation_type == RotationType.RT_WHD
+        if self.rotation_type == RotationType.RT_HWD
+        if self.rotation_type == RotationType.RT_HDW
+        if self.rotation_type == RotationType.RT_DHW
+        if self.rotation_type == RotationType.RT_DWH
+        if self.rotation_type == RotationType.RT_WDH
+        else
+        
+        100% Path Coverage
+        """
+        #if self.rotation_type == RotationType.RT_WHD
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testItem.rotation_type = 0
+        self.assertEqual(testItem.getDimension(), [10,20,30])
+        
+        #if self.rotation_type == RotationType.RT_HWD
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testItem.rotation_type = 1
+        self.assertEqual(testItem.getDimension(), [20,10,30])
+        
+        #if self.rotation_type == RotationType.RT_HDW
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testItem.rotation_type = 2
+        self.assertEqual(testItem.getDimension(), [20,30,10])
+        
+        #if self.rotation_type == RotationType.RT_DHW
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testItem.rotation_type = 3
+        self.assertEqual(testItem.getDimension(), [30,20,10])
+        
+        #if self.rotation_type == RotationType.RT_DWH
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testItem.rotation_type = 4
+        self.assertEqual(testItem.getDimension(), [30,10,20])
+        
+        #if self.rotation_type == RotationType.RT_WDH
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testItem.rotation_type = 5
+        self.assertEqual(testItem.getDimension(), [10,30,20])
+        
+        #else
+        testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
+        testItem.rotation_type = 6
+        self.assertEqual(testItem.getDimension(), [])
 
+    #                     #
+    #  Bin Class Methods  #
+    #                     #
 
+    # BB Done
+    def test_binConstructor(self):
+        """
+        Conditional testing:-
+        No Conditions
+        
+        100% Path Coverage
+        """
 
-
+        # Using default values for corner and put_type
+        testbin = Bin(1, [100,200,100], 5000)
+        self.assertEqual(testbin.partno, 1)
+        self.assertEqual(testbin.width, 100)
+        self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.depth, 100)
+        self.assertEqual(testbin.max_weight, 5000)
+        self.assertEqual(testbin.corner, 0)
+        self.assertEqual(testbin.put_type, 1)
+        self.assertEqual(testbin.fit_items.tolist(), [[0, 100, 0, 200, 0, 0]])
+            # Attributes not affected by constructor
+        self.assertEqual(testbin.items, [])
+        self.assertEqual(testbin.unfitted_items, [])
+        self.assertEqual(testbin.number_of_decimals, 0)
+        self.assertEqual(testbin.fix_point, False)
+        self.assertEqual(testbin.check_stable, False)
+        self.assertEqual(testbin.support_surface_ratio, 0)
+        self.assertEqual(testbin.gravity, [])
+        
+        # Using custom values for corner and put_type
+        testbin = Bin(1, [100,200,100], 5000, 1, 0)
+        self.assertEqual(testbin.partno, 1)
+        self.assertEqual(testbin.width, 100)
+        self.assertEqual(testbin.height, 200)
+        self.assertEqual(testbin.depth, 100)
+        self.assertEqual(testbin.max_weight, 5000)
+        self.assertEqual(testbin.corner, 1)
+        self.assertEqual(testbin.put_type, 0)
+        self.assertEqual(testbin.fit_items.tolist(), [[0, 100, 0, 200, 0, 0]])
+            # Attributes not affected by constructor
+        self.assertEqual(testbin.items, [])
+        self.assertEqual(testbin.unfitted_items, [])
+        self.assertEqual(testbin.number_of_decimals, 0)
+        self.assertEqual(testbin.fix_point, False)
+        self.assertEqual(testbin.check_stable, False)
+        self.assertEqual(testbin.support_surface_ratio, 0)
+        self.assertEqual(testbin.gravity, [])
 
 
 
