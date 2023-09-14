@@ -15,17 +15,6 @@ START_POSITION = [0, 0, 0]
 class Item:
 
     def __init__(self, partno,name,typeof, WHD, weight, level, loadbear, updown, color):
-        ''' 
-        partno  - Unique id of item
-        name    - name/type of item, i.e "Brush"
-        typeof  - cube or cylinder
-        WHD     - Width, height, depth in that order
-        weight  - Item weight
-        level   - Priority
-        loadbear- loadbearing priority, higher priority = more likely to be at the bottom
-        updown  - (boolean) Whether or not the item can be placed upside down
-        color   - color of the item
-        '''
         self.partno = partno
         self.name = name
         self.typeof = typeof
@@ -101,7 +90,6 @@ class Item:
             dimension = []
 
         return dimension
-
 
 
 class Bin:
@@ -499,7 +487,6 @@ class Packer:
             bin.unfitted_items.append(item)
 
 
-    # We shouldn't really use this
     def sortBinding(self,bin):
         ''' sorted by binding '''
         """
