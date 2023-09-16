@@ -8,10 +8,11 @@ Main Program Responsibilities:
 2. Allow user to select 3DBP Solution Algorithm
 """
 # Imports
-import random
 from cuboids import Container, SKU
-from ui import Input_Window
-from program import Option1_input
+from ui import Main_Window
+
+"""
+Old Code
 
 class Warehouse():
 
@@ -25,15 +26,12 @@ class Warehouse():
    def set_random_seed(self, seed):
       self.random_seed = seed
 
-   """
    # To Do - Warehouse Containers can have different fragility class, categories, and max_weight.
    # Need to see how to standardize and regulate input better.
 
    def spawn_containers(self, quantity, length, width, height, fragile, category, max_weight):
       for i in range(quantity):
          self.containers += Container(length, width, height, fragile, category, max_weight)
-   """
-
 
 # Capture Input
 def handle_input():
@@ -51,6 +49,7 @@ def handle_input():
       flag = False
 
    return flag
+"""
 
 # Print Menu
 def print_menu():
@@ -60,25 +59,22 @@ def print_menu():
    print("1. Back Bottom-Left Fill Heuristic - Genetic Algorithm")
    print("2. Corner To Center Heuristic - Genetic Algorithm")
    """
-   iw = Input_Window()
+
+   # Create Main Window
+   iw = Main_Window()
 
    # Retrieve Data from Input Window
-   print("Data Retrieved")
-   r_seed, no_sku, batch_size, approach = iw.get_data()
+   print("Data That was Retrieved: ")
+   approach = iw.get_data()
 
    # Invoke relevant Subroutines 
-   if approach == 'Back Bottom Left Fill':
-      pass
-   elif approach == 'Best Match Fill':
-      pass
-   
+   # Master Subroutine Called Here.
     
-   return data
+   return approach
 
 
 # Main
 def main():
-   flag = False
    
    # Welcome Message
    print("==================================================================")
@@ -87,8 +83,7 @@ def main():
 
    # Input Menu
    data = print_menu()
-   random_seed = data[0]
-   print(random_seed)
+   print(data)
 
    return None
 
