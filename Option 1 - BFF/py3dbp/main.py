@@ -628,7 +628,7 @@ class Packer:
         return result
 
 
-    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS, Variation = [True, False]):
+    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS):
         '''pack master func '''
 
         """
@@ -640,9 +640,10 @@ class Packer:
         support_surface_ratio=0.75          - (not sure) set support surface ratio
         binding                             - make a set of items.
         number_of_decimals                  - number of decimals for formating values
-
-        Variation  - [gravityCenter, distribute_items]
         """
+        if self.bins == []:
+            raise ValueError("Must have atleast 1 bin")
+
         # format bins
         for bin in self.bins:
             bin.formatNumbers(number_of_decimals)
@@ -687,20 +688,18 @@ class Packer:
                     self.pack2Bin(bin, item,fix_point,check_stable,support_surface_ratio)
             
             # Deviation Of Cargo Gravity Center
-            if not Variation[0]:
-                self.bins[idx].gravity = self.gravityCenter(bin)
+            self.bins[idx].gravity = self.gravityCenter(bin)
 
-            if not Variation[1]:
-                if distribute_items :
-                    # loop through each item in the bin
-                    for bitem in bin.items:
-                        no = bitem.partno
-                        # loop through items in this packer class
-                        for item in self.items :
-                            if item.partno == no :
-                                # remove duplicates
-                                self.items.remove(item)
-                                break
+            if distribute_items :
+                # loop through each item in the bin
+                for bitem in bin.items:
+                    no = bitem.partno
+                    # loop through items in this packer class
+                    for item in self.items :
+                        if item.partno == no :
+                            # remove duplicates
+                            self.items.remove(item)
+                            break
 
         # put order of items
         self.putOrder()
