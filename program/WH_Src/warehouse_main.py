@@ -105,7 +105,7 @@ def main():
       chosen_option, back_flag = run_ms_window(m_title, m_geometry, c_algo)
 
       # Feedback loop
-      while back_flag is True or not exit_flag:
+      while back_flag and not exit_flag:
          c_algo, exit_flag = run_main_window(m_title, m_geometry)
          chosen_option, back_flag = run_ms_window(m_title, m_geometry, c_algo)
 
