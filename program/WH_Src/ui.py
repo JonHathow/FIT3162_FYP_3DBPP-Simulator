@@ -53,6 +53,8 @@ class Parent_Window():
    # Start Window
    def start_window(self):
       self.content.pack()
+      # Place Window at Center of Screen
+      self.window.eval('tk::PlaceWindow . center')
       self.window.mainloop()
       return None
    
@@ -89,7 +91,8 @@ class Main_Window(Parent_Window):
       # Create GUI Window
       super().__init__(title, geometry)
 
-      # Algorithm Dropdow Menu
+      # Algorithm Dropdow Menu and Exit Flag
+      self.exitflag = False
       self.approach_field, self.a_select = self.create_dropdown(algorithms, self.content)
 
       # Initialize Window Content
@@ -119,7 +122,7 @@ class Main_Window(Parent_Window):
       compute_exit = Frame(self.window, pady = 20)
       compute_exit.pack(side = 'bottom')
       compute_button = Button(compute_exit , text = "Continue" , command = self.fetch, bg = "lime")
-      exit_button = Button(compute_exit, text = "Exit" , command = self.destroy_window, bg = "red", fg = "white")
+      exit_button = Button(compute_exit, text = "Exit" , command = self.exit, bg = "red", fg = "white")
       compute_button.pack(side = 'left')
       exit_button.pack(side = 'left', padx = 20)
 
@@ -139,6 +142,15 @@ class Main_Window(Parent_Window):
       # Destroy window mainloop and pass control back to main
       self.destroy_window()
       return None
+   
+   # Get Exit Flag
+   def get_exitflag(self):
+      return self.exitflag
+   
+   # Exit Program
+   def exit(self):
+      self.exitflag = True
+      self.destroy_window()
    
    
 # Master Subroutine Window

@@ -59,11 +59,16 @@ def run_main_window(m_title, m_geometry):
 
    # Retrieve Chosen Algorithm
    data = mw.get_data()
-   return data
+   exit_flag = mw.get_exitflag()
+   return data, exit_flag
 
 # Master Subroutine Window
 def run_ms_window(m_title, m_geometry, c_algo):
    
+   # Initialize Variables
+   chosen_option = None
+   back_flag = False
+
    # Check if algorithm was chosen, else "Exit" was selected.
    if c_algo is not None:
 
@@ -75,12 +80,9 @@ def run_ms_window(m_title, m_geometry, c_algo):
       # Retrieve Data and Status
       chosen_option = msw.get_data()
       back_flag = msw.get_backflag()
-      print("Chosen Option: {}".format(chosen_option))
       print("Back Pressed: {}".format(back_flag))
 
-   else:
-      print("Exit was selected. Thank you for using the simulation.")
-      print("==================================================================")
+   return chosen_option, back_flag
 
 # Main
 def main():
@@ -94,11 +96,26 @@ def main():
    # Run Main Window
    m_title = "Storage Optimization in Automated Fulfilment Centers"
    m_geometry = "500x300"
-   c_algo = run_main_window(m_title, m_geometry)
+   c_algo, exit_flag = run_main_window(m_title, m_geometry)
+   print("Exit: {} ".format(exit_flag))
 
    # Invoke relevant Subroutines
-   run_ms_window(m_title, m_geometry, c_algo)
+   if not exit_flag:
+      
+      chosen_option, back_flag = run_ms_window(m_title, m_geometry, c_algo)
 
+      # Feedback loop
+      while back_flag is True or not exit_flag:
+         c_algo, exit_flag = run_main_window(m_title, m_geometry)
+         chosen_option, back_flag = run_ms_window(m_title, m_geometry, c_algo)
+
+      print("Chosen Option: {}".format(chosen_option))
+      print("Exit: {} ".format(exit_flag))
+
+   if exit_flag:
+      print("Exit was selected. Thank you for using the simulation.")
+      print("==================================================================")
+   
    return None
 
 if __name__ == "__main__":
