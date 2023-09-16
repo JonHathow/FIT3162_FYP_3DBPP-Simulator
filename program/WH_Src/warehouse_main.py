@@ -51,7 +51,7 @@ def handle_input():
    return flag
 """
 # Main Window
-def main_window(m_title, m_geometry):
+def run_main_window(m_title, m_geometry):
 
    # Create Main Window
    m_algorithms = ["Option 1 - Back Bottom Left Fill", "Option 2 - Best Match Fill"] # Can add more options here
@@ -59,7 +59,28 @@ def main_window(m_title, m_geometry):
 
    # Retrieve Chosen Algorithm
    data = mw.get_data()
-   return data[0]
+   return data
+
+# Master Subroutine Window
+def run_ms_window(m_title, m_geometry, c_algo):
+   
+   # Check if algorithm was chosen, else "Exit" was selected.
+   if c_algo is not None:
+
+      # Initialize Master Subroutine Window (MSW)
+      print("Chosen Algorithm {}".format(c_algo))
+      s_options = ["1. Create New Box (SKU)", "2. Create New Bin", "3. Load Existing Box (SKU)", "4. Load Existing Bin"] 
+      msw = MS_Window(m_title, m_geometry, c_algo, s_options)
+
+      # Retrieve Data and Status
+      chosen_option = msw.get_data()
+      back_flag = msw.get_backflag()
+      print("Chosen Option: {}".format(chosen_option))
+      print("Back Pressed: {}".format(back_flag))
+
+   else:
+      print("Exit was selected. Thank you for using the simulation.")
+      print("==================================================================")
 
 # Main
 def main():
@@ -68,16 +89,15 @@ def main():
    print("==================================================================")
    print("Welcome to Warehouse simulation for Storage Optimization in Automated Fulfillment Centers.")
    print("Problem To Simulate: 3 Dimensional Bin Packing Problem")
+   print("------------------------------------------------------------------")
 
    # Run Main Window
    m_title = "Storage Optimization in Automated Fulfilment Centers"
    m_geometry = "500x300"
-   c_algo = main_window(m_title, m_geometry)
-   print(c_algo)
+   c_algo = run_main_window(m_title, m_geometry)
 
    # Invoke relevant Subroutines
-   s_options = ["1. Create New Box (SKU)", "2. Create New Bin", "3. Load Existing Box (SKU)", "Load Existing Bin"] 
-   # sw = MS_Window(m_title, m_geometry, c_algo, s_options)
+   run_ms_window(m_title, m_geometry, c_algo)
 
    return None
 

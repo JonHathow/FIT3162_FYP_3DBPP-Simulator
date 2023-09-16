@@ -28,7 +28,7 @@ class Parent_Window():
       self.window = Tk()
       self.window.title(title)
       self.window.geometry(geometry)
-      self.data = []
+      self.data = None
       
       # Frame for Center Content - Grid Layout
       self.content = Frame(self.window)
@@ -52,6 +52,7 @@ class Parent_Window():
    #--- Utility Methods ---#
    # Start Window
    def start_window(self):
+      self.content.pack()
       self.window.mainloop()
       return None
    
@@ -91,7 +92,7 @@ class Main_Window(Parent_Window):
       # Algorithm Dropdow Menu
       self.approach_field, self.a_select = self.create_dropdown(algorithms, self.content)
 
-      # Initialize Window Content - Method Override
+      # Initialize Window Content
       self.initialize_content()
       return None
 
@@ -101,14 +102,18 @@ class Main_Window(Parent_Window):
       # Call Super - Method Override
       super().initialize_content()
 
+      # ----- Content Frame ----- #
       # Heading Label
       heading = Label(self.content, text="Warehouse 3DBPP Simulator", font=("Arial", 20), pady = 10)
-      heading.grid(row=0, column=1)
+      heading.grid(row=0, column=0)
+      guide = Label(self.content, text="Select a Solution Algorithm to Continue", font=("Arial", 15))
+      guide.grid(row=1, column=0)
    
       # Approach Label
-      approach = Label(self.content, text="Approach", padx = 10, pady = 20)
-      approach.grid(row=1, column=0)
-      self.approach_field.grid(row=1, column=1, ipadx="100")
+      # Comment: First Column Size was mad big by "Guide" variable. Hence, other columns are pushed to the side.
+      # approach = Label(self.content, text="Approach")
+      # approach.grid(row=2, column=0)
+      self.approach_field.grid(row=2, column=0, pady = "10")
 
       # Buttons - Continue and Clear
       compute_exit = Frame(self.window, pady = 20)
@@ -122,15 +127,14 @@ class Main_Window(Parent_Window):
       self.start_window()
       return None
    
-   # Fetch Algorithm
+   # Fetch Algorithm - Override
    def fetch(self):
 
       # Method Override
       super().fetch()
 
       # Fetch Data from window
-      approach = self.a_select.get()
-      self.data = [approach]
+      self.data = self.a_select.get()
 
       # Destroy window mainloop and pass control back to main
       self.destroy_window()
@@ -147,16 +151,16 @@ class MS_Window(Parent_Window):
       # Create GUI Window
       super().__init__(title, geometry)
 
-      # Unique Variables
+      # Chosen Algorithm and Back Status
       self.c_algorithm = chosen_algorithm
       self.backflag = False
 
       # Options Dropdow Menu
-      self.options_field, self.o_select = self.create_dropdown(options, self.content)
+      self.options_frame = Frame(self.window)
+      self.options_field, self.o_select = self.create_dropdown(options, self.options_frame)
 
-      # Start input window
-      self.content.pack()
-      self.start_window()
+      # Initialize Window Content
+      self.initialize_content()
       return None
    
    # Create Window Content
@@ -165,18 +169,21 @@ class MS_Window(Parent_Window):
       # Call Super - Method Override
       super().initialize_content()
 
+      # ----- Content Frame ----- #
       # Heading Label
-      heading = Label(self.content, text="Chosen Algorithm", font=("Arial", 20), pady = 10)
+      heading = Label(self.content, text="Chosen Algorithm:", font=("Arial", 20), pady = 10)
       heading.grid(row=0, column=0)
 
       # Chosen Algorithm (From Main Window)
-      c_algorithm = Label(self.content, text=self.c_algorithm, font=("Arial", 18), pady = 10)
+      c_algorithm = Label(self.content, text=self.c_algorithm, font=("Arial", 15), bg = "Yellow")
       c_algorithm.grid(row=1, column=0)
    
+      # ----- Options Frame ----- #
       # Option Label
-      approach = Label(self.content, text="Option", padx = 10, pady = 20)
-      approach.grid(row=2, column=0)
-      self.options_field.grid(row=1, column=1, ipadx="100")
+      options_heading = Label(self.options_frame, text="Select Option:", padx = 10, pady = 20)
+      options_heading.grid(row=0, column=0)
+      self.options_field.grid(row=0, column=1, padx=10)
+      self.options_frame.pack()
 
       # Buttons - Compute and Back
       compute_exit = Frame(self.window, pady = 20)
@@ -197,7 +204,20 @@ class MS_Window(Parent_Window):
    
    def back(self):
       self.backflag = True
-      self.destroy_window
+      self.destroy_window()
+      return None
+   
+   # Fetch Algorithm - Override
+   def fetch(self):
+
+      # Method Override
+      super().fetch()
+
+      # Fetch Data from window
+      self.data = self.o_select.get()
+
+      # Destroy window mainloop and pass control back to main
+      self.destroy_window()
       return None
    
 
