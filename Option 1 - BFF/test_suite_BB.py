@@ -1110,13 +1110,13 @@ class TestAux(unittest.TestCase):
                                         # Positive Cases #
                                         #                #
 
-        # Adding 1 Bin
+        # Adding 1 Item
         testPacker = Packer()
         testItem = Item("testitem","test","cube", [10,30,30], 25, 2, 400, True, "orange")
         testPacker.addItem(testItem)
         self.assertEqual(len(testPacker.items), 1)
 
-        # Adding multiple bins
+        # Adding multiple Item
         testPacker = Packer()
         testItem1 = Item("testitem1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
         testItem2 = Item("testitem2","test","cube", [1,1,1], 5, 2, 20, True, "blue")
@@ -1128,7 +1128,7 @@ class TestAux(unittest.TestCase):
                                         # Negative Cases #
                                         #                #
 
-        # Adding invalid bin
+        # Adding invalid Item
         testPacker = Packer()
         testPacker.addItem("Not an Item")
         self.assertEqual(len(testPacker.items), 1)

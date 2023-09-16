@@ -420,6 +420,7 @@ class TestAux(unittest.TestCase):
         testbin.putItem(testItem3, [100,100,100])
         self.assertEqual(testbin.getTotalWeight(), 46)
 
+    # Delayed
     def test_binPutItem(self):
         """
         Conditional Testing:-
@@ -528,20 +529,314 @@ class TestAux(unittest.TestCase):
     def test_binCheckDepth(self):
         """
         Condition Testing:-
-        Conditions:
-        
+        1 Condition:
+        if len(x_bottom & x_top) != 0 and len(y_bottom & y_top) != 0 :
+
+        Path Coverage Testing:-
+        100%
         """
 
-        # Valid item and bin
+        """
+        if len(x_bottom & x_top) != 0 and len(y_bottom & y_top) != 0 :
+        
+        for j in self.fit_items:
+        x_bottom = set([i for i in range(int(j[0]),int(j[1]))]) # creates a list of every number from j[0] to j[1]
+        x_top = set([i for i in range(int(unfix_point[0]),int(unfix_point[1]))])
+        y_bottom = set([i for i in range(int(j[2]),int(j[3]))]) # creates a list of every number from j[2] to j[3]
+        y_top = set([i for i in range(int(unfix_point[2]),int(unfix_point[3]))])
+
+        """
+
+        # True, True
         testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
         testbin = Bin(2, (10, 10, 10), 100)
         testbin.items.append(testItem)
         unfix_point = [0, 10, 0, 10, 0, 10]
         self.assertEqual(testbin.checkDepth(unfix_point), 0.0)
 
+        # True, False
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (10, 0, 10), 100)
+        testbin.items.append(testItem)
+        unfix_point = [0, 10, 0, 0, 0, 10]
+        self.assertEqual(testbin.checkDepth(unfix_point), 0.0)
 
+        # False, True
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (0, 10, 10), 100)
+        testbin.items.append(testItem)
+        unfix_point = [0, 0, 0, 10, 0, 10]
+        self.assertEqual(testbin.checkDepth(unfix_point), 0.0)
 
+        # False, False
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (0, 0, 10), 100)
+        testbin.items.append(testItem)
+        unfix_point = [0, 0, 0, 0, 0, 10]
+        self.assertEqual(testbin.checkDepth(unfix_point), 0.0)
 
+    def test_binCheckWidth(self):
+        """
+        Condition Testing:-
+        1 Condition:
+        if len(z_bottom & z_top) != 0 and len(y_bottom & y_top) != 0 :
+
+        Path Coverage Testing:-
+        100%
+        """
+
+        """
+        if len(z_bottom & z_top) != 0 and len(y_bottom & y_top) != 0 :
+        
+        for j in self.fit_items:
+        z_bottom = set([i for i in range(int(j[4]),int(j[5]))])
+        z_top = set([i for i in range(int(unfix_point[4]),int(unfix_point[5]))])
+        y_bottom = set([i for i in range(int(j[2]),int(j[3]))])
+        y_top = set([i for i in range(int(unfix_point[2]),int(unfix_point[3]))])
+
+        """
+
+        # True, True
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (10, 10, 10), 100)
+        testbin.items.append(testItem)
+        testbin.fit_items = np.array([[0,10,0, 10,0,10]])
+        unfix_point = [0, 10, 0, 10, 0, 10]
+        self.assertEqual(testbin.checkWidth(unfix_point), 0.0)
+
+        # True, False
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (10, 0, 10), 100)
+        testbin.items.append(testItem)
+        testbin.fit_items = np.array([[0,10,0, 10,0,10]])
+        unfix_point = [0, 10, 0, 0, 0, 10]
+        self.assertEqual(testbin.checkWidth(unfix_point), 0.0)
+
+        # False, True
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (0, 10, 10), 100)
+        testbin.items.append(testItem)
+        unfix_point = [0, 0, 0, 10, 0, 0]
+        self.assertEqual(testbin.checkWidth(unfix_point), 0.0)
+
+        # False, False
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (0, 0, 10), 100)
+        testbin.items.append(testItem)
+        unfix_point = [0, 0, 0, 0, 0, 0]
+        self.assertEqual(testbin.checkWidth(unfix_point), 0.0)
+
+    def test_binCheckWidth(self):
+        """
+        Condition Testing:-
+        1 Condition:
+        if len(x_bottom & x_top) != 0 and len(z_bottom & z_top) != 0 :
+
+        Path Coverage Testing:-
+        100%
+        """
+
+        """
+        if len(z_bottom & z_top) != 0 and len(y_bottom & y_top) != 0 :
+        
+        for j in self.fit_items:
+        x_bottom = set([i for i in range(int(j[0]),int(j[1]))])
+        x_top = set([i for i in range(int(unfix_point[0]),int(unfix_point[1]))])
+        z_bottom = set([i for i in range(int(j[4]),int(j[5]))])
+        z_top = set([i for i in range(int(unfix_point[4]),int(unfix_point[5]))])
+        """
+
+        # True, True
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (10, 10, 10), 100)
+        testbin.items.append(testItem)
+        testbin.fit_items = np.array([[0,10,0, 10,0,10]])
+        unfix_point = [0, 10, 0, 10, 0, 10]
+        self.assertEqual(testbin.checkWidth(unfix_point), 0.0)
+
+        # True, False
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (10, 0, 10), 100)
+        testbin.items.append(testItem)
+        unfix_point = [0, 10, 0, 0, 0, 0]
+        self.assertEqual(testbin.checkWidth(unfix_point), 0.0)
+
+        # False, True
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (0, 10, 10), 100)
+        testbin.items.append(testItem)
+        testbin.fit_items = np.array([[0,10,0, 10,0,10]])
+        unfix_point = [0, 0, 0, 10, 0, 0]
+        self.assertEqual(testbin.checkWidth(unfix_point), 0.0)
+
+        # False, False
+        testItem = Item(1, 'Item1', 'cube', (5, 5, 5), 1.0, 1, 50, True, 'red')
+        testbin = Bin(2, (0, 0, 10), 100)
+        testbin.items.append(testItem)
+        unfix_point = [0, 0, 0, 0, 0, 0]
+        self.assertEqual(testbin.checkWidth(unfix_point), 0.0)
+
+    def test_bin_addCorner(self):
+        """
+        Conditional Testing:-
+        1 Condition:
+        if self.corner != 0 :
+
+        Path coverage testing:-
+        100%
+        """
+        # self.corner == 0 :
+        testbin = Bin(2, (10, 10, 10), 100, 0, 1)
+        testbin.addCorner()
+        self.assertEqual(testbin.addCorner(), None)
+
+        # self.corner == 1 :
+        testbin = Bin(2, (10, 10, 10), 100, 1, 1)
+        testbin.addCorner()
+        self.assertEqual(len(testbin.addCorner()), 8)
+
+    def test_bin_putCorner(self):
+        """
+        Conditional testing:-
+        0 Conditions:
+
+        Path coverage testing:-
+        100%
+        """
+        # Valid bin and corner creation
+        testbin = Bin(1, (10, 10, 10), 100, 2)
+        corners = testbin.addCorner()
+        for corner in corners:
+            testbin.putCorner(0, corner)
+        self.assertEqual(len(testbin.items), 8)
+        for count in range(len(corners)):
+            self.assertEqual(testbin.items[count], corners[count])
+
+    def test_bin_clearBin(self):
+        """
+        Conditional Testing:-
+        0 Conditions:
+
+        Path Coverage Testing:-
+        100%
+        """
+
+        # Valid bin and items
+        testitem1 = Item(1, 'testitem1', 'cube', (4, 4, 4), 1.0, 1, 50, True, 'red')
+        testitem2 = Item(2, 'testitem2', 'cube', (3, 3, 3), 1.0, 1, 50, True, 'blue')
+        testbin = Bin(3, (100, 100, 100), 100)
+        testitem1.formatNumbers(2)
+        testitem2.formatNumbers(2)
+        testbin.putItem(testitem1, [0,0,0])
+        testbin.putItem(testitem2, [5,5,5])
+        self.assertEqual(len(testbin.items), 2)
+        testbin.clearBin()
+        self.assertEqual(len(testbin.items), 0)
+
+    #                        #
+    #  Packer Class Methods  #
+    #                        #
+
+    def test_packer_constructor(self):
+        """
+        Conditional Testing:-
+        0 Conditions:
+
+        Path Coverage Testing:
+        100%
+        """
+        testPacker = Packer()
+        self.assertEqual(testPacker.bins, [])
+        self.assertEqual(testPacker.items, [])
+        self.assertEqual(testPacker.unfit_items, [])
+        self.assertEqual(testPacker.total_items, 0)
+        self.assertEqual(testPacker.binding, [])
+
+    def test_packer_addBin(self):
+        """
+        Conditional Testing:-
+        0 Conditions:
+
+        Path Coverage Testing:-
+        100%
+        """
+        # Adding 1 Bin
+        testPacker = Packer()
+        testbin = Bin("testbin", [100,200,100], 5000, 1, 0)
+        testPacker.addBin(testbin)
+        self.assertEqual(len(testPacker.bins), 1)
+
+    def test_packer_addItem(self):
+        """
+        Conditional Testing:-
+        0 Conditions:
+
+        Path Coverage Testing:-
+        100%
+        """
+        # Adding 1 Item
+        testPacker = Packer()
+        testItem = Item("testitem","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testPacker.addItem(testItem)
+        self.assertEqual(len(testPacker.items), 1)
+        self.assertEqual(testPacker.total_items, 1)
+
+    # Delayed
+    def test_packer_pack2Bin(self):
+        """
+        Conditional Testing:-
+        0 Conditions:
+
+        Path Coverage Testing:-
+        100%
+        """
+        pass
+
+        # Delayed
+   
+   # Delayed
+    def test_packer_sortBinding(self):
+        """
+        Conditional Testing:-
+        0 Conditions:
+
+        Path Coverage Testing:-
+        100%
+        """
+        pass
+
+    # Delayed
+    def test_packer_putOrder(self):
+        """
+        Conditional Testing:-
+        0 Conditions:
+
+        Path Coverage Testing:-
+        100%
+        """
+        pass
+
+    # Delayed
+    def test_packer_gravityCenter(self):
+        """
+        Conditional Testing:-
+        0 Conditions:
+
+        Path Coverage Testing:-
+        100%
+        """
+        pass
+
+    # Delayed
+    def test_packer_pack(self):
+        """
+        Conditional Testing:-
+        0 Conditions:
+
+        Path Coverage Testing:-
+        100%
+        """
+        pass
 
 
 
