@@ -423,8 +423,7 @@ class Packer:
         return self.items.append(item)
 
 
-    # Possible changes
-    def pack2Bin(self, bin, item,fix_point,check_stable,support_surface_ratio, variation = [False]):
+    def pack2Bin(self, bin, item,fix_point,check_stable,support_surface_ratio):
         ''' pack item to bin '''
         # When true, exit for loop
         fitted = False
@@ -441,15 +440,7 @@ class Packer:
                 bin.putCorner(i,corner_lst[i])
 
         # Could make this if not elif
-        elif not variation[0] and not bin.items:
-            response = bin.putItem(item, item.position)
-
-            # if item cant be put in bin, put in unfitted items list
-            if not response:
-                bin.unfitted_items.append(item)
-            return
-        
-        if variation[0] and not bin.items:
+        elif not bin.items:
             response = bin.putItem(item, item.position)
 
             # if item cant be put in bin, put in unfitted items list
@@ -543,7 +534,6 @@ class Packer:
         return
 
 
-    # very confusing, try to avoid using?
     def gravityCenter(self,bin):
         ''' 
         Deviation Of Cargo gravity distribution

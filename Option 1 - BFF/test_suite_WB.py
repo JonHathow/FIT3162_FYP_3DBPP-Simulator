@@ -781,20 +781,177 @@ class TestAux(unittest.TestCase):
         self.assertEqual(len(testPacker.items), 1)
         self.assertEqual(testPacker.total_items, 1)
 
-    # Delayed
     def test_packer_pack2Bin(self):
         """
         Conditional Testing:-
-        0 Conditions:
-
+        6 Conditions:
+        if bin.corner != 0 and not bin.items:
+        elif not bin.items:
+            if not response:
+        if bin.putItem(item, pivot, axis):
+        if fitted:
+        if not fitted:
+        
         Path Coverage Testing:-
         100%
         """
-        pass
 
-        # Delayed
-   
-   # Delayed
+
+        # Test Case 1: bin has no items, corner exists, and item can be placed.
+        """
+        if bin.corner != 0 and not bin.items:              True, True
+        elif not bin.items:                                -
+            if not response:                               -
+        if bin.putItem(item, pivot, axis):                 True
+        if fitted:                                         True
+        """
+        testPacker = Packer()
+        testbin = Bin(1, (50, 50, 50), 10, 2, 1)
+        testitem = Item(1, "testitem", "cube", (5, 5, 5), 5, 1, 1, False, "red")
+        testitem.formatNumbers(2)
+        testbin.formatNumbers(2)
+        testPacker.pack2Bin(testbin, testitem, True, True, support_surface_ratio=0.75)
+        self.assertEqual(len(testbin.unfitted_items), 0)
+        self.assertEqual(len(testbin.items), 9)
+
+        # Test Case 2: bin has items, corner exists, and item can be placed.
+        """
+        if bin.corner != 0 and not bin.items:              False, False
+        elif not bin.items:                                False
+            if not response:                               -
+        if bin.putItem(item, pivot, axis):                 False
+        if fitted:                                         False
+        if not fitted:                                     True
+        """
+        testPacker = Packer()
+        testbin = Bin(1, (50, 50, 50), 10, 2, 1)
+        testitem1 = Item(1, "testitem", "cube", (5, 5, 5), 5, 1, 1, False, "red")
+        testitem2 = Item(2, "testitem", "cube", (5, 5, 5), 5, 1, 1, False, "red")
+        testitem1.formatNumbers(2)
+        testitem2.formatNumbers(2)
+        testbin.formatNumbers(2)
+        testbin.putItem(testitem1, [0,0,0])
+        testPacker.pack2Bin(testbin, testitem2, True, True, support_surface_ratio=0.75)
+        self.assertEqual(len(testbin.unfitted_items), 0)
+        self.assertEqual(len(testbin.items), 2)
+
+        # Test Case 3: bin has no items, corner doesn't exists, and item can be placed.
+        """
+        if bin.corner != 0 and not bin.items:              False, True
+        elif not bin.items:                                True
+            if not response:                               True
+        if bin.putItem(item, pivot, axis):                 False
+        if fitted:                                         False
+        if not fitted:                                     False
+        """
+        testPacker = Packer()
+        testbin = Bin(1, (50, 50, 50), 10, 0, 1)
+        testitem = Item(1, "testitem", "cube", (5, 5, 5), 5, 1, 1, False, "red")
+        testitem.formatNumbers(2)
+        testbin.formatNumbers(2)
+        testPacker.pack2Bin(testbin, testitem, True, True, support_surface_ratio=0.75)
+        self.assertEqual(len(testbin.unfitted_items), 0)
+        self.assertEqual(len(testbin.items), 1)
+
+        # Test Case 4: bin has items, corner doesn't exists, and item can be placed.
+        """
+        if bin.corner != 0 and not bin.items:              False, False
+        elif not bin.items:                                False
+            if not response:                               -
+        if bin.putItem(item, pivot, axis):                 True
+        if fitted:                                         True
+        if not fitted:                                     False
+        """
+        testPacker = Packer()
+        testbin = Bin(1, (50, 50, 50), 10, 0, 1)
+        testitem1 = Item(1, "testitem", "cube", (5, 5, 5), 5, 1, 1, False, "red")
+        testitem2 = Item(2, "testitem", "cube", (5, 5, 5), 5, 1, 1, False, "red")
+        testitem1.formatNumbers(2)
+        testitem2.formatNumbers(2)
+        testbin.formatNumbers(2)
+        testbin.putItem(testitem1, [0,0,0])
+        testPacker.pack2Bin(testbin, testitem2, True, True, support_surface_ratio=0.75)
+        self.assertEqual(len(testbin.unfitted_items), 0)
+        self.assertEqual(len(testbin.items), 2)
+
+        # Test Case 5: bin has no items, corner exists, and item can't be placed.
+        """
+        if bin.corner != 0 and not bin.items:              True, True
+        elif not bin.items:                                -
+            if not response:                               -
+        if bin.putItem(item, pivot, axis):                 False
+        if fitted:                                         False
+        if not fitted:                                     True
+        """
+        testPacker = Packer()
+        testbin = Bin(1, (50, 50, 50), 10, 2, 1)
+        testitem = Item(1, "testitem", "cube", (55, 5, 5), 5, 1, 1, False, "red")
+        testitem.formatNumbers(2)
+        testbin.formatNumbers(2)
+        testPacker.pack2Bin(testbin, testitem, True, True, support_surface_ratio=0.75)
+        self.assertEqual(len(testbin.unfitted_items), 1)
+        self.assertEqual(len(testbin.items), 8)
+
+        # Test Case 6: bin has items, corner exists, and item can't be placed.
+        """
+        if bin.corner != 0 and not bin.items:              True, False
+        elif not bin.items:                                False
+            if not response:                               -
+        if bin.putItem(item, pivot, axis):                 False
+        if fitted:                                         False
+        if not fitted:                                     True
+        """
+        testPacker = Packer()
+        testbin = Bin(1, (50, 50, 50), 10, 2, 1)
+        testitem1 = Item(1, "testitem", "cube", (5, 5, 5), 5, 1, 1, False, "red")
+        testitem2 = Item(2, "testitem", "cube", (55, 5, 5), 5, 1, 1, False, "red")
+        testitem1.formatNumbers(2)
+        testitem2.formatNumbers(2)
+        testbin.formatNumbers(2)
+        testbin.putItem(testitem1, [0,0,0])
+        testPacker.pack2Bin(testbin, testitem2, True, True, support_surface_ratio=0.75)
+        self.assertEqual(len(testbin.unfitted_items), 1)
+        self.assertEqual(len(testbin.items), 1)
+
+        # Test Case 7: bin has no items, corner doesn't exists, and item can't be placed.
+        """
+        if bin.corner != 0 and not bin.items:              False, True
+        elif not bin.items:                                True
+            if not response:                               False
+        if bin.putItem(item, pivot, axis):                 -
+        if fitted:                                         -
+        if not fitted:                                     -
+        """
+        testPacker = Packer()
+        testbin = Bin(1, (50, 50, 50), 10, 0, 1)
+        testitem = Item(1, "testitem", "cube", (55, 5, 5), 5, 1, 1, False, "red")
+        testitem.formatNumbers(2)
+        testbin.formatNumbers(2)
+        testPacker.pack2Bin(testbin, testitem, True, True, support_surface_ratio=0.75)
+        self.assertEqual(len(testbin.unfitted_items), 1)
+        self.assertEqual(len(testbin.items), 0)
+
+        # Test Case 8: bin has items, corner doesn't exists, and item cannot be placed.
+        """
+        if bin.corner != 0 and not bin.items:              False, False
+        elif not bin.items:                                True
+            if not response:                               False
+        if bin.putItem(item, pivot, axis):                 -
+        if fitted:                                         -
+        if not fitted:                                     -
+        """
+        testPacker = Packer()
+        testbin = Bin(1, (50, 50, 50), 10, 0, 1)
+        testitem1 = Item(1, "testitem", "cube", (5, 5, 5), 5, 1, 1, False, "red")
+        testitem2 = Item(2, "testitem", "cube", (55, 5, 5), 5, 1, 1, False, "red")
+        testitem1.formatNumbers(2)
+        testitem2.formatNumbers(2)
+        testbin.formatNumbers(2)
+        testbin.putItem(testitem1, [0,0,0])
+        testPacker.pack2Bin(testbin, testitem2, True, True, support_surface_ratio=0.75)
+        self.assertEqual(len(testbin.unfitted_items), 1)
+        self.assertEqual(len(testbin.items), 1)
+
     def test_packer_sortBinding(self):
         """
         Conditional Testing:-
@@ -803,41 +960,383 @@ class TestAux(unittest.TestCase):
         Path Coverage Testing:-
         100%
         """
-        pass
+        # Valid binding
+        testPacker = Packer()
+        testBin = Bin("B001", WHD=[10, 20, 30], max_weight=100)
+        testItem1 = Item("1", "shoe", 'cube', (85, 60, 60), 10, 1, 100, True, 'red')
+        testItem2 = Item("2", "book", 'cube', (85, 60, 60), 10, 1, 100, True, 'red')
+        testItem3 = Item("3", "hat", 'cube', (85, 60, 60), 10, 1, 100, True, 'red')
+        testItem4 = Item("4", "gloves", 'cube', (85, 60, 60), 10, 1, 100, True, 'red')
+        testPacker.items = [testItem1, testItem2, testItem3, testItem4]
+        testPacker.binding = [("shoe", "book")]
+        testPacker.sortBinding(testBin)
+        item_list = []
+        for i in range(len(testPacker.items)):
+            item_list.append(testPacker.items[i].name)
+        self.assertEqual(item_list,  ['shoe', 'book', 'hat', 'gloves'])
 
-    # Delayed
     def test_packer_putOrder(self):
         """
         Conditional Testing:-
-        0 Conditions:
+        3 Conditions:
+        if i.put_type == 2:
+        elif i.put_type == 1:
+        else :
 
         Path Coverage Testing:-
         100%
         """
-        pass
+        testItem1 = Item("1","testItem1","cube", [5, 5, 5], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","testItem2","cube", [5, 5, 5], 5, 2, 400, True, "red")
+        testItem3 = Item("3","testItem3","cube", [5, 5, 5], 20, 2, 400, True, "blue")
+        testItem1.formatNumbers(2)
+        testItem2.formatNumbers(2)
+        testItem3.formatNumbers(2)
+        testPacker = Packer()
 
-    # Delayed
+        # if i.put_type == 2
+        testBin = Bin("testBin1", [1000,1000,1000], 5000, 1, 1)
+        testPacker.addBin(testBin)
+        testBin.putItem(testItem1, [5, 10, 20])
+        testBin.putItem(testItem2, [500, 500, 500])
+        testBin.putItem(testItem3, [25, 5, 10])
+        testPacker.putOrder()
+        item_lst = []
+        for item in testBin.items:
+            if item.name != 'corner':
+                item_lst.append(item.partno)
+        self.assertEqual(item_lst,["1", "3", "2"])
+
+        # elif i.put_type == 1
+        testBin = Bin("testBin1", [1000,1000,1000], 5000, 1, 2)
+        testPacker.addBin(testBin)
+        testBin.putItem(testItem1, [5, 10, 20])
+        testBin.putItem(testItem2, [500, 500, 500])
+        testBin.putItem(testItem3, [25, 5, 10])
+        testPacker.putOrder()
+        item_lst = []
+        for item in testBin.items:
+            if item.name != 'corner':
+                item_lst.append(item.partno)
+        self.assertEqual(item_lst,["3", "1", "2"])
+
+        # else
+        testBin = Bin("testBin1", [1000,1000,1000], 5000, 1, 3)
+        testPacker.addBin(testBin)
+        testBin.putItem(testItem1, [5, 10, 20])
+        testBin.putItem(testItem2, [500, 500, 500])
+        testBin.putItem(testItem3, [25, 5, 10])
+        testPacker.putOrder()
+        item_lst = []
+        for item in testBin.items:
+            if item.name != 'corner':
+                item_lst.append(item.partno)
+        self.assertEqual(item_lst,["1", "2", "3"])
+
     def test_packer_gravityCenter(self):
         """
         Conditional Testing:-
-        0 Conditions:
+        6 Conditions:
+        if i.rotation_type == 0:
+        elif i.rotation_type == 1:
+        elif i.rotation_type == 2:
+        elif i.rotation_type == 3:
+        elif i.rotation_type == 4:
+        elif i.rotation_type == 5:
+
 
         Path Coverage Testing:-
         100%
         """
-        pass
 
-    # Delayed
+        # rotation_type = 0
+        testPacker = Packer()
+        testBin = Bin("testBin", [300,200,300], 5000, 1, 1)
+        testItem = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testPacker.addBin(testBin)
+        testItem.formatNumbers(2)
+        testBin.putItem(testItem, [0,0,0])
+        testPacker.gravityCenter(testBin)
+        self.assertEqual(testPacker.gravityCenter(testBin), [100.0, 0.0, 0.0, 0.0])
+
+        # rotation_type = 1
+        testPacker = Packer()
+        testBin = Bin("testBin", [300,200,300], 5000, 1, 1)
+        testItem = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem.rotation_type = 1
+        testPacker.addBin(testBin)
+        testItem.formatNumbers(2)
+        testBin.putItem(testItem, [0,0,0])
+        testPacker.gravityCenter(testBin)
+        self.assertEqual(testPacker.gravityCenter(testBin), [100.0, 0.0, 0.0, 0.0])
+
+        # rotation_type = 2
+        testPacker = Packer()
+        testBin = Bin("testBin", [300,200,300], 5000, 1, 1)
+        testItem = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem.rotation_type = 2
+        testPacker.addBin(testBin)
+        testItem.formatNumbers(2)
+        testBin.putItem(testItem, [0,0,0])
+        testPacker.gravityCenter(testBin)
+        self.assertEqual(testPacker.gravityCenter(testBin), [100.0, 0.0, 0.0, 0.0])
+
+        # rotation_type = 3
+        testPacker = Packer()
+        testBin = Bin("testBin", [300,200,300], 5000, 1, 1)
+        testItem = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem.rotation_type = 3
+        testPacker.addBin(testBin)
+        testItem.formatNumbers(2)
+        testBin.putItem(testItem, [0,0,0])
+        testPacker.gravityCenter(testBin)
+        self.assertEqual(testPacker.gravityCenter(testBin), [100.0, 0.0, 0.0, 0.0])
+
+        # rotation_type = 4
+        testPacker = Packer()
+        testBin = Bin("testBin", [300,200,300], 5000, 1, 1)
+        testItem = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem.rotation_type = 4
+        testPacker.addBin(testBin)
+        testItem.formatNumbers(2)
+        testBin.putItem(testItem, [0,0,0])
+        testPacker.gravityCenter(testBin)
+        self.assertEqual(testPacker.gravityCenter(testBin), [100.0, 0.0, 0.0, 0.0])
+
+        # rotation_type = 5
+        testPacker = Packer()
+        testBin = Bin("testBin", [300,200,300], 5000, 1, 1)
+        testItem = Item("1","test","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem.rotation_type = 5
+        testPacker.addBin(testBin)
+        testItem.formatNumbers(2)
+        testBin.putItem(testItem, [0,0,0])
+        testPacker.gravityCenter(testBin)
+        self.assertEqual(testPacker.gravityCenter(testBin), [100.0, 0.0, 0.0, 0.0])
+
+    # unfit item count seems wrong
     def test_packer_pack(self):
         """
         Conditional Testing:-
-        0 Conditions:
+        4 Conditions:
+        if self.bins == []:
+        if binding != []:
+        if distribute_items :
+        if self.items != []
 
         Path Coverage Testing:-
         100%
         """
-        pass
 
+        # print bin items
+        def retStr(bin):
+            res = []
+            for item in bin.items:
+                if item.name != 'corner':
+                    res.append(item.partno)
+            return res
+
+        """
+        if self.bins == []:     True    
+        if binding != []:       -
+        if distribute_items :   -
+        if self.items != []     -
+        """
+        testPacker = Packer()
+        with self.assertRaises(ValueError):
+            testPacker.pack()
+
+        """
+        if self.bins == []:     False    
+        if binding != []:       True
+        if distribute_items :   False
+        if self.items != []     False
+        """
+        testPacker = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+        testBin2 = Bin("testBin2", [1000,2000,3000], 5000, 1, 1)
+        testItem1 = Item("1","apple","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","pen","cube", [500,600,50], 5, 2, 400, True, "red")
+        testItem3 = Item("3","pineapple","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","no","cube", [1200,1200,500], 20, 2, 400, True, "yellow")
+        testPacker.addBin(testBin1)
+        testPacker.addBin(testBin2)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.addItem(testItem3)
+        testPacker.addItem(testItem4)
+        testPacker.pack(False, False, False, False, 0.75, ['no','pen'])
+        self.assertEqual(retStr(testBin1), ['3', '1'])
+        self.assertEqual(retStr(testBin2), ['3', '1', '2', '4'])
+        self.assertEqual(len(testPacker.unfit_items), 4)
+
+        """
+        if self.bins == []:     False    
+        if binding != []:       True
+        if distribute_items :   True
+        if self.items != []     False
+        """
+        testPacker = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+        testBin2 = Bin("testBin2", [1000,2000,3000], 5000, 1, 1)
+        testItem1 = Item("1","apple","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","pen","cube", [500,600,50], 5, 2, 400, True, "red")
+        testItem3 = Item("3","pineapple","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","no","cube", [1200,1200,500], 20, 2, 400, True, "yellow")
+        testPacker.addBin(testBin1)
+        testPacker.addBin(testBin2)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.addItem(testItem3)
+        testPacker.addItem(testItem4)
+        testPacker.pack(False, True, False, False, 0.75, ['no','pen'])
+        self.assertEqual(retStr(testBin1), ['3', '1'])
+        self.assertEqual(retStr(testBin2), ['2', '4'])
+        self.assertEqual(len(testPacker.unfit_items), 2)
+
+        """
+        if self.bins == []:     False    
+        if binding != []:       True
+        if distribute_items :   False
+        if self.items != []     True
+        """
+        testPacker = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+        testBin2 = Bin("testBin2", [1000,2000,3000], 5000, 1, 1)
+        testItem1 = Item("1","apple","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","pen","cube", [500,600,50], 5, 2, 400, True, "red")
+        testItem3 = Item("3","pineapple","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","no","cube", [1200,1200,5000], 20, 2, 400, True, "yellow")
+        testPacker.addBin(testBin1)
+        testPacker.addBin(testBin2)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.addItem(testItem3)
+        testPacker.addItem(testItem4)
+        testPacker.pack(False, False, False, False, 0.75, ['no','pen'])
+        self.assertEqual(retStr(testBin1), ['3', '1'])
+        self.assertEqual(retStr(testBin2), ['3', '1', '2'])
+        self.assertEqual(len(testPacker.unfit_items), 4)
+
+        """
+        if self.bins == []:     False    
+        if binding != []:       True
+        if distribute_items :   True
+        if self.items != []     True
+        """
+        testPacker = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+        testBin2 = Bin("testBin2", [1000,2000,3000], 5000, 1, 1)
+        testItem1 = Item("1","apple","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","pen","cube", [500,600,50], 5, 2, 400, True, "red")
+        testItem3 = Item("3","pineapple","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","no","cube", [1200,1200,5000], 20, 2, 400, True, "yellow")
+        testPacker.addBin(testBin1)
+        testPacker.addBin(testBin2)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.addItem(testItem3)
+        testPacker.addItem(testItem4)
+        testPacker.pack(False, True, False, False, 0.75, ['no','pen'])
+        self.assertEqual(retStr(testBin1), ['3', '1'])
+        self.assertEqual(retStr(testBin2), ['2'])
+        self.assertEqual(len(testPacker.unfit_items), 1)
+
+        """
+        if self.bins == []:     False    
+        if binding != []:       False
+        if distribute_items :   False
+        if self.items != []     False
+        """
+        testPacker = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+        testBin2 = Bin("testBin2", [1000,2000,3000], 5000, 1, 1)
+        testItem1 = Item("1","apple","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","pen","cube", [500,600,50], 5, 2, 400, True, "red")
+        testItem3 = Item("3","pineapple","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","no","cube", [1200,1200,500], 20, 2, 400, True, "yellow")
+        testPacker.addBin(testBin1)
+        testPacker.addBin(testBin2)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.addItem(testItem3)
+        testPacker.addItem(testItem4)
+        testPacker.pack(False, False, False, False, 0.75, [])
+        self.assertEqual(retStr(testBin1), ['3', '1'])
+        self.assertEqual(retStr(testBin2), ['3', '1', '2', '4'])
+        self.assertEqual(len(testPacker.unfit_items), 4)
+
+        """
+        if self.bins == []:     False    
+        if binding != []:       False
+        if distribute_items :   True
+        if self.items != []     False
+        """
+        testPacker = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+        testBin2 = Bin("testBin2", [1000,2000,3000], 5000, 1, 1)
+        testItem1 = Item("1","apple","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","pen","cube", [500,600,50], 5, 2, 400, True, "red")
+        testItem3 = Item("3","pineapple","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","no","cube", [1200,1200,500], 20, 2, 400, True, "yellow")
+        testPacker.addBin(testBin1)
+        testPacker.addBin(testBin2)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.addItem(testItem3)
+        testPacker.addItem(testItem4)
+        testPacker.pack(False, True, False, False, 0.75, [])
+        self.assertEqual(retStr(testBin1), ['3', '1'])
+        self.assertEqual(retStr(testBin2), ['2', '4'])
+        self.assertEqual(len(testPacker.unfit_items), 0)
+
+        """
+        if self.bins == []:     False    
+        if binding != []:       False
+        if distribute_items :   False
+        if self.items != []     True
+        """
+        testPacker = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+        testBin2 = Bin("testBin2", [1000,2000,3000], 5000, 1, 1)
+        testItem1 = Item("1","apple","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","pen","cube", [500,600,50], 5, 2, 400, True, "red")
+        testItem3 = Item("3","pineapple","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","no","cube", [1200,1200,5000], 20, 2, 400, True, "yellow")
+        testPacker.addBin(testBin1)
+        testPacker.addBin(testBin2)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.addItem(testItem3)
+        testPacker.addItem(testItem4)
+        testPacker.pack(False, False, False, False, 0.75, [])
+        self.assertEqual(retStr(testBin1), ['3', '1'])
+        self.assertEqual(retStr(testBin2), ['3', '1', '2'])
+        self.assertEqual(len(testPacker.unfit_items), 4)
+        
+        """
+        if self.bins == []:     False    
+        if binding != []:       False
+        if distribute_items :   True
+        if self.items != []     True
+        """
+        testPacker = Packer()
+        testBin1 = Bin("testBin1", [100,200,100], 5000, 1, 1)
+        testBin2 = Bin("testBin2", [1000,2000,3000], 5000, 1, 1)
+        testItem1 = Item("1","apple","cube", [10,30,30], 25, 2, 400, True, "orange")
+        testItem2 = Item("2","pen","cube", [500,600,50], 5, 2, 400, True, "red")
+        testItem3 = Item("3","pineapple","cube", [23,15,10], 20, 2, 400, True, "blue")
+        testItem4 = Item("4","no","cube", [1200,1200,5000], 20, 2, 400, True, "yellow")
+        testPacker.addBin(testBin1)
+        testPacker.addBin(testBin2)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.addItem(testItem3)
+        testPacker.addItem(testItem4)
+        testPacker.pack(False, True, False, False, 0.75, [])
+        self.assertEqual(retStr(testBin1), ['3', '1'])
+        self.assertEqual(retStr(testBin2), ['2'])
+        self.assertEqual(len(testPacker.unfit_items), 1)
 
 
 
