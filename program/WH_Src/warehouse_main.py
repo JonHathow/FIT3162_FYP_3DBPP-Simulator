@@ -9,7 +9,7 @@ Main Program Responsibilities:
 """
 # Imports
 from cuboids import Container, SKU
-from ui import Main_Window
+from ui import Main_Window, MS_Window
 
 """
 Old Code
@@ -50,28 +50,16 @@ def handle_input():
 
    return flag
 """
-
-# Print Menu
-def print_menu():
-   """
-   print("==================================================================")
-   print("Please select an option (1, 2) to choose your solution algorithm")
-   print("1. Back Bottom-Left Fill Heuristic - Genetic Algorithm")
-   print("2. Corner To Center Heuristic - Genetic Algorithm")
-   """
+# Main Window
+def main_window(m_title, m_geometry):
 
    # Create Main Window
-   iw = Main_Window()
+   m_algorithms = ["Option 1 - Back Bottom Left Fill", "Option 2 - Best Match Fill"] # Can add more options here
+   mw = Main_Window(m_title, m_geometry, m_algorithms)
 
-   # Retrieve Data from Input Window
-   print("Data That was Retrieved: ")
-   approach = iw.get_data()
-
-   # Invoke relevant Subroutines 
-   # Master Subroutine Called Here.
-    
-   return approach
-
+   # Retrieve Chosen Algorithm
+   data = mw.get_data()
+   return data[0]
 
 # Main
 def main():
@@ -81,9 +69,15 @@ def main():
    print("Welcome to Warehouse simulation for Storage Optimization in Automated Fulfillment Centers.")
    print("Problem To Simulate: 3 Dimensional Bin Packing Problem")
 
-   # Input Menu
-   data = print_menu()
-   print(data)
+   # Run Main Window
+   m_title = "Storage Optimization in Automated Fulfilment Centers"
+   m_geometry = "500x300"
+   c_algo = main_window(m_title, m_geometry)
+   print(c_algo)
+
+   # Invoke relevant Subroutines
+   s_options = ["1. Create New Box (SKU)", "2. Create New Bin", "3. Load Existing Box (SKU)", "Load Existing Bin"] 
+   # sw = MS_Window(m_title, m_geometry, c_algo, s_options)
 
    return None
 
