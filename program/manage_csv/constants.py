@@ -1,5 +1,5 @@
 """ Contains various strings and enums used throughout the package and other dependent files. """
-# TODO: Specify units of measurement where relevant.
+# TODO: Evaluate documentation.
 
 from enum import Enum
 
@@ -38,11 +38,13 @@ MENU_INPUT = ("\n1: Generate bin CSV file"
                + "\n2: Generate box CSV file"
                + "\n3: Read from bin CSV file"
                + "\n4: Read from box CSV file"
+               + "\n5: Compute packing and produce output files"
                + "\n0: Exit"
                + "\nRESPONSE: ")
 
 MENU_INVALID = "Invalid menu input.\n"
 MENU_BIN_NOTLOADED = "Bins have not been loaded. Please read from a bin CSV file first!\n"
+MENU_BOX_NOTLOADED = "Boxes have not been loaded. Please read from a box CSV file first!\n"
 MENU_END = "Exiting program...\n"
 
 # Folder paths
@@ -75,6 +77,7 @@ FILE_LASTBIN        = 'lastBinFile.txt'
 FILE_LASTBOX        = 'lastBoxFile.txt'
 FILE_FITTED         = 'outputFitted'
 FILE_UNFITTED       = 'outputUnfitted'
+FILE_METRICS        = 'outputMetrics'
 
 # Output file paths
 FILE_OUTCOUNT_1     = f'{FOLDER_OUTPUTS_1}\{FILE_OUTCOUNT}'
@@ -87,6 +90,8 @@ FILE_FITTED_1       = f'{FOLDER_OUTPUTS_1}\{FILE_FITTED}'
 FILE_FITTED_2       = f'{FOLDER_OUTPUTS_2}\{FILE_FITTED}'
 FILE_UNFITTED_1     = f'{FOLDER_OUTPUTS_1}\{FILE_UNFITTED}'
 FILE_UNFITTED_2     = f'{FOLDER_OUTPUTS_2}\{FILE_UNFITTED}'
+FILE_METRICS_1      = f'{FOLDER_OUTPUTS_1}\{FILE_METRICS}'
+FILE_METRICS_2      = f'{FOLDER_OUTPUTS_2}\{FILE_METRICS}'
 
 # Interchangeable prompts for bin inputs
 PROMPT_QTY_BIN      = "# of bins"
@@ -107,8 +112,9 @@ PROMPT_UPDOWN_VAR   = "variation in LOADING ORIENTATION"
 PROMPT_UPDOWN       = "boxes to be loaded UPSIDE-DOWN"
 
 # Interchangeable prompts for handling missing files
-PROMPT_LASTFILE_BIN     = f"the numeric identifier of the last {FILE_BIN}#.csv (enter 0 if you have no files)"
-PROMPT_LASTFILE_BOX     = f"the numeric identifier of the last {FILE_BOX}#.csv(enter 0 if you have no files)"
+PROMPT_LASTFILE_BIN     = f"the numeric identifier of the last {FILE_BIN}#.csv (enter 0 if you have no such files)"
+PROMPT_LASTFILE_BOX     = f"the numeric identifier of the last {FILE_BOX}#.csv(enter 0 if you have no such files)"
+PROMPT_LASTFILE_OUT     = f"the numeric identifier of the last output CSV file (enter 0 if you have no such files)"
 PROMPT_CSVFILE_BIN      = f"the numeric identifier of a {FILE_BIN}#.csv file you wish to access"
 PROMPT_CSVFILE_BOX      = f"the numeric identifier of a {FILE_BOX}#.csv file you wish to access"
 
@@ -123,6 +129,7 @@ HEADER_BIN_1    = ['partno', 'width', 'height', 'depth', 'max_weight']
 HEADER_BIN_2    = ['name', 'width', 'height', 'depth', 'max_weight']
 HEADER_BOX_1    = ['partno', 'name', 'typeof', 'width', 'height', 'depth', 'weight', 'level', 'loadbear', 'updown', 'color']
 HEADER_BOX_2    = ['name', 'width', 'height', 'depth', 'weight']
+HEADER_OUT_1    = ['partno', 'name', 'color', 'width', 'height', 'depth', 'volume', 'weight', 'position', 'rotation type']
 
 # File I/O error messages
 FILECOUNT_ERROR_VALUE       = "\nERROR: Valid integer value not found in given file. Creating new file..."
@@ -130,5 +137,4 @@ FILECOUNT_ERROR_NOTFOUND    = "\nERROR: File not found. Creating new file..."
 CSVFILE_ERROR_NOTFOUND      = "\nERROR: File not found. Make sure you're entering a valid integer corresponding to an existing file."
 
 # Colors for Option 1
-# TODO: Add more colors?
 COLORS              = ["red", "green", "blue", "white", "black"]
