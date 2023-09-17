@@ -270,31 +270,31 @@ class TestAux(unittest.TestCase):
 
         # Cylinder Item
         testItem = Item(2, 'Cup', 'cylinder', (8, 8, 4), 0.3, 1, 50, False, 'blue')
-        assert testItem.partno == 2
-        assert testItem.name == 'Cup'
-        assert testItem.typeof == 'cylinder'
-        assert testItem.width == 8
-        assert testItem.height == 8
-        assert testItem.depth == 4
-        assert testItem.weight == 0.3
-        assert testItem.level == 1
-        assert testItem.loadbear == 50
-        assert testItem.updown == False
-        assert testItem.color == 'blue'
+        self.assertEqual(testItem.partno, 2) 
+        self.assertEqual(testItem.name, 'Cup') 
+        self.assertEqual(testItem.typeof, 'cylinder')
+        self.assertEqual(testItem.width, 8) 
+        self.assertEqual(testItem.height, 8) 
+        self.assertEqual(testItem.depth, 4) 
+        self.assertEqual(testItem.weight, 0.3) 
+        self.assertEqual(testItem.level, 1) 
+        self.assertEqual(testItem.loadbear, 50) 
+        self.assertEqual(testItem.updown, False) 
+        self.assertEqual(testItem.color, 'blue') 
 
         # Random input types
         testItem = Item("¯\_(ツ)_/¯", False, 'Hexagon', (8.5, -34, 4.55), '0.3', (1,2,4,8), True, 'Maybe', 'blue')
-        assert testItem.partno == "¯\_(ツ)_/¯"
-        assert testItem.name == False
-        assert testItem.typeof == 'Hexagon'
-        assert testItem.width == 8.5
-        assert testItem.height == -34
-        assert testItem.depth == 4.55
-        assert testItem.weight == '0.3'
-        assert testItem.level == (1,2,4,8)
-        assert testItem.loadbear == True
-        assert testItem.updown == False
-        assert testItem.color == 'blue'
+        self.assertEqual(testItem.partno, "¯\_(ツ)_/¯")
+        self.assertEqual(testItem.name, False)
+        self.assertEqual(testItem.typeof, 'Hexagon')
+        self.assertEqual(testItem.width, 8.5)
+        self.assertEqual(testItem.height, -34)
+        self.assertEqual(testItem.depth, 4.55)
+        self.assertEqual(testItem.weight, '0.3') 
+        self.assertEqual(testItem.level, (1,2,4,8))
+        self.assertEqual(testItem.loadbear, True)
+        self.assertEqual(testItem.updown, False)
+        self.assertEqual(testItem.color, 'blue')
 
                                         #                #
                                         # Negative Cases #
