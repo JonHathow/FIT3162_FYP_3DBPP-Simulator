@@ -3,25 +3,6 @@ import unittest
 from decimal import Decimal
 import decimal
 
-"""
-_summary_
-Test suite to test and validate all the functions in this open source code
-
-Author: Anson Lee
-"""
-
-'''
-Option 1 Dimensions
-    WIDTH = 0
-    HEIGHT = 1
-    DEPTH = 2
-
-Option 2 Dimensions
-    LENGTH = 0
-    WIDTH = 1
-    HEIGHT = 2
-'''
-
 class TestAux(unittest.TestCase):
 
     # Testing Auxiliary Methods (Almost identical to option 1)
