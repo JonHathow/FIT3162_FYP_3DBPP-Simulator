@@ -13,7 +13,7 @@ class Option(Enum):
     OPTION1 = 1
     OPTION2 = 2
 
-class Mode(Enum):
+class File(Enum):
     """
     Used as an argument in certain functions to specify whether said function
     is working with an input file for bins, an input file for boxes, or an
