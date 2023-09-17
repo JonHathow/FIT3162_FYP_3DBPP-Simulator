@@ -18,3 +18,17 @@ def update_lastfile(filename: str, option: Option, filetype: File):
     with open(file_path, mode = 'w') as file:
         file.write(filename)
     file.close()
+
+def fetch_lastfile(option: Option, filetype: File):
+
+    if option == Option.OPTION1.value:
+        file_path   = FILE_LASTBIN_1 if filetype == File.BIN.value else FILE_LASTBOX_1
+
+    else:
+        file_path   = FILE_LASTBIN_2 if filetype == File.BIN.value else FILE_LASTBOX_2
+
+    with open(file_path, mode = 'r') as file:
+        filename = str(file.readline())
+    file.close()
+
+    return filename
