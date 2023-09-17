@@ -2,9 +2,8 @@
 Functions to read/write to fileBinCount.txt and fileBoxCount.txt files. These
 files ensure older CSV files are not overwritten upon the creation of new ones.
 """
-# TODO: Specify sample inputs.
 
-from .constants import Mode, PROMPT_LASTFILE_BIN, PROMPT_LASTFILE_BOX, FILECOUNT_ERROR_VALUE, FILECOUNT_ERROR_NOTFOUND
+from .constants import File, PROMPT_LASTFILE_BIN, PROMPT_LASTFILE_BOX, PROMPT_LASTFILE_OUT, FILECOUNT_ERROR_VALUE, FILECOUNT_ERROR_NOTFOUND
 from .prompts import prompt_integer
 
 def update_filecount(filename: str, filecount: int = -1) -> None:
@@ -42,7 +41,7 @@ def fix_filecount(filename: str, prompt: str) -> None:
     """
     update_filecount(filename, prompt_integer(prompt) - 1)
 
-def fetch_filecount(filename: str, mode: Mode) -> int:
+def fetch_filecount(filename: str, filetype: File) -> int:
     """
     Reads from a file that keep track of the number of CSV files (bin or box)
     that have been created for a particular Option, ensuring older files are
@@ -55,7 +54,12 @@ def fetch_filecount(filename: str, mode: Mode) -> int:
                   is prompted for a file count
     """
 
-    prompt = PROMPT_LASTFILE_BIN if mode == Mode.BIN else PROMPT_LASTFILE_BOX
+    if filetype == File.BIN.value:
+        prompt = PROMPT_LASTFILE_BIN
+    elif filetype == File.BOX.value:
+        prompt = PROMPT_LASTFILE_BOX
+    else:
+        prompt = PROMPT_LASTFILE_OUT
 
     while True:
         try:
