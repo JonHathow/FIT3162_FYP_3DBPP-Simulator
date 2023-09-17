@@ -24,6 +24,15 @@ class File(Enum):
     BOX = 2
     OUT = 3
 
+class Mode(Enum):
+    """
+    Used as an argument in certain functions to specify whether said function
+    is handling fitted or unfitted boxes. The same function may be expected to
+    behave differently depending on the type of boxes in question.
+    """
+    FITTED = 1
+    UNFITTED = 2
+
 # Menu navigation and feedback
 MENU_INPUT = ("\n1: Generate bin CSV file"
                + "\n2: Generate box CSV file"
