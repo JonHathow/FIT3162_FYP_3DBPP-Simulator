@@ -16,12 +16,13 @@ class Option(Enum):
 class Mode(Enum):
     """
     Used as an argument in certain functions to specify whether said function
-    is working with a file for bins or a file for boxes. The same function may
-    be expected to behave differently depending on the purpose of the file in
-    question.
+    is working with an input file for bins, an input file for boxes, or an
+    output file. The same function may be expected to behave differently
+    depending on the purpose of the file in question.
     """
     BIN = 1
     BOX = 2
+    OUT = 3
 
 # Menu navigation and feedback
 MENU_INPUT = ("\n1: Generate bin CSV file"
