@@ -1,28 +1,32 @@
 """ Handles writing and reading of CSV files for Option 1. """
+#TODO: Evaluate documentation.
 
 import time
-from manage_csv.constants import Mode, Option, MENU_INPUT, MENU_INVALID, MENU_BIN_NOTLOADED, MENU_END, FILE_BIN_1, FILE_BOX_1
+from manage_csv.constants import File, Option, MENU_INPUT, MENU_INVALID, MENU_BIN_NOTLOADED, MENU_BOX_NOTLOADED, MENU_END, FILE_BIN_1, FILE_BOX_1
 from manage_csv.write_input_bin import write_input_bin
 from manage_csv.write_input_box import write_input_box
 from manage_csv.read_input_csv import read_input
+from write_output_option1 import write_output
 from Option1_package import Packer, Bin, Item, Painter
 
 bins_loaded = False
+boxes_loaded = False
+
 while True:
 
     response = input(MENU_INPUT)
 
     # Write a CSV file for bins.
     if response == "1":
-        write_input_bin(Option.OPTION1)
+        write_input_bin(Option.OPTION1.value)
 
     # Write a CSV file for boxes.
     elif response == "2":
-        write_input_box(Option.OPTION1)
+        write_input_box(Option.OPTION1.value)
 
     # Read a CSV file for bins.
     elif response == "3":
-        bin_params = read_input(FILE_BIN_1, Mode.BIN)
+        bin_params = read_input(FILE_BIN_1, File.BIN.value, Option.OPTION1.value)
 
         if bin_params is not None:
 
@@ -40,27 +44,34 @@ while True:
 
     # Read a CSV file for boxes.
     elif response == "4":
+        item_params = read_input(FILE_BOX_1, File.BOX.value, Option.OPTION1.value)
 
-        if not bins_loaded:
-            print(MENU_BIN_NOTLOADED)
+        if item_params is not None:
+
+            for item in item_params:
+                partno = item[0]
+                name = item[1]
+                typeof = item[2]
+                WHD = (float(item[3]), float(item[4]), float(item[5]))
+                weight = float(item[6])
+                level = int(item[7])
+                loadbear = int(item[8])
+                updown = bool(item[9])
+                color = item[10]
+                packer.addItem(Item(partno, name, typeof, WHD, weight, level, loadbear, updown, color))
+
+            boxes_loaded = True
+
+    # Compute bin packing.
+    elif response == "5":
+
+        if not bins_loaded and not boxes_loaded:
+            if not bins_loaded:
+                print(MENU_BIN_NOTLOADED)
+            if not boxes_loaded:
+                print(MENU_BOX_NOTLOADED)
 
         else:
-            item_params = read_input(FILE_BOX_1, Mode.BOX)
-
-            if item_params is not None:
-
-                for item in item_params:
-                    partno = item[0]
-                    name = item[1]
-                    typeof = item[2]
-                    WHD = (float(item[3]), float(item[4]), float(item[5]))
-                    weight = float(item[6])
-                    level = int(item[7])
-                    loadbear = int(item[8])
-                    updown = bool(item[9])
-                    color = item[10]
-                    packer.addItem(Item(partno, name, typeof, WHD, weight, level, loadbear, updown, color))
-
                 #region Calculate packing
                 start = time.time()                
                 packer.pack(
@@ -96,7 +107,7 @@ while True:
                         print("***************************************************")
                     
                     print('space utilization : {}%'.format(round(volume_t / float(volume) * 100 ,2)))
-                    print('residual volumn : ', float(volume) - volume_t )
+                    print('residual volume : ', float(volume) - volume_t )
                     print("gravity distribution : ",b.gravity)
                     print("***************************************************")
                     # draw results
@@ -123,13 +134,15 @@ while True:
                     print("***************************************************")
                 print("***************************************************")
                 print('unpack item : ',unfitted_name)
-                print('unpack item volumn : ',volume_f)
+                print('unpack item volume : ',volume_f)
 
                 print('used time : ',stop - start)
 
                 fig.show()
                 #endregion
+                write_output(packer)
 
+    
     elif response == "0":
         print(MENU_END)
         break
