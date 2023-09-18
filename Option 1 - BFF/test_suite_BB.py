@@ -605,7 +605,7 @@ class TestAux(unittest.TestCase):
                                         # Positive Cases #
                                         #                #
 
-        # Valid Item Construction
+        # Valid Bin Construction
         testbin = Bin(1, [100,200,100], 5000, 1, 0)
         self.assertEqual(testbin.string(), "1(100x200x100, max_weight:5000) vol(2000000)")
 
@@ -613,7 +613,8 @@ class TestAux(unittest.TestCase):
                                         #                #
                                         #   Edge Cases   #
                                         #                #
-
+        
+        # Random bin construction data types(except dimensions)
         testbin = Bin("454", [100,200,100], False, "1")
         self.assertEqual(testbin.string(), "454(100x200x100, max_weight:False) vol(2000000)")    
 
@@ -621,7 +622,7 @@ class TestAux(unittest.TestCase):
                                         # Negative Cases #
                                         #                #
 
-        # Item construction with invalid dimension data types
+        # Bin construction with invalid dimension data types
         testbin = Bin(1, ["100",False,(2,33)], 5000, 1, 0)
         with self.assertRaises(TypeError):
             testbin.string()
@@ -710,7 +711,7 @@ class TestAux(unittest.TestCase):
         testItem = Item(3, 'Item3', 'cube', (10, 5, 10), 1.5, 1, 50, True, 'green')
         testItem.formatNumbers(1)
         testbin.putItem(testItem, [5, 5, 5])
-        assert len(testbin.items) == 1  # The item should be placed in the bin with a rotation
+        self.assertEqual(len(testbin.items), 1)
                                         
                                         #                #
                                         #   Edge Cases   #
