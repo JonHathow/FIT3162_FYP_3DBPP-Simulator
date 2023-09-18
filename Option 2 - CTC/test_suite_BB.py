@@ -6,18 +6,9 @@ import decimal
 import sys
 from io import StringIO
 
-
-                                        #                #
-                                        # Positive Cases #
-                                        #                #
-
-                                        #                #
-                                        #   Edge Cases   #
-                                        #                #
-
-                                        #                #
-                                        # Negative Cases #
-                                        #                #
+"""
+Black Box Testing for Option 2, Janet's Algorithm
+"""
 
 class TestAux(unittest.TestCase):
 
@@ -25,7 +16,6 @@ class TestAux(unittest.TestCase):
     #  Auxiliary Methods  #
     #                     #
 
-    # BB Done
     def test_aux_rect_intersect(self):
         testItem1 = Item("test1", 10, 20, 30, 25)
         testItem2 = Item("test2", 20, 10, 10, 25)
@@ -129,7 +119,6 @@ class TestAux(unittest.TestCase):
             rect_intersect(testItem1, testItem2, "hello", Axis.HEIGHT)
             rect_intersect(testItem1, testItem2, Axis.WIDTH, "hello")
 
-    # BB Done
     def test_aux_intersect(self):
         testItem1 = Item("test1", 10, 20, 30, 25)
         testItem2 = Item("test2", 20, 10, 10, 25)
@@ -177,7 +166,6 @@ class TestAux(unittest.TestCase):
             intersect(testItem1, 'a')
             intersect(testItem1, False)
         
-    # BB Done
     def test_aux_get_limit_number_of_decimals(self):
                                         #                #
                                         # Positive Cases #
@@ -205,7 +193,6 @@ class TestAux(unittest.TestCase):
             get_limit_number_of_decimals('a')
             get_limit_number_of_decimals(False)
 
-    # BB Done
     def test_aux_set_to_decimal(self):
                                         #                #
                                         # Positive Cases #
@@ -248,7 +235,6 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(decimal.InvalidOperation):
             self.assertEqual(set_to_decimal("Hello", 1), Decimal('Hello'))
 
-    # BB Done
     def test_stack(self):
         
         # Method to return string value of list of items
@@ -331,7 +317,6 @@ class TestAux(unittest.TestCase):
     #  Item Class Methods  #
     #                      #
 
-    # BB Done
     def test_itemConstructor(self):
                                         #                #
                                         # Positive Cases #
@@ -362,7 +347,6 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testItem.position, [0, 0, 0])
         self.assertEqual(testItem.number_of_decimals, 3)
  
-    # BB Done
     def test_itemFormatNumbers(self):
                                         #                #
                                         # Positive Cases #
@@ -417,7 +401,6 @@ class TestAux(unittest.TestCase):
             testItem.format_numbers(2.3)
             testItem.format_numbers('a')
 
-    # BB Done
     def test_itemGetVolume(self):
                                         #                #
                                         # Positive Cases #
@@ -447,7 +430,6 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(decimal.InvalidOperation):
             testItem.get_volume()
     
-    # BB Done
     def test_itemGetDimension(self):
                                         #                #
                                         # Positive Cases #
@@ -474,7 +456,6 @@ class TestAux(unittest.TestCase):
         testItem = Item("testItem", "10", False, 30.3, 25)
         self.assertEqual(testItem.get_dimension(), ["10",False,30.3])
 
-    # BB Done
     def test_itemString(self):
                                         #                #
                                         # Positive Cases #
@@ -504,7 +485,6 @@ class TestAux(unittest.TestCase):
     #  Bin Class Methods  #
     #                     #
 
-    # BB Done
     def test_binConstructor(self):
 
                                         #                #
@@ -539,7 +519,6 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.unfitted_items, [])
         self.assertEqual(testbin.number_of_decimals, 3)
                                         
-    # BB Done
     def test_binFormatNumbers(self):
                                         #                #
                                         # Positive Cases #
@@ -596,7 +575,6 @@ class TestAux(unittest.TestCase):
             testbin.format_numbers(False)
             testbin.format_numbers(13.2)
     
-    # BB Done
     def test_binGetVolume(self):
                                         #                #
                                         # Positive Cases #
@@ -626,7 +604,6 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(TypeError):
             testbin.get_volume()
     
-    # BB Done
     def test_binGetTotalWeight(self):
                                         #                #
                                         # Positive Cases #
@@ -665,7 +642,6 @@ class TestAux(unittest.TestCase):
         testbin.items.append((testItem))
         self.assertEqual(testbin.get_total_weight(), 1000)
   
-    # BB Done
     def test_binGetFillingRatio(self):
                                         #                #
                                         # Positive Cases #
@@ -713,7 +689,6 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(AttributeError):
             testBin.get_filling_ratio()
 
-    # BB Done
     def test_binCanHoldItemWithRotation(self):
 
                                         #                #
@@ -749,7 +724,6 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(AttributeError):
             testBin.can_hold_item_with_rotation('testItem1', [0,0,0])
     
-    # BB Done
     def test_binPutItem(self):
                                         #                #
                                         # Positive Cases #
@@ -821,7 +795,6 @@ class TestAux(unittest.TestCase):
             testbin.put_item(5, [80, 90, 80], [0, 0, 0])
             testbin.put_item(testbin, [80, 90, 80], [0, 0, 0])
     
-    # BB Done
     def test_binString(self):
                                         #                #
                                         # Positive Cases #
@@ -860,8 +833,7 @@ class TestAux(unittest.TestCase):
     #                        #
     #  Packer Class Methods  #
     #                        #
-
-    # BB Done
+    
     def test_packerConstructor(self):
                                         #                #
                                         # Positive Cases #
@@ -876,7 +848,6 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testPacker.total_used_bins,0)
         self.assertEqual(testPacker.used_bins,[])
         
-    # BB Done
     def test_packerAddBin(self):
                                         #                #
                                         # Positive Cases #
@@ -905,7 +876,6 @@ class TestAux(unittest.TestCase):
         testPacker.add_bin("Not a Bin")
         self.assertEqual(len(testPacker.bins), 1)
     
-    # BB Done
     def test_packerAddItem(self):
 
                                         #                #
@@ -935,7 +905,6 @@ class TestAux(unittest.TestCase):
         testPacker.add_item("Not an Item")
         self.assertEqual(len(testPacker.unplaced_items), 1)
 
-    # BB Done
     def test_packerPivotDict(self):
                                         #                #
                                         # Positive Cases #
@@ -972,7 +941,6 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testPacker.pivot_dict(testBin, testItem1), {})
         self.assertEqual(testPacker.pivot_dict(testBin, testItem2), {})
      
-    # BB Done
     def test_packerPivotList(self):
 
                                         #                #
@@ -1009,7 +977,6 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testPacker.pivot_list(testBin, testItem1), [])
         self.assertEqual(testPacker.pivot_list(testBin, testItem2), [])
     
-    # BB Done
     def test_packerChoosePivotPoint(self):
 
                                         #                #
@@ -1046,7 +1013,6 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testPacker.choose_pivot_point(testBin, testItem1), False)
         self.assertEqual(testPacker.choose_pivot_point(testBin, testItem2), False)
 
-    # BB Done
     def test_packerPackToBin(self):
                                         #                #
                                         # Positive Cases #
@@ -1106,7 +1072,6 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(AttributeError):
             testpacker.pack2Bin(testBin, testItem)
     
-    # BB Done
     def test_packerPack(self):
         def capture_output(function, *args):
             captured_output = StringIO()

@@ -6,7 +6,7 @@ import unittest
 import numpy as np
 
 """
-White Box Testing
+White Box Testing for Option 1, Jerry's Algorithm
 """
 
                                         #                #
