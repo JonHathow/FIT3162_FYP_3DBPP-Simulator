@@ -82,7 +82,7 @@ def write_input_box(option: Option) -> None:
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
-    filecount: int = fetch_filecount(file_boxcount, File.BOX.value)
+    filecount: int = fetch_filecount(file_boxcount)
     inputs: InputBoxParameters = prompt_input_boxes(option)
 
     filename = f'{filename}{filecount + 1}.csv'

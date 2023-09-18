@@ -51,8 +51,8 @@ def write_output_metrics(packer: Packer, filecount: int):
         for item in packer.unfit_items:
             volume_u += float(item.width) * float(item.height) * float(item.depth)
 
-        file.write(f'Bin input file:        {fetch_lastfile(Option.OPTION1.value, File.BIN.value)}')
-        file.write(f'Bin input file:        {fetch_lastfile(Option.OPTION1.value, File.BOX.value)}')
+        file.write(f'Bin input file:        {fetch_lastfile(Option.OPTION1.value, File.BIN.value)}\n')
+        file.write(f'Box input file:        {fetch_lastfile(Option.OPTION1.value, File.BOX.value)}\n')
         file.write(f'Bin volume:            {volume}\n')
         file.write(f'Volume utilised:       {volume_f}\n')
         file.write(f'Residual volume:       {float(volume) - volume_f}\n')
@@ -65,7 +65,7 @@ def write_output(packer: Packer):
     if not os.path.exists(FOLDER_OUTPUTS_1):
         os.makedirs(FOLDER_OUTPUTS_1)
 
-    filecount = fetch_filecount(FILE_OUTCOUNT_1, File.OUT.value)
+    filecount = fetch_filecount(FILE_OUTCOUNT_1)
 
     write_output_boxes(packer, Mode.FITTED.value, filecount)
     write_output_boxes(packer, Mode.UNFITTED.value, filecount)

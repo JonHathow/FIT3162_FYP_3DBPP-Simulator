@@ -58,7 +58,7 @@ def write_input_bin(option: Option) -> None:
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
-    filecount: int = fetch_filecount(file_bincount, File.BIN.value)
+    filecount: int = fetch_filecount(file_bincount)
     inputs: InputBinParameters = prompt_input_bins()
 
     filename = f'{filename}{filecount + 1}.csv'
