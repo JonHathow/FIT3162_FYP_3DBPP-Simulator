@@ -3,6 +3,8 @@ from test_folder.auxiliary_methods import get_limit_number_of_decimals, set_to_d
 import unittest
 from decimal import Decimal
 import decimal
+import sys
+from io import StringIO
 
 
                                         #                #
@@ -874,201 +876,402 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testPacker.total_used_bins,0)
         self.assertEqual(testPacker.used_bins,[])
         
-    #
+    # BB Done
     def test_packerAddBin(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
+        # Adding 1 Bin
         testPacker = Packer()
-        testBin = Bin(300, 300, 300, 300, 400)
-        testPacker.add_bin(testBin)
+        testbin = Bin(300, 100, 200, 100, 5000)
+        testPacker.add_bin(testbin)
+        self.assertEqual(len(testPacker.bins), 1)
 
-        # Function to return string method of bin
-        def retStr(bins):
-            res = []
-            for bin in bins:
-                res.append(bin.string())
-            return res
-        
-        self.assertEqual(retStr(testPacker.bins), ['300(300x300x300, max_weight:400) vol(27000000.000) item_number(0) filling_ratio(0.000)'])
+        # Adding multiple bins
+        testPacker = Packer()
+        testbin1 = Bin(100, 100, 200, 100, 5000)
+        testbin2 = Bin(200, 100, 200, 100, 5000)
+        testPacker.add_bin(testbin1)
+        testPacker.add_bin(testbin2)
+        self.assertEqual(len(testPacker.bins), 2)
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
 
-        testBin2 = Bin(1000, 200, 500, 700, 20000)
-        testPacker.add_bin(testBin2)
-        self.assertEqual(retStr(testPacker.bins), ['300(300x300x300, max_weight:400) vol(27000000.000) item_number(0) filling_ratio(0.000)', '1000(200x500x700, max_weight:20000) vol(70000000.000) item_number(0) filling_ratio(0.000)'])
+        # Adding invalid bin
+        testPacker = Packer()
+        testPacker.add_bin("Not a Bin")
+        self.assertEqual(len(testPacker.bins), 1)
     
-    #
+    # BB Done
     def test_packerAddItem(self):
-        # Method to return string value of list of items
-        def retStr(lst):
-            if isinstance(lst, list):
-                res = []
-                for item in lst:
-                    res.append(item.string())
-                return res
-            else:
-                return lst.string()
-            
+
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
+        # Adding 1 Item
         testPacker = Packer()
-        testItem1 = Item('testItem1', 10, 120, 30, 120)
-        testItem2 = Item('testItem2', 100, 10, 60, 100)
-        self.assertEqual(testPacker.total_items, 0)
-        self.assertEqual(retStr(testPacker.unplaced_items), [])
+        testItem = Item("testitem", 10, 30, 30, 25)
+        testPacker.add_item(testItem)
+        self.assertEqual(len(testPacker.unplaced_items), 1)
 
+        # Adding multiple Item
+        testPacker = Packer()
+        testItem1 = Item("testItem1", 10, 30, 30, 25)
+        testItem2 = Item("testItem2", 10, 30, 30, 25)
         testPacker.add_item(testItem1)
-        self.assertEqual(testPacker.total_items, 1)
-        self.assertEqual(retStr(testPacker.unplaced_items), ['testItem1(10x120x30, weight: 120) pos([0, 0, 0]) rt(0) vol(36000.000)'])
-    
         testPacker.add_item(testItem2)
-        self.assertEqual(testPacker.total_items, 2)
-        self.assertEqual(retStr(testPacker.unplaced_items), ['testItem1(10x120x30, weight: 120) pos([0, 0, 0]) rt(0) vol(36000.000)', 'testItem2(100x10x60, weight: 100) pos([0, 0, 0]) rt(0) vol(60000.000)'])
+        self.assertEqual(len(testPacker.unplaced_items), 2)
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
 
-        testPacker.add_item('testItem1')
-        self.assertEqual(testPacker.total_items, 3)
-        with self.assertRaises(AttributeError):
-            retStr(testPacker.unplaced_items)
+        # Adding invalid Item
+        testPacker = Packer()
+        testPacker.add_item("Not an Item")
+        self.assertEqual(len(testPacker.unplaced_items), 1)
 
-    #
+    # BB Done
     def test_packerPivotDict(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
+        
         testPacker = Packer()
         testBin = Bin(2000, 300, 400, 200, 4000)
         testItem1 = Item('testItem1', 10, 10, 30, 50)
         testItem2 = Item('testItem2', 10, 10, 30, 50)
-
-
         testPacker.add_bin(testBin)
         testPacker.add_item(testItem1)
         testPacker.add_item(testItem2)
+        testBin.put_item(testItem2, [0,0,0],[0,0,0])
 
+        # Item not put in bin yet (Bin already has another item)
+        self.assertEqual(testPacker.pivot_dict(testBin, testItem1), {(10, 0, 0): [290, 400, 200], (0, 10, 0): [300, 390, 200], (0, 0, 30): [300, 400, 170]})
+        
+        # Item is already in bin
+        self.assertEqual(testPacker.pivot_dict(testBin, testItem2), {})
+
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+        # Empty Bin
+        testPacker = Packer()
+        testBin = Bin(2000, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 10, 10, 30, 50)
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
         self.assertEqual(testPacker.pivot_dict(testBin, testItem1), {})
         self.assertEqual(testPacker.pivot_dict(testBin, testItem2), {})
-
-        testBin.put_item(testItem2, [0,0,0],[0,0,0])
-
-        # There must be an item already in the bin
-        self.assertEqual(testPacker.pivot_dict(testBin, testItem1), {(10, 0, 0): [290, 400, 200], (0, 10, 0): [300, 390, 200], (0, 0, 30): [300, 400, 170]})
-
-        # Already in a bin
-        self.assertEqual(testPacker.pivot_dict(testBin, testItem2), {})
      
-    #
+    # BB Done
     def test_packerPivotList(self):
+
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
         testPacker = Packer()
         testBin = Bin(2000, 300, 400, 200, 4000)
         testItem1 = Item('testItem1', 10, 10, 30, 50)
         testItem2 = Item('testItem2', 10, 10, 30, 50)
-
-
         testPacker.add_bin(testBin)
         testPacker.add_item(testItem1)
         testPacker.add_item(testItem2)
+        testBin.put_item(testItem2, [0,0,0],[0,0,0])
 
+        # Item not put in bin yet (Bin already has another item)
+        self.assertEqual(testPacker.pivot_list(testBin, testItem1), [[10, 0, 0], [0, 10, 0], [0, 0, 30]])
+        
+        # Item is already in bin
+        self.assertEqual(testPacker.pivot_list(testBin, testItem2), [[10, 0, 0], [0, 10, 0], [0, 0, 30]])
+        
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+        # Empty Bin
+        testPacker = Packer()
+        testBin = Bin(2000, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 10, 10, 30, 50)
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
         self.assertEqual(testPacker.pivot_list(testBin, testItem1), [])
         self.assertEqual(testPacker.pivot_list(testBin, testItem2), [])
-
-        testBin.put_item(testItem2, [0,0,0],[0,0,0])
-
-        # There must be an item already in the bin
-        self.assertEqual(testPacker.pivot_list(testBin, testItem1), [[10, 0, 0], [0, 10, 0], [0, 0, 30]])
-
-        # Already in a bin
-        self.assertEqual(testPacker.pivot_list(testBin, testItem2), [[10, 0, 0], [0, 10, 0], [0, 0, 30]])
     
-    #
+    # BB Done
     def test_packerChoosePivotPoint(self):
+
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
         testPacker = Packer()
         testBin = Bin(2000, 300, 400, 200, 4000)
         testItem1 = Item('testItem1', 10, 10, 30, 50)
         testItem2 = Item('testItem2', 10, 10, 30, 50)
-
-
         testPacker.add_bin(testBin)
         testPacker.add_item(testItem1)
         testPacker.add_item(testItem2)
+        testBin.put_item(testItem2, [0,0,0],[0,0,0])
 
+        # Item not put in bin yet (Bin already has another item)
+        self.assertEqual(testPacker.choose_pivot_point(testBin, testItem1), [10, 0, 0])
+        
+        # Item is already in bin
+        self.assertEqual(testPacker.choose_pivot_point(testBin, testItem2), False)
+        
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+        # Empty Bin
+        testPacker = Packer()
+        testBin = Bin(2000, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 10, 10, 30, 50)
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
         self.assertEqual(testPacker.choose_pivot_point(testBin, testItem1), False)
         self.assertEqual(testPacker.choose_pivot_point(testBin, testItem2), False)
 
-        testBin.put_item(testItem2, [0,0,0],[0,0,0])
+    # BB Done
+    def test_packerPackToBin(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
 
-        # There must be an item already in the bin
-        self.assertEqual(testPacker.choose_pivot_point(testBin, testItem1), [10, 0, 0])
+        # Valid packing
+        testpacker = Packer()
+        testBin = Bin(200, 300, 400, 200, 4000)
+        testItem = Item('testItem', 10, 10, 30, 50)
+        testpacker.pack_to_bin(testBin, testItem)
+        self.assertEqual(testBin.total_items, 1)
 
-        # Already in a bin
-        self.assertEqual(testPacker.choose_pivot_point(testBin, testItem2), False)
+        # Failed packing
+        testpacker = Packer()
+        testBin = Bin(200, 300, 400, 200, 4000)
+        testItem = Item('testItem', 500, 500, 500, 50)
+        testpacker.pack_to_bin(testBin, testItem)
+        self.assertEqual(testBin.total_items, 0)
+        self.assertEqual(len(testBin.unfitted_items), 1)
 
-    # def test_packerPackToBin(self):
-    #     testPacker = Packer()
-    #     testBin = Bin(2000, 300, 400, 200, 4000)
-    #     testItem1 = Item('testItem1', 10, 10, 30, 50)
-    #     testItem2 = Item('testItem2', 100, 10, 40, 50)
-    #     testItem3 = Item('testItem3', 55, 120, 30, 50)
-    #     testItem4 = Item('testItem4', 500, 500, 500, 50)
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
 
-    #     testPacker.add_bin(testBin)
-    #     testPacker.add_item(testItem1)
-    #     testPacker.add_item(testItem2)
-    #     testPacker.add_item(testItem3)
-    #     testPacker.add_item(testItem4)
+        # 0 size item
+        testpacker = Packer()
+        testBin = Bin(200, 300, 400, 200, 4000)
+        testItem = Item('testItem', 0, 0, 0, 50)
+        testpacker.pack_to_bin(testBin, testItem)
+        self.assertEqual(testBin.total_items, 1)
+        self.assertEqual(len(testBin.unfitted_items), 0)
 
-    #     # Method to return string value of list of items
-    #     def retStr(lst):
-    #         if isinstance(lst, list):
-    #             res = []
-    #             for item in lst:
-    #                 res.append(item.string())
-    #             return res
-    #         else:
-    #             return lst.string()
+        # Item barely fits
+        testpacker = Packer()
+        testBin = Bin(200, 100, 200, 100, 5000)
+        testItem = Item('testItem', 100, 200, 100, 25)
+        testpacker.pack_to_bin(testBin, testItem)
+        self.assertEqual(testBin.total_items, 1)
+        self.assertEqual(len(testBin.unfitted_items), 0)
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+        # Invalid Bin
+        testpacker = Packer()
+        testBin = "Not a Bin"
+        testItem = Item('testItem', 100, 200, 100, 25)
+        with self.assertRaises(AttributeError):
+            testpacker.pack_to_bin(testBin, testItem)
+
+
+        # Invalid Item
+        testpacker = Packer()
+        testBin = Bin(200, 100, 200, 100, 5000)
+        testItem = "Not an Item"
+        with self.assertRaises(AttributeError):
+            testpacker.pack2Bin(testBin, testItem)
+    
+    # BB Done
+    def test_packerPack(self):
+        def capture_output(function, *args):
+            captured_output = StringIO()
+            sys.stdout = captured_output
+            function(*args)
+            sys.stdout = sys.__stdout__
+            return captured_output.getvalue().strip()
         
-    #     testPacker.pack_to_bin(testBin, testItem1)
-    #     self.assertEqual(retStr(testBin.items), ['testItem1(10x10x30, weight: 50) pos([0, 0, 0]) rt(0) vol(3000.000)'])
+        captured_output = capture_output(testPacker.pack, True, 3)
+        self.assertEqual(captured_output, expected_output)
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
 
-    #     testPacker.pack_to_bin(testBin, testItem2)
-    #     self.assertEqual(retStr(testBin.items), ['testItem1(10x10x30, weight: 50) pos([0, 0, 0]) rt(0) vol(3000.000)', 'testItem2(100x10x40, weight: 50) pos([10, 0, 0]) rt(2) vol(40000.000)'])
+        # Valid packing (Bigger first)
+        testPacker = Packer()
+        testBin1 = Bin("testBin1", 10, 10, 10, 10)
+        testBin2 = Bin("testBin2", 20, 20, 20, 20)
+        testItem1 = Item("testItem1", 5, 5, 5, 1)
+        testItem2 = Item("testItem2", 15, 15, 15, 2)
+        testItem3 = Item("testItem3", 10, 10, 10, 1)
+        
+        testPacker.add_bin(testBin1)
+        testPacker.add_bin(testBin2)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.add_item(testItem3)
+        self.maxDiff = None
+        expected_output = (
+            "::::::::::: testBin1(10.000x10.000x10.000, max_weight:10.000) vol(1000.000) item_number(1) filling_ratio(1.000)\n"
+            "FITTED ITEMS:\n"
+            "====>  testItem3(10.000x10.000x10.000, weight: 1.000) pos([0, 0, 0]) rt(0) vol(1000.000)\n"
+            "\n"
+            "UNFITTED ITEMS:\n"
+            "====>  testItem2(15.000x15.000x15.000, weight: 2.000) pos([0, 0, 0]) rt(5) vol(3375.000)\n"
+            "====>  testItem1(5.000x5.000x5.000, weight: 1.000) pos([0, 0, Decimal('10.000')]) rt(5) vol(125.000)\n"
+            "\n"
+            "::::::::::: testBin2(20.000x20.000x20.000, max_weight:20.000) vol(8000.000) item_number(2) filling_ratio(0.438)\n"
+            "FITTED ITEMS:\n"
+            "====>  testItem2(15.000x15.000x15.000, weight: 2.000) pos([0, 0, 0]) rt(0) vol(3375.000)\n"
+            "====>  testItem1(5.000x5.000x5.000, weight: 1.000) pos([Decimal('15.000'), 0, 0]) rt(0) vol(125.000)\n"
+            "\n"
+            "UNFITTED ITEMS:\n"
+            "====>  testItem3(10.000x10.000x10.000, weight: 1.000) pos([0, 0, Decimal('15.000')]) rt(5) vol(1000.000)\n"
+            "\n"
+            "Selected bin with highest filling ratio:  testBin1(10.000x10.000x10.000, max_weight:10.000) vol(1000.000) item_number(1) filling_ratio(1.000)"
+        )
+        captured_output = capture_output(testPacker.pack, True, 3)
+        self.assertEqual(captured_output, expected_output)
 
-    #     testPacker.pack_to_bin(testBin, testItem3)
-    #     self.assertEqual(retStr(testBin.items), ['testItem1(10x10x30, weight: 50) pos([0, 0, 0]) rt(0) vol(3000.000)', 'testItem2(100x10x40, weight: 50) pos([10, 0, 0]) rt(2) vol(40000.000)', 'testItem3(55x120x30, weight: 50) pos([0, 10, 0]) rt(5) vol(198000.000)'])
+        # Valid packing (Smaller first)
+        testPacker = Packer()
+        testBin1 = Bin("testBin1", 10, 10, 10, 10)
+        testBin2 = Bin("testBin2", 20, 20, 20, 20)
+        testItem1 = Item("testItem1", 5, 5, 5, 1)
+        testItem2 = Item("testItem2", 15, 15, 15, 2)
+        testItem3 = Item("testItem3", 10, 10, 10, 1)
+        
+        testPacker.add_bin(testBin1)
+        testPacker.add_bin(testBin2)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.add_item(testItem3)
+        expected_output = (
+        "::::::::::: testBin1(10.000x10.000x10.000, max_weight:10.000) vol(1000.000) item_number(1) filling_ratio(0.125)\n"
+        "FITTED ITEMS:\n"
+        "====>  testItem1(5.000x5.000x5.000, weight: 1.000) pos([0, 0, 0]) rt(0) vol(125.000)\n"
+        "\n"
+        "UNFITTED ITEMS:\n"
+        "====>  testItem3(10.000x10.000x10.000, weight: 1.000) pos([0, 0, Decimal('5.000')]) rt(5) vol(1000.000)\n"
+        "====>  testItem2(15.000x15.000x15.000, weight: 2.000) pos([0, 0, Decimal('5.000')]) rt(5) vol(3375.000)\n"
+        "\n"
+        "::::::::::: testBin2(20.000x20.000x20.000, max_weight:20.000) vol(8000.000) item_number(2) filling_ratio(0.141)\n"
+        "FITTED ITEMS:\n"
+        "====>  testItem1(5.000x5.000x5.000, weight: 1.000) pos([0, 0, 0]) rt(0) vol(125.000)\n"
+        "====>  testItem3(10.000x10.000x10.000, weight: 1.000) pos([Decimal('5.000'), 0, 0]) rt(0) vol(1000.000)\n"
+        "\n"
+        "UNFITTED ITEMS:\n"
+        "====>  testItem2(15.000x15.000x15.000, weight: 2.000) pos([Decimal('5.000'), 0, Decimal('10.000')]) rt(5) vol(3375.000)\n"
+        "\n"
+        "Selected bin with highest filling ratio:  testBin2(20.000x20.000x20.000, max_weight:20.000) vol(8000.000) item_number(2) filling_ratio(0.141)"
+        )
+        captured_output = capture_output(testPacker.pack, False, 3)
+        self.assertEqual(captured_output, expected_output)
 
-    #     # Item4 should not be fitted into bin (too big)
-    #     testPacker.pack_to_bin(testBin, testItem4)
-    #     self.assertEqual(retStr(testBin.items), ['testItem1(10x10x30, weight: 50) pos([0, 0, 0]) rt(0) vol(3000.000)', 'testItem2(100x10x40, weight: 50) pos([10, 0, 0]) rt(2) vol(40000.000)', 'testItem3(55x120x30, weight: 50) pos([0, 10, 0]) rt(5) vol(198000.000)'])
-    #     self.assertEqual(retStr(testBin.unfitted_items), ['testItem4(500x500x500, weight: 50) pos([0, 10, 120]) rt(5) vol(125000000.000)'])
-    
-    # def test_packerPack(self):
-    #     #1 Bin
-    #     testPacker = Packer()
-    #     testBin = Bin(2000, 300, 400, 200, 4000)
-    #     testItem1 = Item('testItem1', 10, 10, 30, 50)
-    #     testItem2 = Item('testItem2', 100, 10, 40, 50)
-    #     testItem3 = Item('testItem3', 55, 120, 30, 50)
-    #     testItem4 = Item('testItem4', 500, 500, 500, 50)
+        # Item failed to pack
+        testPacker = Packer()
+        testBin = Bin("testBin", 10, 10, 10, 10)
+        testItem = Item("testItem", 50, 50, 50, 10)
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem)
+        expected_output = (
+        "::::::::::: testBin(10.000x10.000x10.000, max_weight:10.000) vol(1000.000) item_number(0) filling_ratio(0.000)\n"
+        "FITTED ITEMS:\n"
+        "\n"
+        "UNFITTED ITEMS:\n"
+        "====>  testItem(50.000x50.000x50.000, weight: 10.000) pos([0, 0, 0]) rt(5) vol(125000.000)\n"
+        "\n"
+        "Selected bin with highest filling ratio:  testBin(10.000x10.000x10.000, max_weight:10.000) vol(1000.000) item_number(0) filling_ratio(0.000)"
+        )
+        captured_output = capture_output(testPacker.pack, False, 3)
+        self.assertEqual(captured_output, expected_output)
 
-    #     testPacker.add_bin(testBin)
-    #     testPacker.add_item(testItem1)
-    #     testPacker.add_item(testItem2)
-    #     testPacker.add_item(testItem3)
-    #     testPacker.add_item(testItem4)
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
 
-    #     testPacker.pack()
+        # 0 size item
+        testPacker = Packer()
+        testBin = Bin("testBin", 10, 10, 10, 10)
+        testItem = Item("testItem", 0, 0, 0, 0)
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem)
+        expected_output = (
+        "::::::::::: testBin(10.000x10.000x10.000, max_weight:10.000) vol(1000.000) item_number(1) filling_ratio(0.000)\n"
+        "FITTED ITEMS:\n"
+        "====>  testItem(0.000x0.000x0.000, weight: 0.000) pos([0, 0, 0]) rt(0) vol(0.000)\n"
+        "\n"
+        "UNFITTED ITEMS:\n"
+        "\n"
+        "Selected bin with highest filling ratio:  testBin(10.000x10.000x10.000, max_weight:10.000) vol(1000.000) item_number(1) filling_ratio(0.000)"
+        )
+        captured_output = capture_output(testPacker.pack, False, 3)
+        self.assertEqual(captured_output, expected_output)
 
-    #     print("///////////////////////////////////////////////////////")
+        # Item barely fits
+        testPacker = Packer()
+        testBin = Bin("testBin", 10, 10, 10, 10)
+        testItem = Item("testItem", 10, 10, 10, 10)
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem)
+        expected_output = (
+        "::::::::::: testBin(10.000x10.000x10.000, max_weight:10.000) vol(1000.000) item_number(1) filling_ratio(1.000)\n"
+        "FITTED ITEMS:\n"
+        "====>  testItem(10.000x10.000x10.000, weight: 10.000) pos([0, 0, 0]) rt(0) vol(1000.000)\n"
+        "\n"
+        "UNFITTED ITEMS:\n"
+        "\n"
+        "Selected bin with highest filling ratio:  testBin(10.000x10.000x10.000, max_weight:10.000) vol(1000.000) item_number(1) filling_ratio(1.000)"
+        )
+        captured_output = capture_output(testPacker.pack, False, 3)
+        self.assertEqual(captured_output, expected_output)
 
-    #     # 2 Bins
-    #     testPacker = Packer()
-    #     testBin1 = Bin(2000, 300, 400, 200, 4000)
-    #     testBin2 = Bin(2000, 1000, 600, 800, 4000)
-    #     testItem1 = Item('testItem1', 10, 10, 30, 50)
-    #     testItem2 = Item('testItem2', 100, 10, 40, 50)
-    #     testItem3 = Item('testItem3', 55, 120, 30, 50)
-    #     testItem4 = Item('testItem4', 500, 500, 500, 50)
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
 
-    #     testPacker.add_bin(testBin1)
-    #     testPacker.add_bin(testBin2)
-    #     testPacker.add_item(testItem1)
-    #     testPacker.add_item(testItem2)
-    #     testPacker.add_item(testItem3)
-    #     testPacker.add_item(testItem4)
+        # Invalid Bin
+        testPacker = Packer()
+        testBin = "Not a Bin"
+        testItem = Item("testItem", 10, 10, 10, 10)
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem)
+        with self.assertRaises(AttributeError):
+            testPacker.pack(False, 3)
 
-    #     testPacker.pack()
-    
 
+        # Invalid Item
+        testPacker = Packer()
+        testBin = Bin("testBin", 10, 10, 10, 10)
+        testItem = "Not an Item"
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem)
+        with self.assertRaises(AttributeError):
+            testPacker.pack(False, 3)
 
 
 if __name__ == '__main__':
