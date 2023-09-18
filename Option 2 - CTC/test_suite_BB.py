@@ -325,116 +325,178 @@ class TestAux(unittest.TestCase):
             stack(1, testItem2)
             stack(testItem1, 2)
     
-    # # Testing Item Class Methods
+    #                      #
+    #  Item Class Methods  #
+    #                      #
 
-    # def test_itemConstructor(self):
-    #     testItem1 = Item('testItem1', 10, 20, 30, 50)
-    #     self.assertEqual(testItem1.name, 'testItem1')
-    #     self.assertEqual(testItem1.length, 10)
-    #     self.assertEqual(testItem1.width, 20)
-    #     self.assertEqual(testItem1.height, 30)
-    #     self.assertEqual(testItem1.weight, 50)
+    # BB Done
+    def test_itemConstructor(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+                                        
+        # Cylinder Item
+        testItem = Item("testItem", 8, 8, 4, 0.3)
+        self.assertEqual(testItem.name, 'testItem') 
+        self.assertEqual(testItem.length, 8) 
+        self.assertEqual(testItem.width, 8) 
+        self.assertEqual(testItem.height, 4) 
+        self.assertEqual(testItem.weight, 0.3) 
+            # Attributes not affected by constructor
+        self.assertEqual(testItem.rotation_type, 0)
+        self.assertEqual(testItem.position, [0, 0, 0])
+        self.assertEqual(testItem.number_of_decimals, 3)
 
-    #     # Attributes not affected by constructor
-    #     self.assertEqual(testItem1.rotation_type, 0)
-    #     self.assertEqual(testItem1.position, [0,0,0])
-    #     self.assertEqual(testItem1.number_of_decimals, 3)
 
-    #     # Different name types
-    #     testItem1 = Item(34, 10, 20, 30, 50)
-    #     self.assertEqual(testItem1.name, 34)
-
-    #     testItem1 = Item(False, 10, 20, 30, 50)
-    #     self.assertEqual(testItem1.name, False)
-
-    #     testItem2 = Item('testItem2', 30, 30, 30, 90)
-    #     testItem1 = Item(testItem2, 10, 20, 30, 50)
-        
-    #     with self.assertRaises(AssertionError):
-    #         # address of item always changes
-    #         self.assertEqual(testItem1.name, '<test_folder.item.Item object at 0x000001B90D9E7EB0>(10x20x30')
-
-    #     # Incorrect Data type measurements
-    #     testItem1 = Item('testItem1', '10', 20, 30, 50)
-    #     self.assertEqual(testItem1.length, '10')
-
-    #     testItem1 = Item('testItem1', 10, '20', 30, 50)
-    #     self.assertEqual(testItem1.width, '20')
-        
-    #     testItem1 = Item('testItem1', 10, 20, True, 50)
-    #     self.assertEqual(testItem1.height, True)
-
-    #     testItem1 = Item('testItem1', 10, 20, 30, False)
-    #     self.assertEqual(testItem1.weight, False)
+        # Random input types
+        testItem = Item(False, "WIDE", -34, 4.55, '0.3')
+        self.assertEqual(testItem.name, False) 
+        self.assertEqual(testItem.length, "WIDE") 
+        self.assertEqual(testItem.width, -34) 
+        self.assertEqual(testItem.height, 4.55) 
+        self.assertEqual(testItem.weight, '0.3') 
+            # Attributes not affected by constructor
+        self.assertEqual(testItem.rotation_type, 0)
+        self.assertEqual(testItem.position, [0, 0, 0])
+        self.assertEqual(testItem.number_of_decimals, 3)
  
-    # def test_itemFormatNumbers(self):
-    #     testItem1 = Item('testItem1', 10, 20, 30, 50)
-        
-    #     testItem1.format_numbers(5)
-    #     self.assertEqual(testItem1.length, 10.00000)
-    #     self.assertEqual(testItem1.width, 20.00000)
-    #     self.assertEqual(testItem1.height, 30.00000)
-    #     self.assertEqual(testItem1.weight, 50.00000)
-    #     self.assertEqual(testItem1.number_of_decimals, 5)
+    # BB Done
+    def test_itemFormatNumbers(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+        # Integer number of decimals
+        testItem = Item("testItem", 10.23423, 20.3, 30, 25)
+        testItem.format_numbers(3)
+        self.assertEqual(testItem.length, Decimal('10.234'))
+        self.assertEqual(testItem.width, Decimal('20.300'))
+        self.assertEqual(testItem.height, Decimal('30.000'))
+        self.assertEqual(testItem.weight, Decimal('25.000'))
+        self.assertEqual(testItem.number_of_decimals, 3)
 
-    #     testItem1.format_numbers(-5)
-    #     self.assertEqual(testItem1.length, 10)
-    #     self.assertEqual(testItem1.width, 20)
-    #     self.assertEqual(testItem1.height, 30)
-    #     self.assertEqual(testItem1.weight, 50)
-    #     self.assertEqual(testItem1.number_of_decimals, -5)
+        # Negative Integer number of decimals
+        testItem = Item("testItem", 10.23423, 20.3, 30, 25)
+        testItem.format_numbers(-2)
+        self.assertEqual(testItem.length, Decimal('10'))
+        self.assertEqual(testItem.width, Decimal('20'))
+        self.assertEqual(testItem.height, Decimal('30'))
+        self.assertEqual(testItem.weight, Decimal('25'))
+        self.assertEqual(testItem.number_of_decimals, -2)
 
-    #     testItem1.format_numbers(0)
-    #     self.assertEqual(testItem1.length, 10)
-    #     self.assertEqual(testItem1.width, 20)
-    #     self.assertEqual(testItem1.height, 30)
-    #     self.assertEqual(testItem1.weight, 50)
-    #     self.assertEqual(testItem1.number_of_decimals, 0)
+        # Large number of decimals
+        testItem = Item("testItem", 10.23423, 20.3, 30, 25)
+        testItem.format_numbers(10)
+        self.assertEqual(testItem.length, Decimal('10.2342300000'))
+        self.assertEqual(testItem.width, Decimal('20.3000000000'))
+        self.assertEqual(testItem.height, Decimal('30.0000000000'))
+        self.assertEqual(testItem.weight, Decimal('25.0000000000'))
+        self.assertEqual(testItem.number_of_decimals, 10)
 
-    #     testItem1.format_numbers(20)
-    #     self.assertEqual(testItem1.length, 10.00000000000000000000)
-    #     self.assertEqual(testItem1.width, 20.00000000000000000000)
-    #     self.assertEqual(testItem1.height, 30.00000000000000000000)
-    #     self.assertEqual(testItem1.weight, 50.00000000000000000000)
-    #     self.assertEqual(testItem1.number_of_decimals, 20)
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+                                        
+        # Number of decimals is 0
+        testItem = Item("testItem", 10.23423, 20.3, 30, 25)
+        testItem.format_numbers(0)
+        self.assertEqual(testItem.length, Decimal('10'))
+        self.assertEqual(testItem.width, Decimal('20'))
+        self.assertEqual(testItem.height, Decimal('30'))
+        self.assertEqual(testItem.weight, Decimal('25'))
+        self.assertEqual(testItem.number_of_decimals, 0)
+
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+       
+       # Invalid type of number of decimals
+        testItem = Item("testItem", 10.23423, 20.3, 30, 25)
+        with self.assertRaises(TypeError):
+            testItem.format_numbers(2.3)
+            testItem.format_numbers('a')
+
+    # BB Done
+    def test_itemGetVolume(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+
+        # Valid Item Construction
+        testItem = Item("testItem", 10, 20, 30, 25)
+        self.assertEqual(testItem.get_volume(), 6000)
+
+        # Item Construction Random Data Types (except Dimensions)
+        testItem = Item(34, 10, 20, 30, False)
+        self.assertEqual(testItem.get_volume(), 6000)
+
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+        # Item Construction with 0 dimensions
+        testItem = Item("testItem", 0, 0, 0, 25)
+        self.assertEqual(testItem.get_volume(), 0)
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+        # Invalid Dimension Types
+        testItem = Item("testItem", "10", True, 30, 25)
+        with self.assertRaises(decimal.InvalidOperation):
+            testItem.get_volume()
     
-    # def test_itemGetVolume(self):
-    #     testItem1 = Item('testItem1', 10, 20, 30, 50)
-    #     self.assertEqual(testItem1.get_volume(), 6000.000)
+    # BB Done
+    def test_itemGetDimension(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
 
-    #     # Non-integer values
-    #     testItem1 = Item('testItem1', 10.5, 20.34, 30.5342, 50)
-    #     self.assertEqual(testItem1.get_volume(), Decimal('6521.189'))
+        # Valid Item Construction
+        testItem = Item("testItem", 10, 20, 30, 25)
+        self.assertEqual(testItem.get_dimension(), [10,20,30])
 
-    #     # Non-numeric values
-    #     testItem1 = Item('testItem1', '10', False, 30, 50)
-    #     with self.assertRaises(decimal.InvalidOperation):
-    #         self.assertEqual(testItem1.get_volume(), 6000.000)
-    
-    # def test_itemGetDimension(self):
-    #     testItem1 = Item('testItem1', 10, 20, 30, 50)
-    #     self.assertEqual(testItem1.get_dimension(), [10,20,30])
+        # Small Dimensions
+        testItem = Item("testItem", 1, 2, 3, 25)
+        self.assertEqual(testItem.get_dimension(), [1,2,3])
 
-    #     testItem1 = Item('testItem1', 10.7, 20.65, 30.655, 50)
-    #     self.assertEqual(testItem1.get_dimension(), [10.7,20.65,30.655])
+        # Large Dimensions
+        testItem = Item("testItem", 150, 2000, 3320, 25)
+        self.assertEqual(testItem.get_dimension(), [150,2000,3320])
 
-    #     testItem1 = Item('testItem1', '10', False, 30, 50)
-    #     self.assertEqual(testItem1.get_dimension(), ['10',False,30])
 
-    # def test_itemString(self):
-    #     testItem1 = Item('testItem1', 10, 20, 30, 50)
-    #     self.assertEqual(testItem1.string(), 'testItem1(10x20x30, weight: 50) pos([0, 0, 0]) rt(0) vol(6000.000)')
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
 
-    #     testItem1 = Item(43, 10.6, 204.5, 30.34, 5043)
-    #     self.assertEqual(testItem1.string(), '43(10.6x204.5x30.34, weight: 5043) pos([0, 0, 0]) rt(0) vol(65768.018)')
+        # Invalid Dimension Data Types
+        testItem = Item("testItem", "10", False, 30.3, 25)
+        self.assertEqual(testItem.get_dimension(), ["10",False,30.3])
 
-    #     testItem1 = Item(True, 10, 20, 30, 50)
-    #     self.assertEqual(testItem1.string(), 'True(10x20x30, weight: 50) pos([0, 0, 0]) rt(0) vol(6000.000)')
+    # BB Done
+    def test_itemString(self):
+                                        #                #
+                                        # Positive Cases #
+                                        #                #
+        # Valid Item construction
+        testItem = Item("testItem", 10.23423, 20.3, 30, 25)
+        self.assertEqual(testItem.string(), "testItem(10.23423x20.3x30, weight: 25) pos([0, 0, 0]) rt(0) vol(6232.646)")
 
-    #     # Invalid measurements
-    #     testItem1 = Item('testItem1', '10', True, 30, 50)
-    #     with self.assertRaises(decimal.InvalidOperation):
-    #         self.assertEqual(testItem1.string(), 'testItem1(10x20x30, weight: 50) pos([0, 0, 0]) rt(0) vol(6000.000)')
+                                        #                #
+                                        #   Edge Cases   #
+                                        #                #
+
+        # Item construction with random values and datatypes (except dimensions)
+        testItem = Item(34, 10.23423, 20.3, 30, False)
+        self.assertEqual(testItem.string(), "34(10.23423x20.3x30, weight: False) pos([0, 0, 0]) rt(0) vol(6232.646)")
+                                        
+                                        #                #
+                                        # Negative Cases #
+                                        #                #
+
+        # Item construction with invalid dimension data types
+        testItem = Item("testItem", "10.23423", False, (1,23), 25)
+        with self.assertRaises(TypeError):
+            testItem.string()
 
     # # Testing Bin Class Methods
 
