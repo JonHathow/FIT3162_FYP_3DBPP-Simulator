@@ -322,7 +322,7 @@ class TestAux(unittest.TestCase):
                                         # Positive Cases #
                                         #                #
                                         
-        # Cylinder Item
+        # Valid Construction
         testItem = Item("testItem", 8, 8, 4, 0.3)
         self.assertEqual(testItem.name, 'testItem') 
         self.assertEqual(testItem.length, 8) 
@@ -491,7 +491,7 @@ class TestAux(unittest.TestCase):
                                         # Positive Cases #
                                         #                #
 
-        # Valid Bin Construction using default values
+        # Valid Bin Construction
         testbin = Bin(300, 100, 200, 100, 5000)
         self.assertEqual(testbin.size, 300)
         self.assertEqual(testbin.length, 100)

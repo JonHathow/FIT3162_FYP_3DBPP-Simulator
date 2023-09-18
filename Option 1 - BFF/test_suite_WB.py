@@ -9,18 +9,6 @@ import numpy as np
 White Box Testing for Option 1, Jerry's Algorithm
 """
 
-                                        #                #
-                                        # Positive Cases #
-                                        #                #
-                                        
-                                        #                #
-                                        #   Edge Cases   #
-                                        #                #
-                                        
-                                        #                #
-                                        # Negative Cases #
-                                        #                #
-
 class TestAux(unittest.TestCase):
     
     #                     #
@@ -131,7 +119,11 @@ class TestAux(unittest.TestCase):
  
     def test_getLimitNumberOfDecimals(self):
         """
-        No conditionals, 1 line of code, 100% Path Coverage
+        Conditional Testing:-
+        0 Conditions: 
+        
+        Path Coverage Testing:-
+        100% 
         """
         # Positive number of decimals
         self.assertEqual(getLimitNumberOfDecimals(3), 1.000)
@@ -160,11 +152,6 @@ class TestAux(unittest.TestCase):
         
         100% Path coverage
         """
-
-                                        #                #
-                                        # Positive Cases #
-                                        #                #
-                                        
         # typeof == 'cube'
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.partno, 1)
@@ -203,7 +190,8 @@ class TestAux(unittest.TestCase):
 
     def test_itemFormatNumbers(self):
         """
-        No conditionals
+        Conditional Testing:-
+        0 Conditions:
         
         100% Path coverage
         """
@@ -228,7 +216,8 @@ class TestAux(unittest.TestCase):
 
     def test_itemGetVolume(self):
         """
-        No conditionals
+        Conditional Testing:-
+        0 Conditions:
         
         100% Patch coverage
         """
@@ -420,7 +409,6 @@ class TestAux(unittest.TestCase):
         testbin.putItem(testItem3, [100,100,100])
         self.assertEqual(testbin.getTotalWeight(), 46)
 
-    # Delayed
     def test_binPutItem(self):
         """
         Conditional Testing:-
