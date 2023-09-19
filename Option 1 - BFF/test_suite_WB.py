@@ -15,7 +15,7 @@ class TestAux(unittest.TestCase):
     #  Auxiliary Methods  #
     #                     #
     
-    def test_rectIntersect(self):
+    def test_aux_rectIntersect(self):
         """
         Conditional Testing:-
         2 conditions:
@@ -64,7 +64,7 @@ class TestAux(unittest.TestCase):
         100% path coverage
         """
  
-    def test_intersect(self):
+    def test_aux_intersect(self):
         """
         Conditional testing:-
         3 Conditions:
@@ -117,7 +117,7 @@ class TestAux(unittest.TestCase):
         testItem1.position = [0, 15, 15]
         self.assertEqual(intersect(testItem1, testItem2), False)
  
-    def test_getLimitNumberOfDecimals(self):
+    def test_aux_getLimitNumberOfDecimals(self):
         """
         Conditional Testing:-
         0 Conditions: 
@@ -128,7 +128,7 @@ class TestAux(unittest.TestCase):
         # Positive number of decimals
         self.assertEqual(getLimitNumberOfDecimals(3), 1.000)
 
-    def test_set2Decimal(self):
+    def test_aux_set2Decimal(self):
         """
         Only difference is if default variable value is used
         
@@ -144,7 +144,7 @@ class TestAux(unittest.TestCase):
     #  Item Class Methods  #
     #                      #
 
-    def test_itemConstructor(self):
+    def test_item_constructor(self):
         """
         Conditional testing:-
         1 Condition:
@@ -188,7 +188,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testItem.position, [0,0,0])
         self.assertEqual(testItem.number_of_decimals, 0)
 
-    def test_itemFormatNumbers(self):
+    def test_item_formatNumbers(self):
         """
         Conditional Testing:-
         0 Conditions:
@@ -204,7 +204,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testItem.weight, Decimal('25.000'))
         self.assertEqual(testItem.number_of_decimals, 3)
 
-    def test_itemString(self):
+    def test_item_string(self):
         """
         No conditionals
         
@@ -214,7 +214,7 @@ class TestAux(unittest.TestCase):
         testItem = Item(1,"test","cube", [10.23423,20.3,30], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.string(), "1(10.23423x20.3x30, weight: 25) pos([0, 0, 0]) rt(0) vol(6233)")
 
-    def test_itemGetVolume(self):
+    def test_item_getVolume(self):
         """
         Conditional Testing:-
         0 Conditions:
@@ -225,7 +225,7 @@ class TestAux(unittest.TestCase):
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, True, "orange")
         self.assertEqual(testItem.getVolume(), 6000)
 
-    def test_itemGetMaxArea(self):
+    def test_item_getMaxArea(self):
         """
         Conditional testing:-
         1 Condition:
@@ -241,7 +241,7 @@ class TestAux(unittest.TestCase):
         testItem = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
         self.assertEqual(testItem.getMaxArea(), 200)
 
-    def test_itemGetDimension(self):
+    def test_item_getDimension(self):
         """
         Conditional Testing:-
         7 Conditions:
@@ -294,7 +294,7 @@ class TestAux(unittest.TestCase):
     #  Bin Class Methods  #
     #                     #
 
-    def test_binConstructor(self):
+    def test_bin_constructor(self):
         """
         Conditional testing:-
         No Conditions
@@ -340,7 +340,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.support_surface_ratio, 0)
         self.assertEqual(testbin.gravity, [])
 
-    def test_binFormatNumbers(self):
+    def test_bin_formatNumbers(self):
         """
         Conditional Testing:-
         No Conditions:
@@ -356,7 +356,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.max_weight, Decimal('5000.000'))
         self.assertEqual(testbin.number_of_decimals, 3)
 
-    def test_binString(self):
+    def test_bin_string(self):
         """
         Conditional Testing:-
         No Conditions:
@@ -368,7 +368,7 @@ class TestAux(unittest.TestCase):
         testbin = Bin(1, [100,200,100], 5000, 1, 0)
         self.assertEqual(testbin.string(), "1(100x200x100, max_weight:5000) vol(2000000)")
 
-    def test_binGetVolume(self):
+    def test_bin_getVolume(self):
         """
         Conditional Testing:-
         No Conditions:
@@ -379,7 +379,7 @@ class TestAux(unittest.TestCase):
         testbin = Bin(1, [100,200,100], 5000, 1, 0)
         self.assertEqual(testbin.getVolume(), 2000000)
 
-    def test_binGetTotalWeight(self):
+    def test_bin_getTotalWeight(self):
         """
         Loop Testing:-
         1 Loop:
@@ -409,7 +409,7 @@ class TestAux(unittest.TestCase):
         testbin.putItem(testItem3, [100,100,100])
         self.assertEqual(testbin.getTotalWeight(), 46)
 
-    def test_binPutItem(self):
+    def test_bin_putItem(self):
         """
         Conditional Testing:-
         8 Conditions:
@@ -514,7 +514,7 @@ class TestAux(unittest.TestCase):
         testbin.putItem(testItem2, [100,100,100])
         self.assertEqual(len(testbin.items), 1)
         
-    def test_binCheckDepth(self):
+    def test_bin_checkDepth(self):
         """
         Condition Testing:-
         1 Condition:
@@ -563,7 +563,7 @@ class TestAux(unittest.TestCase):
         unfix_point = [0, 0, 0, 0, 0, 10]
         self.assertEqual(testbin.checkDepth(unfix_point), 0.0)
 
-    def test_binCheckWidth(self):
+    def test_bin_checkWidth(self):
         """
         Condition Testing:-
         1 Condition:
@@ -614,7 +614,7 @@ class TestAux(unittest.TestCase):
         unfix_point = [0, 0, 0, 0, 0, 0]
         self.assertEqual(testbin.checkWidth(unfix_point), 0.0)
 
-    def test_binCheckWidth(self):
+    def test_bin_checkWidth(self):
         """
         Condition Testing:-
         1 Condition:

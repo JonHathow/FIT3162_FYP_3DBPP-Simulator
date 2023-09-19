@@ -15,7 +15,7 @@ class TestAux(unittest.TestCase):
     #  Auxiliary Methods  #
     #                     #
 
-    def test_rectIntersect(self):
+    def test_aux_rectIntersect(self):
         testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
         testItem2 = Item(2,"test","cube", [5,10,10], 25, 2, 400, False, "orange")
 
@@ -115,7 +115,7 @@ class TestAux(unittest.TestCase):
             rectIntersect(testItem1, testItem2, "hello", Axis.HEIGHT)
             rectIntersect(testItem1, testItem2, Axis.WIDTH, "hello")
 
-    def test_intersect(self):
+    def test_aux_intersect(self):
         testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
         testItem2 = Item(2,"test","cube", [20,10,10], 25, 2, 400, False, "orange")
 
@@ -162,7 +162,7 @@ class TestAux(unittest.TestCase):
             intersect(testItem1, 'a')
             intersect(testItem1, False)
         
-    def test_getLimitNumberOfDecimals(self):
+    def test_aux_getLimitNumberOfDecimals(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -189,7 +189,7 @@ class TestAux(unittest.TestCase):
             getLimitNumberOfDecimals('a')
             getLimitNumberOfDecimals(False)
 
-    def test_set2Decimal(self):
+    def test_aux_set2Decimal(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -244,7 +244,7 @@ class TestAux(unittest.TestCase):
     #  Item Class Methods  #
     #                      #
 
-    def test_itemConstructor(self):
+    def test_item_constructor(self):
 
                                         #                #
                                         # Positive Cases #
@@ -310,7 +310,7 @@ class TestAux(unittest.TestCase):
             testItem = Item(1,"test","cube", False, 25, 2, 400, True, "orange")
             testItem = Item(1,"test","cube", "(10, 20, 30)", 25, 2, 400, True, "orange")
 
-    def test_itemFormatNumbers(self):
+    def test_item_formatNumbers(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -363,7 +363,7 @@ class TestAux(unittest.TestCase):
             testItem.formatNumbers(2.3)
             testItem.formatNumbers('a')
 
-    def test_itemString(self):
+    def test_item_string(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -388,7 +388,7 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(TypeError):
             testItem.string()
 
-    def test_itemGetVolume(self):
+    def test_item_getVolume(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -417,7 +417,7 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(decimal.InvalidOperation):
             testItem.getVolume()
 
-    def test_itemGetMaxArea(self):
+    def test_item_getMaxArea(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -449,7 +449,7 @@ class TestAux(unittest.TestCase):
             testItem = Item(1,"test","cube", ["10", True, 30], 25, 2, 400, False, "orange")
             testItem.getMaxArea()
 
-    def test_itemGetDimension(self):
+    def test_item_getDimension(self):
 
                                         #                #
                                         # Positive Cases #
@@ -480,7 +480,7 @@ class TestAux(unittest.TestCase):
     #  Bin Class Methods  #
     #                     #
 
-    def test_binConstructor(self):
+    def test_bin_constructor(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -547,7 +547,7 @@ class TestAux(unittest.TestCase):
             testbin = Bin(1, 100, 4000, False, "true")
             testbin = Bin(1, "100", 4000, False, "true")
 
-    def test_binFormatNumbers(self):
+    def test_bin_formatNumbers(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -600,7 +600,7 @@ class TestAux(unittest.TestCase):
             testbin.formatNumbers(False)
             testbin.formatNumbers(13.2)
 
-    def test_binString(self):
+    def test_bin_string(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -627,7 +627,7 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(TypeError):
             testbin.string()
 
-    def test_binGetVolume(self):
+    def test_bin_getVolume(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -656,7 +656,7 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.assertEqual(testbin.getVolume(), 2000000.000)
 
-    def test_binGetTotalWeight(self):
+    def test_bin_getTotalWeight(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -694,7 +694,7 @@ class TestAux(unittest.TestCase):
         testbin.putItem(testItem, [0,0,0])
         self.assertEqual(testbin.getTotalWeight(), 25)
 
-    def test_binPutItem(self):
+    def test_bin_putItem(self):
 
                                         #                #
                                         # Positive Cases #
@@ -758,7 +758,7 @@ class TestAux(unittest.TestCase):
             testbin.putItem(5, [80, 90, 80])
             testbin.putItem(testbin2, [80, 90, 80])
      
-    def test_binCheckDepth(self):
+    def test_bin_checkDepth(self):
 
 
                                         #                #
@@ -814,7 +814,7 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(IndexError):
             testbin.checkDepth(unfix_point)
 
-    def test_binCheckWidth(self):
+    def test_bin_checkWidth(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -864,7 +864,7 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(IndexError):
             self.assertEqual(testbin.checkWidth(unfix_point), 0)
 
-    def test_binCheckHeight(self):
+    def test_bin_checkHeight(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -915,7 +915,7 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(IndexError):
             self.assertEqual(testbin.checkHeight(unfix_point), 0)
 
-    def test_binAddCorner(self):
+    def test_bin_addCorner(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -963,7 +963,7 @@ class TestAux(unittest.TestCase):
         corners = testbin.addCorner()
         self.assertEqual(corners, None)
 
-    def test_binPutCorner(self):
+    def test_bin_putCorner(self):
 
                                         #                #
                                         # Positive Cases #
@@ -1022,7 +1022,7 @@ class TestAux(unittest.TestCase):
         testbin.putCorner(0, corner_item)
         self.assertEqual(len(testbin.items), 1)
 
-    def test_binClearBin(self):
+    def test_bin_clearBin(self):
 
                                         #                #
                                         # Positive Cases #
@@ -1064,7 +1064,7 @@ class TestAux(unittest.TestCase):
     #  Packer Class Methods  #
     #                        #
 
-    def test_packerConstructor(self):
+    def test_packer_constructor(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -1076,7 +1076,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testPacker.total_items, 0)
         self.assertEqual(testPacker.binding, [])
 
-    def test_packerAddBin(self):
+    def test_packer_addBin(self):
 
                                         #                #
                                         # Positive Cases #
@@ -1105,7 +1105,7 @@ class TestAux(unittest.TestCase):
         testPacker.addBin("Not a Bin")
         self.assertEqual(len(testPacker.bins), 1)
 
-    def test_packerAddItem(self):
+    def test_packer_addItem(self):
 
                                         #                #
                                         # Positive Cases #
@@ -1134,7 +1134,7 @@ class TestAux(unittest.TestCase):
         testPacker.addItem("Not an Item")
         self.assertEqual(len(testPacker.items), 1)
 
-    def test_packerPack2Bin(self):
+    def test_packer_pack2Bin(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -1204,7 +1204,7 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(AttributeError):
             testpacker.pack2Bin(testbin, testItem, True, False, 0)
 
-    def test_packerSortBinding(self):
+    def test_packer_sortBinding(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -1264,7 +1264,7 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(ValueError):
             testPacker.sortBinding(testBin)
     
-    def test_packerPutOrder(self):
+    def test_packer_putOrder(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -1327,7 +1327,7 @@ class TestAux(unittest.TestCase):
                 item_lst.append(item.partno)
         self.assertEqual(item_lst,["1", "2", "3"])
 
-    def test_packerGravityCenter(self):
+    def test_packer_gravityCenter(self):
                                         #                #
                                         # Positive Cases #
                                         #                #
@@ -1411,7 +1411,7 @@ class TestAux(unittest.TestCase):
         with self.assertRaises(AttributeError):
             testPacker.gravityCenter(testBin)
 
-    def test_packerPack(self):
+    def test_packer_pack(self):
 
         #print bin items
         def retStr(bin):

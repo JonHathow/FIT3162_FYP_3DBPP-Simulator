@@ -2,6 +2,8 @@ from test_folder import get_limit_number_of_decimals, set_to_decimal, rect_inter
 import unittest
 from decimal import Decimal
 import decimal
+import sys
+from io import StringIO
 
 """
 White Box Testing for Option 2, Janet's Algorithm
@@ -12,31 +14,7 @@ class TestAux(unittest.TestCase):
     #  Auxiliary Methods  #
     #                     #
 
-    # WB Done
-    def test_get_limit_number_of_decimals(self):
-        """
-        Conditional Testing:-
-        0 Conditions: 
-        
-        Path Coverage Testing:-
-        100% 
-        """
-        # Positive number of decimals
-        self.assertEqual(get_limit_number_of_decimals(3), 1.000)
-    
-    # WB Done
-    def test_set_to_decimal(self):
-        """
-        Conditional Testing:-
-        0 Conditions
-        
-        100% path coverage
-        """
-        # Float value with a custom number of decimals
-        self.assertEqual(set_to_decimal(9.4231, 2), Decimal('9.42'))
-    
-    # WB Done
-    def test_rect_intersect(self):
+    def test_aux_rect_intersect(self):
         """
         Conditional Testing:-
         2 conditions:
@@ -81,9 +59,41 @@ class TestAux(unittest.TestCase):
         testItem2 = Item("testItem2", 100, 100, 10, 25)
         testItem2.position = [100, 100, 0]
         self.assertEqual(rect_intersect(testItem1, testItem2, Axis.LENGTH, Axis.WIDTH), False)
+
+    def test_aux_intersect(self):
+        """
+        Conditional Testing:-
+        0 Conditions: 
+        
+        Path Coverage Testing:-
+        100% 
+        """
+        testItem1 = Item("test1", 10, 20, 30, 25)
+        testItem2 = Item("test2", 20, 10, 10, 25)
+        self.assertEqual(intersect(testItem1, testItem2), True)
+
+    def test_aux_get_limit_number_of_decimals(self):
+        """
+        Conditional Testing:-
+        0 Conditions: 
+        
+        Path Coverage Testing:-
+        100% 
+        """
+        # Positive number of decimals
+        self.assertEqual(get_limit_number_of_decimals(3), 1.000)
     
-    # WB Done
-    def test_stack(self):
+    def test_aux_set_to_decimal(self):
+        """
+        Conditional Testing:-
+        0 Conditions
+        
+        100% path coverage
+        """
+        # Float value with a custom number of decimals
+        self.assertEqual(set_to_decimal(9.4231, 2), Decimal('9.42'))
+
+    def test_aux_stack(self):
         """
         Conditional Testing:-
         Conditions:
@@ -177,8 +187,7 @@ class TestAux(unittest.TestCase):
     #  Item Class Methods  #
     #                      #
 
-    # WB Done
-    def test_itemConstructor(self):
+    def test_item_constructor(self):
         """
         Conditional Testing:-
         0 Conditions:
@@ -198,8 +207,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testItem.position, [0, 0, 0])
         self.assertEqual(testItem.number_of_decimals, 3)
 
-    # WB Done
-    def test_itemFormatNumbers(self):
+    def test_item_format_numbers(self):
         """
         Conditional Testing:-
         0 Conditions:
@@ -215,8 +223,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testItem.weight, Decimal('25.000'))
         self.assertEqual(testItem.number_of_decimals, 3)
     
-    # WB Done
-    def test_itemGetVolume(self):
+    def test_item_get_volume(self):
         """
         Conditional Testing:-
         0 Conditions:
@@ -227,8 +234,7 @@ class TestAux(unittest.TestCase):
         testItem = Item("testItem", 10, 20, 30, 25)
         self.assertEqual(testItem.get_volume(), 6000)
 
-    # WB Done  
-    def test_itemGetDimension(self):
+    def test_item_get_dimension(self):
         """
         Conditional Testing:-
         7 Conditions:
@@ -280,8 +286,7 @@ class TestAux(unittest.TestCase):
         testItem.rotation_type = 6
         self.assertEqual(testItem.get_dimension(), [])
     
-    # WB Done
-    def test_itemString(self):
+    def test_item_string(self):
         """
         Conditional Testing:-
         0 Conditions:
@@ -298,8 +303,7 @@ class TestAux(unittest.TestCase):
     #  Bin Class Methods  #
     #                     #
 
-    # WB Done
-    def test_binConstructor(self):
+    def test_bin_constructor(self):
         """
         Conditional Testing:-
         0 Conditions:
@@ -321,8 +325,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.unfitted_items, [])
         self.assertEqual(testbin.number_of_decimals, 3)
 
-    # WB Done
-    def test_binFormatNumbers(self):
+    def test_bin_format_numbers(self):
         """
         Conditional Testing:-
         0 Conditions:
@@ -340,8 +343,7 @@ class TestAux(unittest.TestCase):
         self.assertEqual(testbin.capacity, Decimal('5000.000'))
         self.assertEqual(testbin.number_of_decimals, 3)
     
-    # WB Done
-    def test_binGetVolume(self):
+    def test_bin_get_volume(self):
         """
         Conditional Testing:-
         0 Conditions:
@@ -353,8 +355,7 @@ class TestAux(unittest.TestCase):
         testbin = Bin(300, 100, 200, 100, 5000)
         self.assertEqual(testbin.get_volume(), 2000000)
     
-    # WB Done
-    def test_binGetTotalWeight(self):
+    def test_bin_get_total_weight(self):
         """
         Conditional Testing:-
         0 Conditions:
@@ -381,8 +382,7 @@ class TestAux(unittest.TestCase):
         testbin.items.append((testItem3))
         self.assertEqual(testbin.get_total_weight(), 46)
   
-    # WB Done
-    def test_binGetFillingRatio(self):
+    def test_bin_get_filling_ratio(self):
         """
         Conditional Testing:-
         0 Conditions:
@@ -409,8 +409,7 @@ class TestAux(unittest.TestCase):
         testBin.items.append(testItem3)
         self.assertEqual(testBin.get_filling_ratio(), Decimal('0.014'))
 
-    # WB Done
-    def test_binCanHoldItemWithRotation(self):
+    def test_bin_can_hold_item_with_rotation(self):
         """
         Conditional Testing:-
         5 Conditions:
@@ -503,8 +502,7 @@ class TestAux(unittest.TestCase):
         testBin.items.append(testItem1)
         self.assertEqual(testBin.can_hold_item_with_rotation(testItem2, [0,0,0]), [])
     
-    # WB Done
-    def test_binPutItem(self):
+    def test_bin_put_item(self):
         """
         Conditional Testing:-
         4 Conditions:
@@ -560,8 +558,7 @@ class TestAux(unittest.TestCase):
         testBin.put_item(testItem, [0, 0, 0], [0, 0, 0])
         self.assertEqual(testBin.total_items, 1)
     
-    # WB Done
-    def test_binString(self):
+    def test_bin_string(self):
         """
         Conditional Testing:-
         0 Conditions:
@@ -573,76 +570,248 @@ class TestAux(unittest.TestCase):
         testBin = Bin(300, 300, 300, 300, 400)
         self.assertEqual(testBin.string(), '300(300x300x300, max_weight:400) vol(27000000.000) item_number(0) filling_ratio(0.000)')
 
-    # #                        #
-    # #  Packer Class Methods  #
-    # #                        #
+    #                        #
+    #  Packer Class Methods  #
+    #                        #
 
-    #
-    def test_packerConstructor(self):
-        pass
-    
-    #
-    def test_packerAddBin(self):
-        pass
+    def test_packer_constructor(self):
+        """
+        Conditional Testing:-
+        0 Conditions:
 
-        # Function to return string method of bin
-        def retStr(bins):
-            res = []
-            for bin in bins:
-                res.append(bin.string())
-            return res
-        
-        self.assertEqual(retStr(testPacker.bins), ['300(300x300x300, max_weight:400) vol(27000000.000) item_number(0) filling_ratio(0.000)'])
-
-        testBin2 = Bin(1000, 200, 500, 700, 20000)
-        testPacker.add_bin(testBin2)
-        self.assertEqual(retStr(testPacker.bins), ['300(300x300x300, max_weight:400) vol(27000000.000) item_number(0) filling_ratio(0.000)', '1000(200x500x700, max_weight:20000) vol(70000000.000) item_number(0) filling_ratio(0.000)'])
-    
-    #
-    def test_packerAddItem(self):
-        pass
-            
+        Path Coverage Testing:
+        100%
+        """
         testPacker = Packer()
-        testItem1 = Item('testItem1', 10, 120, 30, 120)
-        testItem2 = Item('testItem2', 100, 10, 60, 100)
-        self.assertEqual(testPacker.total_items, 0)
-        self.assertEqual(retStr(testPacker.unplaced_items), [])
+        self.assertEqual(testPacker.bins,[])
+        self.assertEqual(testPacker.unplaced_items,[])
+        self.assertEqual(testPacker.placed_items,[])
+        self.assertEqual(testPacker.unfit_items,[])
+        self.assertEqual(testPacker.total_items,0)
+        self.assertEqual(testPacker.total_used_bins,0)
+        self.assertEqual(testPacker.used_bins,[])
+    
+    def test_packer_add_bin(self):
+        """
+        Conditional Testing:-
+        0 Conditions:
 
+        Path Coverage Testing:
+        100%
+        """
+        testPacker = Packer()
+        testbin = Bin(300, 100, 200, 100, 5000)
+        testPacker.add_bin(testbin)
+        self.assertEqual(len(testPacker.bins), 1)
+    
+    def test_packer_add_item(self):
+        """
+        Conditional Testing:-
+        0 Conditions:
+
+        Path Coverage Testing:
+        100%
+        """
+        testPacker = Packer()
+        testItem = Item("testitem", 10, 30, 30, 25)
+        testPacker.add_item(testItem)
+        self.assertEqual(len(testPacker.unplaced_items), 1)
+
+    def test_packer_pivot_dict(self):
+        """
+        Patch Coverage Testing:-
+        100%
+        """
+
+        testPacker = Packer()
+        testBin = Bin(2000, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 10, 10, 30, 50)
+        testPacker.add_bin(testBin)
         testPacker.add_item(testItem1)
-        self.assertEqual(testPacker.total_items, 1)
-        self.assertEqual(retStr(testPacker.unplaced_items), ['testItem1(10x120x30, weight: 120) pos([0, 0, 0]) rt(0) vol(36000.000)'])
-    
         testPacker.add_item(testItem2)
-        self.assertEqual(testPacker.total_items, 2)
-        self.assertEqual(retStr(testPacker.unplaced_items), ['testItem1(10x120x30, weight: 120) pos([0, 0, 0]) rt(0) vol(36000.000)', 'testItem2(100x10x60, weight: 100) pos([0, 0, 0]) rt(0) vol(60000.000)'])
+        testBin.put_item(testItem2, [0,0,0],[0,0,0])
 
-        testPacker.add_item('testItem1')
-        self.assertEqual(testPacker.total_items, 3)
-        with self.assertRaises(AttributeError):
-            retStr(testPacker.unplaced_items)
+        # Item not put in bin yet (Bin already has another item)
+        self.assertEqual(testPacker.pivot_dict(testBin, testItem1), {(10, 0, 0): [290, 400, 200], (0, 10, 0): [300, 390, 200], (0, 0, 30): [300, 400, 170]})
+        
+        # Item is already in bin
+        self.assertEqual(testPacker.pivot_dict(testBin, testItem2), {})
+         
+    def test_packer_pivot_list(self):
+        """
+        Conditional Testing:-
+        3 Conditions:
+        if axis == Axis.LENGTH: 
+        elif axis == Axis.WIDTH: 
+        elif axis == Axis.HEIGHT:
 
-    #
-    def test_packerPivotDict(self):
-        pass
-     
-    #
-    def test_packerPivotList(self):
-        pass
+        Path Coverage Testing:
+        100%
+        """
+        
+        # All possible conditions are met due to the for loop. therefore only 1 test is necessary
+        testPacker = Packer()
+        testBin = Bin(2000, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 10, 10, 30, 50)
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testBin.put_item(testItem2, [0,0,0],[0,0,0])
+        self.assertEqual(testPacker.pivot_list(testBin, testItem1), [[10, 0, 0], [0, 10, 0], [0, 0, 30]])
+        self.assertEqual(testPacker.pivot_list(testBin, testItem2), [[10, 0, 0], [0, 10, 0], [0, 0, 30]])
+
+    def test_packer_choose_pivot_point(self):
+        """
+        Path Coverage Testing:-
+        100%
+        """
+        testPacker = Packer()
+        testBin = Bin(2000, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 10, 10, 30, 50)
+        testPacker.add_bin(testBin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testBin.put_item(testItem2, [0,0,0],[0,0,0])
+
+        # Item not put in bin yet (Bin already has another item)
+        self.assertEqual(testPacker.choose_pivot_point(testBin, testItem1), [10, 0, 0])
+        
+        # Item is already in bin
+        self.assertEqual(testPacker.choose_pivot_point(testBin, testItem2), False)
+
+    def test_packer_pack_to_bin(self):
+        """
+        Conditional Testing:-
+        4 Conditions:
+        if not bin.items:
+            if not response:
+        else:
+            if not pivot_point:
+        
+        Path Coverage Testing:-
+        100%
+        """
+
+        """
+        if not bin.items:
+            if not response:
+        else:
+            if not pivot_point:
+            
+        True, True, - , -
+        """
+        testpacker = Packer()
+        testBin = Bin(200, 300, 400, 200, 4000)
+        testItem = Item('testItem', 1000, 1000, 3000, 50)
+        testpacker.pack_to_bin(testBin, testItem)
+        self.assertEqual(testBin.total_items, 0)
+        self.assertEqual(len(testBin.unfitted_items), 1)
+
+        """
+        if not bin.items:
+            if not response:
+        else:
+            if not pivot_point:
+            
+        True, False, - , -
+        """
+        testpacker = Packer()
+        testBin = Bin(200, 300, 400, 200, 4000)
+        testItem = Item('testItem', 10, 10, 30, 50)
+        testpacker.pack_to_bin(testBin, testItem)
+        self.assertEqual(testBin.total_items, 1)
+        self.assertEqual(len(testBin.unfitted_items), 0)
+
+        """
+        if not bin.items:
+            if not response:
+        else:
+            if not pivot_point:
+            
+        False, -, True, True
+        """
+        testpacker = Packer()
+        testBin = Bin(200, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 1000, 1000, 3000, 50)
+        testpacker.pack_to_bin(testBin, testItem1)
+        testpacker.pack_to_bin(testBin, testItem2)
+        self.assertEqual(testBin.total_items, 1)
+        self.assertEqual(len(testBin.unfitted_items), 1)
+
+        """
+        if not bin.items:
+            if not response:
+        else:
+            if not pivot_point:
+            
+        False, -, True, False
+        """
+        testpacker = Packer()
+        testBin = Bin(200, 300, 400, 200, 4000)
+        testItem1 = Item('testItem1', 10, 10, 30, 50)
+        testItem2 = Item('testItem2', 10, 10, 30, 50)
+        testpacker.pack_to_bin(testBin, testItem1)
+        testpacker.pack_to_bin(testBin, testItem2)
+        self.assertEqual(testBin.total_items, 2)
+        self.assertEqual(len(testBin.unfitted_items), 0)
     
-    #
-    def test_packerChoosePivotPoint(self):
-        pass
+    def test_packer_pack(self):
+        """
+        Conditional Testing:-
+        1 Condition:
+        if bin.get_filling_ratio() == max_filling_ratio:
 
-    #
-    def test_packerPackToBin(self):
-        pass
+        Path Coverage Testing:-
+        100%
+        """
+
+        # Captures functions output
+        def capture_output(function, *args):
+            captured_output = StringIO()
+            sys.stdout = captured_output
+            function(*args)
+            sys.stdout = sys.__stdout__
+            return captured_output.getvalue().strip()
+
+        # testBin1 (if bin.get_filling_ratio() == max_filling_ratio:), False
+        # testBin2 (if bin.get_filling_ratio() == max_filling_ratio:), True
+        testPacker = Packer()
+        testBin1 = Bin("testBin1", 10, 10, 10, 10)
+        testBin2 = Bin("testBin2", 20, 20, 20, 20)
+        testItem1 = Item("testItem1", 5, 5, 5, 1)
+        testItem2 = Item("testItem2", 15, 15, 15, 2)
+        testItem3 = Item("testItem3", 10, 10, 10, 1)
+        
+        testPacker.add_bin(testBin1)
+        testPacker.add_bin(testBin2)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.add_item(testItem3)
+        expected_output = (
+        "::::::::::: testBin1(10.000x10.000x10.000, max_weight:10.000) vol(1000.000) item_number(1) filling_ratio(0.125)\n"
+        "FITTED ITEMS:\n"
+        "====>  testItem1(5.000x5.000x5.000, weight: 1.000) pos([0, 0, 0]) rt(0) vol(125.000)\n"
+        "\n"
+        "UNFITTED ITEMS:\n"
+        "====>  testItem3(10.000x10.000x10.000, weight: 1.000) pos([0, 0, Decimal('5.000')]) rt(5) vol(1000.000)\n"
+        "====>  testItem2(15.000x15.000x15.000, weight: 2.000) pos([0, 0, Decimal('5.000')]) rt(5) vol(3375.000)\n"
+        "\n"
+        "::::::::::: testBin2(20.000x20.000x20.000, max_weight:20.000) vol(8000.000) item_number(2) filling_ratio(0.141)\n"
+        "FITTED ITEMS:\n"
+        "====>  testItem1(5.000x5.000x5.000, weight: 1.000) pos([0, 0, 0]) rt(0) vol(125.000)\n"
+        "====>  testItem3(10.000x10.000x10.000, weight: 1.000) pos([Decimal('5.000'), 0, 0]) rt(0) vol(1000.000)\n"
+        "\n"
+        "UNFITTED ITEMS:\n"
+        "====>  testItem2(15.000x15.000x15.000, weight: 2.000) pos([Decimal('5.000'), 0, Decimal('10.000')]) rt(5) vol(3375.000)\n"
+        "\n"
+        "Selected bin with highest filling ratio:  testBin2(20.000x20.000x20.000, max_weight:20.000) vol(8000.000) item_number(2) filling_ratio(0.141)"
+        )
+        captured_output = capture_output(testPacker.pack, False, 3)
+        self.assertEqual(captured_output, expected_output)
     
-    #
-    # def test_packerPack(self):
-    #     pass
-    
-
-
-
 if __name__ == '__main__':
     unittest.main()
