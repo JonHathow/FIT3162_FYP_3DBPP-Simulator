@@ -86,7 +86,6 @@ class Bin:
             
             else:
                 continue 
-        
         return rotation_type_list 
 
     def put_item(self, item, pivot, distance_3d): 
