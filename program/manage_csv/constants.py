@@ -77,6 +77,7 @@ FILE_LASTBIN        = 'lastBinFile.txt'
 FILE_LASTBOX        = 'lastBoxFile.txt'
 FILE_FITTED         = 'outputFitted'
 FILE_UNFITTED       = 'outputUnfitted'
+FILE_OUTBINS        = 'outputBins'
 FILE_SUMMARY        = 'outputSummary'
 
 # Output file paths
@@ -92,6 +93,7 @@ FILE_UNFITTED_1     = f'{FOLDER_OUTPUTS_1}\{FILE_UNFITTED}'
 FILE_UNFITTED_2     = f'{FOLDER_OUTPUTS_2}\{FILE_UNFITTED}'
 FILE_SUMMARY_1      = f'{FOLDER_OUTPUTS_1}\{FILE_SUMMARY}'
 FILE_SUMMARY_2      = f'{FOLDER_OUTPUTS_2}\{FILE_SUMMARY}'
+FILE_OUTBINS_1      = f'{FOLDER_OUTPUTS_1}\{FILE_OUTBINS}'
 
 # Interchangeable prompts for bin inputs
 PROMPT_QTY_BIN      = "# of bins"
@@ -122,11 +124,15 @@ ERROR_STRING    = "ERROR: Invalid string input."
 ERROR_BOOLEAN   = "ERROR: Invalid input. Y/N only."
 
 # CSV file header with row names
-HEADER_BIN_1    = ['partno', 'width', 'height', 'depth', 'max_weight']    
-HEADER_BIN_2    = ['name', 'width', 'height', 'depth', 'max_weight']
-HEADER_BOX_1    = ['partno', 'name', 'typeof', 'width', 'height', 'depth', 'weight', 'level', 'loadbear', 'updown', 'color']
-HEADER_BOX_2    = ['name', 'width', 'height', 'depth', 'weight']
-HEADER_OUT_1    = ['partno', 'name', 'color', 'width', 'height', 'depth', 'volume', 'weight', 'position', 'rotation type']
+HEADER_BIN_1        = ['partno', 'width', 'height', 'depth', 'max_weight']    
+HEADER_BIN_2        = ['name', 'width', 'height', 'depth', 'max_weight']
+HEADER_BOX_1        = ['partno', 'name', 'typeof', 'width', 'height', 'depth', 'weight', 'level', 'loadbear', 'updown', 'color']
+HEADER_BOX_2        = ['name', 'width', 'height', 'depth', 'weight']
+HEADER_OUT_1        = ['partno', 'name', 'color', 'width', 'height', 'depth', 'volume', 'weight', 'position', 'rotation_type']
+HEADER_OUT_2        = []
+HEADER_SUM_1        = ['input_bin_file', 'input_box_file', 'total_bin_volume', 'total_volume_utilised', 'total_residual_volume', 'total_space_utilisation', 'unpacked_volume']
+HEADER_SUM_2        = []
+HEADER_OUTBINS_1    = ['partno', 'volume', 'volume_utilised', 'residual_volume', 'space_utilisation', 'gravity_distribution']
 
 # File I/O error messages
 FILECOUNT_ERROR_VALUE       = "\nERROR: Valid integer value not found in given file. Creating new file..."
