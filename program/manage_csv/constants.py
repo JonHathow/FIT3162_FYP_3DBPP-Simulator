@@ -111,7 +111,7 @@ PROMPT_LEVEL_VAR    = "variation in LOADING PRIORITY LEVEL"
 PROMPT_UPDOWN_VAR   = "variation in LOADING ORIENTATION"
 PROMPT_UPDOWN       = "boxes to be loaded UPSIDE-DOWN"
 
-# Interchangeable prompts for handling missing files
+# Interchangeable prompts for locating specific files
 PROMPT_CSVFILE_BIN      = f"the numeric identifier of a {FILE_BIN}#.csv file you wish to access"
 PROMPT_CSVFILE_BOX      = f"the numeric identifier of a {FILE_BOX}#.csv file you wish to access"
 
