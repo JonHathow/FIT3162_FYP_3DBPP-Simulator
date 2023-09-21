@@ -33,7 +33,7 @@ def read_input(filename: str, filetype: File, option: Option) -> Optional[List[s
                   determines which PROMPT_CSVFILE string is used when the user is
                   prompted for a file to read
     """
-    filename = fetch_filename(filename)
+    filename = fetch_filename(filename, filetype)
     update_lastfile(filename, option, filetype)
 
     try:
