@@ -1,11 +1,11 @@
 """ Handles writing and reading of CSV files for Option 1. """
 
 import time
-from manage_csv.constants import Mode, Option, MENU_INPUT, MENU_INVALID, MENU_BIN_NOTLOADED, MENU_END, FILE_BIN_1, FILE_BOX_1
-from manage_csv.write_input_bin import write_input_bin_func
-from manage_csv.write_input_box import write_input_box_func
-from manage_csv.read_input_csv import read_input
-from Option1_package import Packer, Bin, Item, Painter
+from .manage_csv import Mode, Option, MENU_INPUT, MENU_INVALID, MENU_BIN_NOTLOADED, MENU_END, FILE_BIN_1, FILE_BOX_1
+from .manage_csv import write_input_bin_func
+from .manage_csv import write_input_box_func
+from .manage_csv import read_input
+from .Option1_package import Packer, Bin, Item, Painter
 
 
 def O1_input():
@@ -139,31 +139,51 @@ def O1_input():
 
         else:
             print(MENU_INVALID)
-            
+      
 def O1_input_test():
+        
     bins_loaded = False
     while True:
+
         response = input(MENU_INPUT)
+
+        # Write a CSV file for bins.
         if response == "1":
             write_input_bin_func(Option.OPTION1.value)
+
+        # Write a CSV file for boxes.
         elif response == "2":
             write_input_box_func(Option.OPTION1.value)
+
+        # Read a CSV file for bins.
         elif response == "3":
             bin_params = read_input(FILE_BIN_1, Mode.BIN.value)
+
             if bin_params is not None:
+
+                # Initialize packing function.
                 packer = Packer()
+
+                # Initialize bins.
                 for b in bin_params:
                     partno = b[0]
                     WHD = (float(b[1]), float(b[2]), float(b[3]))
                     max_weight = b[4]
                     packer.addBin(Bin(partno, WHD, max_weight))
+
                 bins_loaded = True
+
+        # Read a CSV file for boxes.
         elif response == "4":
+
             if not bins_loaded:
-                return MENU_BIN_NOTLOADED
+                print(MENU_BIN_NOTLOADED)
+
             else:
                 item_params = read_input(FILE_BOX_1, Mode.BOX.value)
+
                 if item_params is not None:
+
                     for item in item_params:
                         partno = item[0]
                         name = item[1]
@@ -175,6 +195,8 @@ def O1_input_test():
                         updown = bool(item[9])
                         color = item[10]
                         packer.addItem(Item(partno, name, typeof, WHD, weight, level, loadbear, updown, color))
+
+                    #region Calculate packing
                     start = time.time()                
                     packer.pack(
                         bigger_first=True,
@@ -185,30 +207,34 @@ def O1_input_test():
                         number_of_decimals=0
                     )
                     stop = time.time()
-                    res = ("***************************************************\n")
+
+                    # print result
+                    print("***************************************************")
                     for idx,b in enumerate(packer.bins) :
-                        res += ("**" + b.string() + "**\n")
-                        res += ("***************************************************\n")
-                        res += ("FITTED ITEMS:\n")
-                        res += ("***************************************************\n")
+                        print("**", b.string(), "**")
+                        print("***************************************************")
+                        print("FITTED ITEMS:")
+                        print("***************************************************")
                         volume = b.width * b.height * b.depth
                         volume_t = 0
                         volume_f = 0
                         unfitted_name = ''
                         for item in b.items:
-                            res += ("partno : " + item.partno + "\n")
-                            res += ("color : " + item.color + "\n")
-                            res += ("position : " + item.position + "\n")
-                            res += ("rotation type : " + item.rotation_type + "\n")
-                            res += ("W*H*D : " + str(item.width) +' * '+ str(item.height) +' * '+ str(item.depth) + "\n")
-                            res += ("volume : " + float(item.width) * float(item.height) * float(item.depth) + "\n")
-                            res += ("weight : " + float(item.weight) + "\n")
+                            print("partno : ",item.partno)
+                            print("color : ",item.color)
+                            print("position : ",item.position)
+                            print("rotation type : ",item.rotation_type)
+                            print("W*H*D : ",str(item.width) +' * '+ str(item.height) +' * '+ str(item.depth))
+                            print("volume : ",float(item.width) * float(item.height) * float(item.depth))
+                            print("weight : ",float(item.weight))
                             volume_t += float(item.width) * float(item.height) * float(item.depth)
-                            res += ("***************************************************\n")
-                        res += ('space utilization : {}%'.format(round(volume_t / float(volume) * 100 ,2)) + "\n")
-                        res += ('residual volumn : ' +  str(float(volume) - volume_t)  + "\n")
-                        res += ("gravity distribution : " + str(b.gravity) + "\n")
-                        res += ("***************************************************\n")
+                            print("***************************************************")
+                        
+                        print('space utilization : {}%'.format(round(volume_t / float(volume) * 100 ,2)))
+                        print('residual volumn : ', float(volume) - volume_t )
+                        print("gravity distribution : ",b.gravity)
+                        print("***************************************************")
+                        # draw results
                         painter = Painter(b)
                         fig = painter.plotBoxAndItems(
                             title=b.partno,
@@ -216,26 +242,36 @@ def O1_input_test():
                             write_num=False,
                             fontsize=10
                         )
-                    res += ("***************************************************\n")
-                    res += ("UNFITTED ITEMS:\n")
+
+                    print("***************************************************")
+                    print("UNFITTED ITEMS:")
                     for item in packer.unfit_items:
-                        res += ("***************************************************\n")
-                        res += ('name : ' + item.name + "\n")
-                        res += ("partno : " + item.partno + "\n")
-                        res += ("color : " + item.color + "\n")
-                        res += ("W*H*D : " + str(item.width) +' * '+ str(item.height) +' * '+ str(item.depth) + "\n")
-                        res += ("volume : " + str(float(item.width) * float(item.height) * float(item.depth)) + "\n")
-                        res += ("weight : " + str(item.weight) + "\n")
+                        print("***************************************************")
+                        print('name : ',item.name)
+                        print("partno : ",item.partno)
+                        print("color : ",item.color)
+                        print("W*H*D : ",str(item.width) +' * '+ str(item.height) +' * '+ str(item.depth))
+                        print("volume : ",float(item.width) * float(item.height) * float(item.depth))
+                        print("weight : ",float(item.weight))
                         volume_f += float(item.width) * float(item.height) * float(item.depth)
                         unfitted_name += '{},'.format(item.partno)
-                        res += ("***************************************************\n")
-                    res += ("***************************************************\n")
-                    res += ('unpack item : ' + unfitted_name + "\n")
-                    res += ('unpack item volumn : ' + str(volume_f) + "\n")
-                    res += ('used time : ' + str(stop - start) + "\n")
+                        print("***************************************************")
+                    print("***************************************************")
+                    print('unpack item : ',unfitted_name)
+                    print('unpack item volumn : ',volume_f)
+
+                    print('used time : ',stop - start)
+                    for bin in packer.bins:
+                        print(bin.string())
+                        for item in bin.items:
+                            print(item.string())
+
                     fig.show()
-                    return res
+                    #endregion
+
         elif response == "0":
-            return MENU_END
+            print(MENU_END)
+            break
+
         else:
-            return MENU_INVALID
+            print(MENU_INVALID)

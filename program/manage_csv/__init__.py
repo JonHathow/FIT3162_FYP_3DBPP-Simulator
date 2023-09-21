@@ -7,4 +7,4 @@ from .write_input_box import write_input_box_func, prompt_input_boxes
 from .input_parameters import InputBinParameters, InputBoxParameters
 from .prompts import prompt_boolean, prompt_integer, prompt_number, prompt_range, get_input
 from .manage_filecount import update_filecount, fix_filecount, fetch_filecount
-from .constants import PROMPT_LASTFILE_BIN, PROMPT_LASTFILE_BOX, FILE_BOXCOUNT_2
+from .constants import PROMPT_LASTFILE_BIN, PROMPT_LASTFILE_BOX, FILE_BOXCOUNT_2, FILE_BIN_2

@@ -1,10 +1,10 @@
 """ Handles writing and reading of CSV files for Option 2. """
 
-from manage_csv.constants import Mode, Option, MENU_INPUT, MENU_INVALID, MENU_BIN_NOTLOADED, MENU_END, FILE_BIN_2, FILE_BOX_2
-from manage_csv.write_input_bin import write_input_bin_func
-from manage_csv.write_input_box import write_input_box_func
-from manage_csv.read_input_csv import read_input
-from Option2_package import Packer, Bin, Item
+from .manage_csv import Mode, Option, MENU_INPUT, MENU_INVALID, MENU_BIN_NOTLOADED, MENU_END, FILE_BIN_2, FILE_BOX_2
+from .manage_csv import write_input_bin_func
+from .manage_csv import write_input_box_func
+from .manage_csv import read_input
+from .Option2_package import Packer, Bin, Item
 
 def O2_input():
 
