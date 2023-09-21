@@ -77,7 +77,7 @@ FILE_LASTBIN        = 'lastBinFile.txt'
 FILE_LASTBOX        = 'lastBoxFile.txt'
 FILE_FITTED         = 'outputFitted'
 FILE_UNFITTED       = 'outputUnfitted'
-FILE_METRICS        = 'outputMetrics'
+FILE_SUMMARY        = 'outputSummary'
 
 # Output file paths
 FILE_OUTCOUNT_1     = f'{FOLDER_OUTPUTS_1}\{FILE_OUTCOUNT}'
@@ -90,8 +90,8 @@ FILE_FITTED_1       = f'{FOLDER_OUTPUTS_1}\{FILE_FITTED}'
 FILE_FITTED_2       = f'{FOLDER_OUTPUTS_2}\{FILE_FITTED}'
 FILE_UNFITTED_1     = f'{FOLDER_OUTPUTS_1}\{FILE_UNFITTED}'
 FILE_UNFITTED_2     = f'{FOLDER_OUTPUTS_2}\{FILE_UNFITTED}'
-FILE_METRICS_1      = f'{FOLDER_OUTPUTS_1}\{FILE_METRICS}'
-FILE_METRICS_2      = f'{FOLDER_OUTPUTS_2}\{FILE_METRICS}'
+FILE_SUMMARY_1      = f'{FOLDER_OUTPUTS_1}\{FILE_SUMMARY}'
+FILE_SUMMARY_2      = f'{FOLDER_OUTPUTS_2}\{FILE_SUMMARY}'
 
 # Interchangeable prompts for bin inputs
 PROMPT_QTY_BIN      = "# of bins"
