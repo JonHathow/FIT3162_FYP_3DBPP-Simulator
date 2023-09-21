@@ -6,7 +6,7 @@ output files.
 
 import csv
 
-def write_output(filename: str, filecount: int, rows: [[str]], header: [str]):
+def write_output(filename: str, filecount: int, header: [str], rows):
     """
     filename    - name of the CSV file to write to
 
