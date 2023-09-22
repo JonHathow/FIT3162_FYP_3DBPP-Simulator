@@ -6,7 +6,7 @@ from manage_csv.constants import File, Option, MENU_INPUT, MENU_INVALID, MENU_BI
 from manage_csv.write_input_bin import write_input_bin
 from manage_csv.write_input_box import write_input_box
 from manage_csv.read_input_csv import read_input
-from write_output_option1 import write_output
+from write_output_option1 import output_master
 from Option1_package import Packer, Bin, Item, Painter
 
 bins_loaded = False
@@ -140,7 +140,7 @@ while True:
 
                 fig.show()
                 #endregion
-                write_output(packer)
+                output_master(packer)
 
     
     elif response == "0":
