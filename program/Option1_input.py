@@ -44,28 +44,32 @@ while True:
 
     # Read a CSV file for boxes.
     elif response == "4":
-        item_params = read_input(FILE_BOX_1, File.BOX.value, Option.OPTION1.value)
+        if not bins_loaded:
+            print(MENU_BIN_NOTLOADED)
+        
+        else:
+            item_params = read_input(FILE_BOX_1, File.BOX.value, Option.OPTION1.value)
 
-        if item_params is not None:
+            if item_params is not None:
 
-            for item in item_params:
-                partno = item[0]
-                name = item[1]
-                typeof = item[2]
-                WHD = (float(item[3]), float(item[4]), float(item[5]))
-                weight = float(item[6])
-                level = int(item[7])
-                loadbear = int(item[8])
-                updown = bool(item[9])
-                color = item[10]
-                packer.addItem(Item(partno, name, typeof, WHD, weight, level, loadbear, updown, color))
+                for item in item_params:
+                    partno = item[0]
+                    name = item[1]
+                    typeof = item[2]
+                    WHD = (float(item[3]), float(item[4]), float(item[5]))
+                    weight = float(item[6])
+                    level = int(item[7])
+                    loadbear = int(item[8])
+                    updown = bool(item[9])
+                    color = item[10]
+                    packer.addItem(Item(partno, name, typeof, WHD, weight, level, loadbear, updown, color))
 
-            boxes_loaded = True
+                boxes_loaded = True
 
     # Compute bin packing.
     elif response == "5":
 
-        if not bins_loaded and not boxes_loaded:
+        if not bins_loaded or not boxes_loaded:
             if not bins_loaded:
                 print(MENU_BIN_NOTLOADED)
             if not boxes_loaded:

@@ -4,6 +4,7 @@ from manage_csv.constants import File, Option, MENU_INPUT, MENU_INVALID, MENU_BI
 from manage_csv.write_input_bin import write_input_bin
 from manage_csv.write_input_box import write_input_box
 from manage_csv.read_input_csv import read_input
+from write_output_option2 import output_master
 from Option2_package import Packer, Bin, Item
 
 bins_loaded = False
@@ -43,23 +44,27 @@ while True:
 
     # Read a CSV file for boxes.
     elif response == "4":
-        item_params = read_input(FILE_BOX_2, File.BOX, Option.OPTION2)
+        if not bins_loaded:
+            print(MENU_BIN_NOTLOADED)
+        
+        else:        
+            item_params = read_input(FILE_BOX_2, File.BOX, Option.OPTION2)
 
-        if item_params is not None:
+            if item_params is not None:
 
-            for item in item_params:
-                name = item[0]
-                width = float(item[1])
-                depth = float(item[2])
-                height = float(item[3])
-                weight = float(item[4])
-                packer.add_item(Item(name, width, depth, height, weight))
+                for item in item_params:
+                    name = item[0]
+                    width = float(item[1])
+                    depth = float(item[2])
+                    height = float(item[3])
+                    weight = float(item[4])
+                    packer.add_item(Item(name, width, depth, height, weight))
 
-            boxes_loaded = True
+                boxes_loaded = True
 
     elif response == "5":
 
-        if not bins_loaded and not boxes_loaded:
+        if not bins_loaded or not boxes_loaded:
             if not bins_loaded:
                 print(MENU_BIN_NOTLOADED)
             if not boxes_loaded:
@@ -67,6 +72,7 @@ while True:
 
         else:
             packer.pack()
+            output_master(packer)
 
     elif response == "0":
         print(MENU_END)
