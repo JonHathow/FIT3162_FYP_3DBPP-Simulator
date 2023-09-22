@@ -1,14 +1,16 @@
 """
-Functions to extract relevant data items from a packer class
+Functions to extract relevant data items from a packer object
 (as implemented in Option 1) and format them into rows to be
 printed in a CSV file.
 """
+# TODO: Validate correctness of extracting unpacked items from
+# the packer object.
 
 import os
 from manage_csv.constants import (Option, File, Mode,
                                   FOLDER_OUTPUTS_1, FILE_OUTCOUNT_1,
                                   FILE_FITTED_1, FILE_UNFITTED_1, FILE_SUMMARY_1, FILE_OUTBINS_1,
-                                  HEADER_OUT_1, HEADER_SUM_1, HEADER_OUTBINS_1)
+                                  HEADER_OUT_1, HEADER_OUTBINS_1, HEADER_SUM)
 from manage_csv.manage_filecount import fetch_filecount, update_filecount
 from manage_csv.manage_lastfile import fetch_lastfile
 from manage_csv.write_output import write_output
@@ -96,7 +98,7 @@ def extract_summary(packer: Packer):
                       round(volume_f / float(volume_b) * 100, 2),
                       volume_u])
     
-    return rows_summ, rows_bins
+    return rows_bins, rows_summ
 
 def output_master(packer: Packer):
     """
@@ -116,12 +118,12 @@ def output_master(packer: Packer):
 
     rows_fitted             = extract_boxes(packer, Mode.FITTED.value)
     rows_unfitted           = extract_boxes(packer, Mode.UNFITTED.value)
-    rows_summ, rows_bins    = extract_summary(packer)
+    rows_bins, rows_summ    = extract_summary(packer)
 
     write_output(FILE_FITTED_1, filecount + 1, HEADER_OUT_1, rows_fitted)
     write_output(FILE_UNFITTED_1, filecount + 1, HEADER_OUT_1, rows_unfitted)
-    write_output(FILE_SUMMARY_1, filecount + 1, HEADER_SUM_1, rows_summ)
     write_output(FILE_OUTBINS_1, filecount + 1, HEADER_OUTBINS_1, rows_bins)
+    write_output(FILE_SUMMARY_1, filecount + 1, HEADER_SUM, rows_summ)
     
     update_filecount(FILE_OUTCOUNT_1, filecount)
     
