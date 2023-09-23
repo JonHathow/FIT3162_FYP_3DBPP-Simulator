@@ -5,7 +5,7 @@ from manage_csv import PROMPT_LASTFILE_BIN, PROMPT_LASTFILE_BOX, FILE_BOXCOUNT_2
 from manage_csv import prompt_input_boxes, write_input_box_func
 from manage_csv import fetch_filename, read_input
 from manage_csv import update_filecount, fix_filecount, fetch_filecount
-from Option1_input import O1_input, O1_input_test
+from Option1_input import O1_input
 from Option2_input import O2_input
 from unittest.mock import patch
 import unittest
