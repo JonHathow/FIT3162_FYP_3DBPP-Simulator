@@ -6,7 +6,7 @@ from program.Option2_input import O2_input
 from unittest.mock import patch
 import shutil
 
- # Captures functions output
+# Captures functions output
 def capture_output(function, *args):
     captured_output = StringIO()
     sys.stdout = captured_output
