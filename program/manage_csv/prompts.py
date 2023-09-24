@@ -7,12 +7,17 @@ PROMPT_) can be found in constants.py.
 from .constants import ERROR_NUMBER, ERROR_INTEGER, ERROR_BOOLEAN
 from typing import Tuple
 
+
+# needed for testing
+def get_input(prompt: str) -> str:
+    return input(prompt)
+
 def prompt_number(prompt: str) -> float:
     """ Reusable function to prompt user for a single numerical input. """
 
     while True:
         try:
-            n = float(input(f"\nDeclare the {prompt}: "))
+            n = float(get_input(f"\nDeclare the {prompt}: "))
             break
         except ValueError:
             print(ERROR_NUMBER)
@@ -23,7 +28,7 @@ def prompt_integer(prompt: str) -> int:
 
     while True:
         try:
-            n = int(input(f"\nDeclare the {prompt}: "))
+            n = int(get_input(f"\nDeclare the {prompt}: "))
             break
         except ValueError:
             print(ERROR_INTEGER)
@@ -38,8 +43,8 @@ def prompt_range(prompt: str) -> Tuple[int, int]:
     while True:
         try:
             print(f"\nUsing only integers, declare the range of {prompt}: ")
-            a = int(input("Lower bound: "))
-            b = int(input("Upper bound: "))
+            a = int(get_input("Lower bound: "))
+            b = int(get_input("Upper bound: "))
             break
         except ValueError:
             print(ERROR_INTEGER)
@@ -52,10 +57,22 @@ def prompt_boolean(prompt: str) -> bool:
     """
 
     while True:
-        response = input(f"\nDo you want {prompt} (Y/N)? ")
+        response = get_input(f"\nDo you want {prompt} (Y/N)? ")
         if response == "Y" or response == "y":
             return True
         elif response == "N" or response == "n":
             return False
         else:
             print(ERROR_BOOLEAN)  
+
+"""
+def prompt_number(prompt: str) -> float:
+
+    while True:
+        try:
+            n = int(input(f"\nDeclare the {prompt}: "))
+            break
+        except ValueError:
+            print(ERROR_NUMBER)
+    return abs(n)
+"""

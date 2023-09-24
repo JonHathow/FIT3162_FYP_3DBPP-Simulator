@@ -12,7 +12,8 @@ boxes_loaded = False
 
 while True:
 
-    response = input(MENU_INPUT)
+    bins_loaded = False
+    while True:
 
     # Write a CSV file for bins.
     if response == "1":
@@ -26,21 +27,23 @@ while True:
     elif response == "3":
         bin_params = read_input(FILE_BIN_2, File.BIN.value, Option.OPTION2.value)
 
-        if bin_params is not None:
+        # Read a CSV file for bins.
+        elif response == "3":
+            bin_params = read_input(FILE_BIN_2, Mode.BIN.value)
 
-            # Initialize packing function.
-            packer = Packer()
+            if bin_params is not None:
 
-            # Initialize bins.
-            for b in bin_params:
-                name = b[0]
-                width = float(b[1])
-                height = float(b[2])
-                depth = float(b[3])
-                capacity = float(b[4])
-                packer.add_bin(Bin(name, width, depth, height, capacity))
+                # Initialize packing function.
+                packer = Packer()
 
-            bins_loaded = True
+                # Initialize bins.
+                for b in bin_params:
+                    name = b[0]
+                    width = float(b[1])
+                    height = float(b[2])
+                    depth = float(b[3])
+                    capacity = float(b[4])
+                    packer.add_bin(Bin(name, width, depth, height, capacity))
 
     # Read a CSV file for boxes.
     elif response == "4":
@@ -74,9 +77,9 @@ while True:
             packer.pack()
             output_master(packer)
 
-    elif response == "0":
-        print(MENU_END)
-        break
+        elif response == "0":
+            print(MENU_END)
+            break
 
-    else:
-        print(MENU_INVALID)
+        else:
+            print(MENU_INVALID)

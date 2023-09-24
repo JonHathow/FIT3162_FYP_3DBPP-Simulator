@@ -2,6 +2,7 @@ from decimal import Decimal
 from .constants import RotationType, Axis, DEFAULT_NUMBER_OF_DECIMALS, START_POSITION
 
 
+
 def get_limit_number_of_decimals(number_of_decimals):
     return Decimal('1.{}'.format('0' * number_of_decimals))
 

@@ -15,17 +15,6 @@ START_POSITION = [0, 0, 0]
 class Item:
 
     def __init__(self, partno,name,typeof, WHD, weight, level, loadbear, updown, color):
-        ''' 
-        partno  - Unique id of item
-        name    - name/type of item, i.e "Brush"
-        typeof  - cube or cylinder
-        WHD     - Width, height, depth in that order
-        weight  - Item weight
-        level   - Priority
-        loadbear- loadbearing priority, higher priority = more likely to be at the bottom
-        updown  - (boolean) Whether or not the item can be placed upside down
-        color   - color of the item
-        '''
         self.partno = partno
         self.name = name
         self.typeof = typeof
@@ -103,7 +92,6 @@ class Item:
         return dimension
 
 
-
 class Bin:
 
     def __init__(self, partno, WHD, max_weight,corner=0,put_type=1):
@@ -114,10 +102,6 @@ class Bin:
         corner      - size of container corner
                         -Containers usually have a section of the corner blocked off to leave space for hooks to attach to the container from the outsided
         put_type    - (1 : general & 2 : open top), Set the bin to open top or general, and the returned results are sorted according to this method.
-
-
-        !!!Document mentioned that 0 is general and 2 is open top, but in the putOrder function in the packer class states that 1 is general and 2 is open top!!!
-
         '''
         self.partno = partno
         self.width = WHD[0]
@@ -126,7 +110,6 @@ class Bin:
         self.max_weight = max_weight
         self.corner = corner
         self.items = []
-        # not too sure what this does
         self.fit_items = np.array([[0,WHD[0],0,WHD[1],0,0]])
         self.unfitted_items = []
         # number of decimals for formatting
@@ -184,7 +167,6 @@ class Bin:
         return set2Decimal(total_weight, self.number_of_decimals)
 
 
-    # possible change
     def putItem(self, item, pivot,axis=None):
         ''' put item in bin '''
 
@@ -441,8 +423,7 @@ class Packer:
         return self.items.append(item)
 
 
-    # Possible changes
-    def pack2Bin(self, bin, item,fix_point,check_stable,support_surface_ratio, variation = [False]):
+    def pack2Bin(self, bin, item,fix_point,check_stable,support_surface_ratio):
         ''' pack item to bin '''
         # When true, exit for loop
         fitted = False
@@ -459,15 +440,7 @@ class Packer:
                 bin.putCorner(i,corner_lst[i])
 
         # Could make this if not elif
-        elif not variation[0] and not bin.items:
-            response = bin.putItem(item, item.position)
-
-            # if item cant be put in bin, put in unfitted items list
-            if not response:
-                bin.unfitted_items.append(item)
-            return
-        
-        if variation[0] and not bin.items:
+        elif not bin.items:
             response = bin.putItem(item, item.position)
 
             # if item cant be put in bin, put in unfitted items list
@@ -505,7 +478,6 @@ class Packer:
             bin.unfitted_items.append(item)
 
 
-    # We shouldn't really use this
     def sortBinding(self,bin):
         ''' sorted by binding '''
         """
@@ -562,7 +534,6 @@ class Packer:
         return
 
 
-    # very confusing, try to avoid using?
     def gravityCenter(self,bin):
         ''' 
         Deviation Of Cargo gravity distribution
@@ -647,7 +618,7 @@ class Packer:
         return result
 
 
-    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS, Variation = [False, False]):
+    def pack(self, bigger_first=False,distribute_items=True,fix_point=True,check_stable=True,support_surface_ratio=0.75,binding=[],number_of_decimals=DEFAULT_NUMBER_OF_DECIMALS):
         '''pack master func '''
 
         """
@@ -659,9 +630,10 @@ class Packer:
         support_surface_ratio=0.75          - (not sure) set support surface ratio
         binding                             - make a set of items.
         number_of_decimals                  - number of decimals for formating values
-
-        Variation  - [gravityCenter, distribute_items]
         """
+        if self.bins == []:
+            raise ValueError("Must have atleast 1 bin")
+
         # format bins
         for bin in self.bins:
             bin.formatNumbers(number_of_decimals)
@@ -706,20 +678,18 @@ class Packer:
                     self.pack2Bin(bin, item,fix_point,check_stable,support_surface_ratio)
             
             # Deviation Of Cargo Gravity Center
-            if not Variation[0]:
-                self.bins[idx].gravity = self.gravityCenter(bin)
+            self.bins[idx].gravity = self.gravityCenter(bin)
 
-            if not Variation[1]:
-                if distribute_items :
-                    # loop through each item in the bin
-                    for bitem in bin.items:
-                        no = bitem.partno
-                        # loop through items in this packer class
-                        for item in self.items :
-                            if item.partno == no :
-                                # remove duplicates
-                                self.items.remove(item)
-                                break
+            if distribute_items :
+                # loop through each item in the bin
+                for bitem in bin.items:
+                    no = bitem.partno
+                    # loop through items in this packer class
+                    for item in self.items :
+                        if item.partno == no :
+                            # remove duplicates
+                            self.items.remove(item)
+                            break
 
         # put order of items
         self.putOrder()
