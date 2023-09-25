@@ -28,3 +28,7 @@ program/Option2_package/__pycache__/bin.cpython-310.pyc
 program/Option2_package/__pycache__/constants.cpython-310.pyc
 program/Option2_package/__pycache__/item.cpython-310.pyc
 program/Option2_package/__pycache__/packer.cpython-310.pyc
+program/__pycache__/write_output_option1.cpython-310.pyc
+program/manage_csv/__pycache__/manage_lastfile.cpython-310.pyc
+program/manage_csv/__pycache__/write_output.cpython-310.pyc
+program/__pycache__/write_output_option2.cpython-310.pyc
