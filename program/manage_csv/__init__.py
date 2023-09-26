@@ -8,3 +8,9 @@ from .read_input_csv import read_input
 from .write_input_bin import write_input_bin
 from .write_input_box import write_input_box
 from .write_output import write_output
+
+# imports needed for test suite
+# from .input_parameters import InputBinParameters, InputBoxParameters
+# from .prompts import prompt_boolean, prompt_integer, prompt_number, prompt_range, get_input
+# from .manage_filecount import update_filecount, fix_filecount, fetch_filecount
+# from .constants import PROMPT_LASTFILE_BIN, PROMPT_LASTFILE_BOX, FILE_BOXCOUNT_2, FILE_BIN_2

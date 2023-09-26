@@ -1,5 +1,4 @@
 """ Classes to instantiate objects that store user inputs for further processing. """
-# TODO: Specify units of measurement where relevant.
 
 class InputBinParameters:
     """
