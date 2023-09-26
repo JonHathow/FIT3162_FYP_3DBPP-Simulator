@@ -2,7 +2,7 @@
 
 import os
 import csv
-from .constants import (Option, Mode, PROMPT_QTY_BIN, PROMPT_WID_BIN, PROMPT_HEI_BIN, PROMPT_DEP_BIN, PROMPT_WGT_BIN,
+from .constants import (Option, File, PROMPT_QTY_BIN, PROMPT_WID_BIN, PROMPT_HEI_BIN, PROMPT_DEP_BIN, PROMPT_WGT_BIN,
                         FOLDER_INPUTS_1, FOLDER_INPUTS_2, FILE_BINCOUNT_1, FILE_BINCOUNT_2, FILE_BIN_1, FILE_BIN_2,
                         HEADER_BIN_1, HEADER_BIN_2)
 
@@ -33,7 +33,7 @@ def prompt_input_bins() -> InputBinParameters:
 
     return InputBinParameters(qty, wid, hei, dep, wgt)
 
-def write_input_bin_func(option: Option) -> None:
+def write_input_bin(option: Option) -> None:
     """
     Produce a CSV file for bins specfied by the user's inputs.
 
@@ -41,8 +41,7 @@ def write_input_bin_func(option: Option) -> None:
               Option 1 or Option 2, used to determine file path,
               file name, and the header to be printed
     """
-
-    #if option == Option.OPTION1:
+    
     if option == Option.OPTION1.value:
         folder_path     = FOLDER_INPUTS_1
         file_bincount   = FILE_BINCOUNT_1
@@ -59,7 +58,7 @@ def write_input_bin_func(option: Option) -> None:
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
-    filecount: int = fetch_filecount(file_bincount, Mode.BIN.value)
+    filecount: int = fetch_filecount(file_bincount)
     inputs: InputBinParameters = prompt_input_bins()
 
     filename = f'{filename}{filecount + 1}.csv'
