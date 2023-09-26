@@ -14,6 +14,16 @@ package in the following order:
     (5) read_input_csv.py
     (6) write_input_bin.py
     (7) write_input_box.py
+    (8) write_output.py
+
+The documentation of the following files should also be perused:
+
+    (1) write_output_option1.py
+    (2) write_output_option2.py
+
+Despite their name, both Option1_input.py and Option2_input.py are
+responsible for producing output files as well as parsing input.
+They may be given a more suitable name should the need arise.
 
 --- PACKAGES --------------------------------------------------------
 
@@ -43,6 +53,10 @@ problem as implemented in Option 1 and Option 2.
     write_input_bin.py      - functions to write a CSV file for bins
 
     write_input_box.py      - functions to write a CSV file for boxes
+
+    write_output.py         - function that prints given array of
+                              records detailing the output of the
+                              program and prints them to a CSV file
 
 (2) Option1_package
 
