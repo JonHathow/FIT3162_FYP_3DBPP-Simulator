@@ -2,7 +2,7 @@
 
 import os
 import csv
-from .constants import (Option, File, PROMPT_TYPE_BOX, PROMPT_QTY_BOX, PROMPT_DIM_BOX, PROMPT_WGT_BOX,
+from .constants import (Option, Mode, PROMPT_TYPE_BOX, PROMPT_QTY_BOX, PROMPT_DIM_BOX, PROMPT_WGT_BOX,
                         PROMPT_LEVEL_VAR, PROMPT_UPDOWN_VAR, PROMPT_UPDOWN,
                         FOLDER_INPUTS_1, FOLDER_INPUTS_2, FILE_BOXCOUNT_1, FILE_BOXCOUNT_2, FILE_BOX_1, FILE_BOX_2,
                         HEADER_BOX_1, HEADER_BOX_2, COLORS)
@@ -55,7 +55,7 @@ def prompt_input_boxes(option: Option) -> InputBoxParameters:
             updown = False
 
         input_params.set_option1_params(level_var, updown_var, updown)
-    
+
     return input_params
 
 def write_input_box_func(option: Option) -> None:
@@ -82,7 +82,7 @@ def write_input_box_func(option: Option) -> None:
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
-    filecount: int = fetch_filecount(file_boxcount)
+    filecount: int = fetch_filecount(file_boxcount, Mode.BOX)
     inputs: InputBoxParameters = prompt_input_boxes(option)
 
     filename = f'{filename}{filecount + 1}.csv'
