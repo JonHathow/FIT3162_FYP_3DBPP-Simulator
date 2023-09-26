@@ -1,5 +1,4 @@
 """ Handles writing and reading of CSV files for Option 1. """
-#TODO: Evaluate documentation.
 
 import time
 from manage_csv.constants import File, Option, MENU_INPUT, MENU_INVALID, MENU_BIN_NOTLOADED, MENU_BOX_NOTLOADED, MENU_END, FILE_BIN_1, FILE_BOX_1

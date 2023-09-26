@@ -126,4 +126,3 @@ def output_master(packer: Packer):
     write_output(FILE_SUMMARY_1, filecount + 1, HEADER_SUM, rows_summ)
     
     update_filecount(FILE_OUTCOUNT_1, filecount)
-    
