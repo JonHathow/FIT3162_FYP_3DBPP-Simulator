@@ -1,5 +1,4 @@
 """ Contains various strings and enums used throughout the package and other dependent files. """
-# TODO: Evaluate documentation.
 
 from enum import Enum
 

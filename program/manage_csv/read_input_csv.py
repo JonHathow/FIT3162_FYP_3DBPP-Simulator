@@ -1,5 +1,4 @@
 """ Functions to read from a CSV file of inputs for either bins or boxes. """
-# TODO: Evaluate documentation.
 
 import csv
 from typing import Optional, List
