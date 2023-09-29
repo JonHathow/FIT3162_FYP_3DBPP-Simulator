@@ -10,7 +10,7 @@ from Option1_package import Packer, Bin, Item, Painter
 bins_loaded = False
 while True:
 
-    response = input(MENU_INPUT)
+    response = input(MENU_INPUT) # MSR output a number.
 
     # Write a CSV file for bins.
     if response == "1":

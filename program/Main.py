@@ -112,7 +112,7 @@ def main():
       print("Chosen Option: {}".format(chosen_option))
       print("Exit: {} ".format(exit_flag))
 
-   if exit_flag:
+   else:
       print("Exit was selected. Thank you for using the simulation.")
       print("==================================================================")
    
