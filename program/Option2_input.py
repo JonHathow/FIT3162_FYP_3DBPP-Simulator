@@ -56,7 +56,7 @@ while True:
                     height = float(item[3])
                     weight = float(item[4])
                     packer.add_item(Item(name, width, depth, height, weight))
-
+            
             packer.pack()
 
     elif response == "0":

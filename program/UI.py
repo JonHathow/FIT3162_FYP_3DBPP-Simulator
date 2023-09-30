@@ -9,18 +9,17 @@ Classes Implemented
 2. Main_Window
 3. MS_Window (Master Subroutine Window)
 4. Bin_Input Window
-5. Box_Input_O1 Window - Option 1
-6. Box_Input_O1 Window - Option 1
+5. Box_Input_O1 Window - Option 2 - Defined first as a parent to Option 1's Window
+6. Box_Input_O1 Window - Option 1 - Has a few more perimeters than Option 2
 7. Output Window
 """
 
 # Imports
 from tkinter import *
 from manage_csv.input_parameters import InputBinParameters
-from manage_csv.constants import Option
 
 ##############################################################################
-# General Purpose - Parent Window
+# 1. General Purpose - Parent Window
 # Contains all common functionality of Windows
 class Parent_Window():
 
@@ -33,6 +32,8 @@ class Parent_Window():
       self.window.title(title)
       self.window.geometry(geometry)
       self.data = None
+      self.labels = None
+      self.fields = None
       
       # ----- Section Frames ----- #
       # 1. Header - Title and Guides
@@ -56,30 +57,6 @@ class Parent_Window():
    # Get Window
    def get_window(self):
       return self.window
-   
-   # --- Utility Methods --- #
-   # Start Window
-   def start_window(self):
-
-      # Pack and publish
-      self.header.pack()
-      self.body.pack()
-      self.footer.pack(side = 'bottom')
-
-      # Place Window at Center of Screen
-      self.window.eval('tk::PlaceWindow . center')
-      self.window.mainloop()
-      return None
-   
-   # Fetch Data from Input Fields
-   def fetch(self):
-      # To Override
-      return None
-
-   # Destroy Window
-   def destroy_window(self):
-      self.window.destroy()
-      return None
    
    # --- Creation Methods --- #
    # Create Input Labels
@@ -116,8 +93,42 @@ class Parent_Window():
 
       return dropdown, select
    
+   # --- Utility Methods --- #
+   # Start Window
+   def start_window(self):
+
+      # Pack and publish
+      self.header.pack()
+      self.body.pack()
+      self.footer.pack(side = 'bottom')
+
+      # Place Window at Center of Screen
+      self.window.eval('tk::PlaceWindow . center')
+      self.window.mainloop()
+      return None
+   
+   # Fetch Data from Input Fields
+   def fetch(self):
+      # To Override
+      return None
+
+   # Clear Fields
+   def clear(self):
+
+      # clear the content of all entry fields present
+      if self.fields is not None:
+         for i in range(len(self.fields)):
+            self.fields[i].delete(0, END)
+
+      return None
+   
+   # Destroy Window
+   def destroy_window(self):
+      self.window.destroy()
+      return None
+   
 ##############################################################################
-# Main Window - Warehouse Main UI
+# 2. Main Window - Warehouse Main UI
 class Main_Window(Parent_Window):
    
    #--- Constructor ---#
@@ -186,7 +197,8 @@ class Main_Window(Parent_Window):
       self.destroy_window()
 
 ##############################################################################
-# Master Subroutine Window
+# 3. Master Subroutine Window
+# To choose options - creating bin / box csv file, loading bin / box csv file, compute algorithm
 class MS_Window(Parent_Window):
    
    #--- Constructor ---#
@@ -263,7 +275,7 @@ class MS_Window(Parent_Window):
       return None
    
 ##############################################################################
-# Create New Bin UI - Same for both option 1 and 2
+# 4. Create New Bin UI - Same for both option 1 and 2
 class Bin_Window(Parent_Window):
 
    # Init
@@ -348,39 +360,31 @@ class Bin_Window(Parent_Window):
          else:
             raise Exception("Input must be positive integer, not negative integers, or other types like String")
 
-       
-
       # Destroy window mainloop and pass control back to main
       self.destroy_window()
       return None
    
+   # Back Button
    def back(self):
       self.backflag = True
       self.destroy_window()
       return None
    
-   # Clear Fields
-   def clear(self):
-
-      # clear the content of text entry box
-      for i in range(len(self.fields)):
-         self.fields[i].delete(0, END)
-
-      return None
-   
 ##############################################################################
-# Create New Box UI - Option 1 has extra parameters
-class Box_Window_O1(Parent_Window):
+# 5. Create New Box UI - Option 2 
+class Box_Window_O2(Parent_Window):
 
    # Init
-   def __init__(self, title, geometry, option: Option) -> None:
+   def __init__(self, title, geometry, chosen_algorithm, entries) -> None:
 
       # Create GUI Window
-      super().__init__(self, title, geometry)
+      super().__init__(title, geometry)
 
-      # Box Details - Options 1 and 2 Differ
+      # Chosen Algorithm and Back Status
+      self.c_algorithm = chosen_algorithm
+      self.backflag = False
 
-      return None
+      self.initialize_content
    
    # Create Window Content
    def initialize_content(self):
@@ -393,35 +397,57 @@ class Box_Window_O1(Parent_Window):
       heading = Label(self.body, text="Chosen Algorithm:", font=("Arial", 20), pady = 10)
       heading.grid(row=0, column=0)
 
-      # ----- Body ----- #
-      c_algorithm = Label(self.body, text=self.c_algorithm, font=("Arial", 15), bg = "Yellow")
+      # Chosen Algorithm
+      c_algorithm = Label(self.header, text=self.c_algorithm, font=("Arial", 15), bg = "Yellow")
       c_algorithm.grid(row=1, column=0)
+
+      # ----- Body ----- #
+      # Box Variables - Integer Types
+      # Number of Boxes, quantity range = (qty_lo, qty_hi), dimensions range (WHD) = (dim_lo, dim_hi), weight range = (wgt_lo, wgt_hi)
+      self.labels = self.create_input_labels(self.entries, 0)
+      self.fields = self.create_input_fields(self.entries, 1)
    
       # ----- Footer ----- #
-      compute_exit = Frame(self.window, pady = 20)
-      compute_exit.pack(side = 'bottom')
-      compute_button = Button(compute_exit , text = "Compute" , command = self.fetch, bg = "lime")
-      exit_button = Button(compute_exit, text = "Back" , command = self.back, bg = "red", fg = "white")
+      compute_button = Button(self.footer, text = "Create" , command = self.fetch, bg = "lime")
+      clear_button = Button(self.footer, text = "Clear" , command = self.clear, bg = "yellow")
+      exit_button = Button(self.footer, text = "Back" , command = self.back, bg = "red", fg = "white")
       compute_button.pack(side = 'left')
+      clear_button.pack(side = 'left', padx = 20)
       exit_button.pack(side = 'left', padx = 20)
 
       # Start Window
       self.start_window()
       return None
    
-   # Initialize 
-   def clear(self):
-     
-      # clear the content of text entry box
-      self.r_seed_field.delete(0, END)
-      self.no_sku_field.delete(0, END)
-      self.batch_size_field.delete(0, END)
+   # Back Button
+   def back(self):
+      self.backflag = True
+      self.destroy_window()
+      return None
+
+# 6. Create New Box UI - Option 1 - Which has a few more parameters than Option 2
+class Box_Window_O1(Box_Window_O2):
+   
+   # Init
+   def __init__(self, title, geometry) -> None:
+
+      # Create GUI Window
+      super().__init__(self, title, geometry)
+
+      # Box Details - Options 1 and 2 Differ
 
       return None
 
-# Create New Box UI - Option 2
-class Box_Window_O2():
-   pass
+##############################################################################
+# 7. Output_Window
+class Output_Window(Parent_Window):
+
+   # Init
+   def __init__(self, title, geometry) -> None:
+
+      # Create GUI Window
+      super().__init__(self, title, geometry)
+      return None
 
 ##############################################################################
 # Main
@@ -440,10 +466,24 @@ def main():
 
    m_title = "Storage Optimization in Automated Fulfilment Centers"
    m_geometry = "500x300"
-   entries = ["Quantity", "Width", "Height", "Depth", "Capacity"]
-   bw = Bin_Window(m_title, m_geometry, entries)
+   bin_params = ["Quantity", "Width", "Height", "Depth", "Capacity"]
+
+   # Box Param Option 1
+   # These 3 are Boolean - "Allow Varying Priority Levels", "Allow Varying Loading Orientations", "Allow Upside Down Loading" - Only if No.2 is False.
+   # If No. 2 is True, no. 3 is always False.
+   b_params_O1 = ["Number of Boxes", "Quantity Range", "Dimensions Range", "Weight Range", "Allow Varying Priority Levels", "Allow Varying Loading Orientations", "Allow Upside Down Loading"]
+   # Box Param Option 2
+   b_params_O2 = ["Number of Boxes", "Quantity Range", "Dimensions Range", "Weight Range"]
+
+   # Bin Window Test
+   """
+   bw = Bin_Window(m_title, m_geometry, bin_params)
    inputparam = bw.get_data()
    print(inputparam)
+   """
+
+   # Box Window Test - Option 2
+   bw_O2 = Box_Window_O2(m_title, m_geometry, b_params_O2)
 
    return None
 
