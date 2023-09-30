@@ -9,14 +9,17 @@ Classes Implemented
 2. Main_Window
 3. MS_Window (Master Subroutine Window)
 4. Bin_Input Window
-5. Box_Input Window
-6. Output Window
+5. Box_Input_O1 Window - Option 1
+6. Box_Input_O1 Window - Option 1
+7. Output Window
 """
 
-#Imports
+# Imports
 from tkinter import *
 from manage_csv.input_parameters import InputBinParameters
+from manage_csv.constants import Option
 
+##############################################################################
 # General Purpose - Parent Window
 # Contains all common functionality of Windows
 class Parent_Window():
@@ -78,6 +81,29 @@ class Parent_Window():
       self.window.destroy()
       return None
    
+   # --- Creation Methods --- #
+   # Create Input Labels
+   def create_input_labels(self, entries, col):
+      
+      labels = []
+
+      for i in range(len(entries)):
+         labels.append(Label(self.body, text = entries[i], padx = 10))
+         labels[i].grid(row = i, column = col)
+
+      return labels
+   
+   # Create Input Fields - To be used together with create_input_labels
+   def create_input_fields(self, entries, col):
+      
+      fields = []
+
+      for i in range(len(entries)):
+         fields.append(Entry(self.body))
+         fields[i].grid(row = i, column = col)
+
+      return fields
+   
    # Create Dropdown Menus - Approach, Run State, Termination Condition
    def create_dropdown(self, options, window):
       
@@ -90,7 +116,7 @@ class Parent_Window():
 
       return dropdown, select
    
-
+##############################################################################
 # Main Window - Warehouse Main UI
 class Main_Window(Parent_Window):
    
@@ -158,8 +184,8 @@ class Main_Window(Parent_Window):
    def exit(self):
       self.exitflag = True
       self.destroy_window()
-   
-   
+
+##############################################################################
 # Master Subroutine Window
 class MS_Window(Parent_Window):
    
@@ -236,12 +262,118 @@ class MS_Window(Parent_Window):
       self.destroy_window()
       return None
    
-
-# Create New Box UI - Option 1 has extra parameters
-class Box_Window(Parent_Window):
+##############################################################################
+# Create New Bin UI - Same for both option 1 and 2
+class Bin_Window(Parent_Window):
 
    # Init
-   def __init__(self, title, geometry) -> None:
+   def __init__(self, title, geometry, entries) -> None:
+
+      # Create GUI Window
+      super().__init__(title, geometry)
+      self.backflag = False
+      self.entries = entries
+
+      self.initialize_content()
+      return None
+   
+    # Create Window Content
+   def initialize_content(self):
+
+      # Call Super - Method Override
+      super().initialize_content()
+
+      # ----- Header ----- #
+      # Heading Label
+      heading = Label(self.header, text="Create New Bin", font=("Arial", 20), pady = 10)
+      heading.grid(row=0, column=0)
+      heading = Label(self.header, text="Enter Bin Details (Positive Units):", font=("Arial", 15), pady = 5)
+      heading.grid(row=1, column=0)
+
+      # ----- Body ----- #
+      # Bin Variables - Integer Types
+      # Quantity, Width, Height, Depth, Capacity20
+      self.labels = self.create_input_labels(self.entries, 0)
+      self.fields = self.create_input_fields(self.entries, 1)
+
+      # ----- Footer ----- #
+      compute_button = Button(self.footer, text = "Create" , command = self.fetch, bg = "lime")
+      clear_button = Button(self.footer, text = "Clear" , command = self.clear, bg = "yellow")
+      exit_button = Button(self.footer, text = "Back" , command = self.back, bg = "red", fg = "white")
+      compute_button.pack(side = 'left')
+      clear_button.pack(side = 'left', padx = 20)
+      exit_button.pack(side = 'left', padx = 20)
+
+      # Start Window
+      self.start_window()
+      return None
+
+   # --- Getters --- #
+   # Get Data - Override
+   def get_data(self):
+
+      # Method Override
+      super().get_data()
+
+      # Return Data in New Format - Quantity, Width, Height, Depth, Capacity.
+      print(self.data)
+      return InputBinParameters(self.data[0], self.data[1], self.data[2], self.data[3], self.data[4])
+
+   # Check if "Back" button is pressed.
+   def get_backflag(self):
+      return self.backflag
+   
+   # --- Utility --- #
+   # Fetch Algorithm - Override
+   def fetch(self):
+
+      # Method Override
+      super().fetch()
+      self.data = []
+
+      # Fetch Data from window
+      for i in range(len(self.fields)):
+         
+         # Field Ret Val is String Form
+         field_val = self.fields[i].get()
+
+         # Null Values Check
+         if field_val == '':
+            raise Exception("Input must be positive integer, not Null")
+         
+         # Positive Integers Only Check
+         if field_val.isdigit():
+            field_val = abs(int(field_val))
+            self.data.append(field_val)
+         else:
+            raise Exception("Input must be positive integer, not negative integers, or other types like String")
+
+       
+
+      # Destroy window mainloop and pass control back to main
+      self.destroy_window()
+      return None
+   
+   def back(self):
+      self.backflag = True
+      self.destroy_window()
+      return None
+   
+   # Clear Fields
+   def clear(self):
+
+      # clear the content of text entry box
+      for i in range(len(self.fields)):
+         self.fields[i].delete(0, END)
+
+      return None
+   
+##############################################################################
+# Create New Box UI - Option 1 has extra parameters
+class Box_Window_O1(Parent_Window):
+
+   # Init
+   def __init__(self, title, geometry, option: Option) -> None:
 
       # Create GUI Window
       super().__init__(self, title, geometry)
@@ -286,122 +418,12 @@ class Box_Window(Parent_Window):
       self.batch_size_field.delete(0, END)
 
       return None
-   
 
-# Create New Bin UI - Same for both option 1 and 2
-class Bin_Window(Parent_Window):
+# Create New Box UI - Option 2
+class Box_Window_O2():
+   pass
 
-   # Init
-   def __init__(self, title, geometry, entries) -> None:
-
-      # Create GUI Window
-      super().__init__(title, geometry)
-      self.backflag = False
-      self.entries = entries
-
-      self.initialize_content()
-      return None
-   
-    # Create Window Content
-   def initialize_content(self):
-
-      # Call Super - Method Override
-      super().initialize_content()
-
-      # ----- Header ----- #
-      # Heading Label
-      heading = Label(self.header, text="Create New Bin", font=("Arial", 20), pady = 10)
-      heading.grid(row=0, column=0)
-
-      # ----- Body ----- #
-      # Bin Variables - Integer Types
-      # Quantity, Width, Height, Depth, Capacity20
-      self.labels = self.create_input_labels(self.entries, 0)
-      self.fields = self.create_input_fields(self.entries, 1)
-
-      # ----- Footer ----- #
-      compute_button = Button(self.footer, text = "Create" , command = self.fetch, bg = "lime")
-      clear_button = Button(self.footer, text = "Clear" , command = self.clear, bg = "yellow")
-      exit_button = Button(self.footer, text = "Back" , command = self.back, bg = "red", fg = "white")
-      compute_button.pack(side = 'left')
-      clear_button.pack(side = 'left', padx = 20)
-      exit_button.pack(side = 'left', padx = 20)
-
-      # Start Window
-      self.start_window()
-      return None
-   
-   def create_input_labels(self, entries, col):
-      labels = []
-
-      for i in range(len(entries)):
-         labels.append(Label(self.body, text = entries[i], padx = 10))
-         labels[i].grid(row = i, column = col)
-
-      return labels
-   
-   def create_input_fields(self, entries, col):
-      fields = []
-
-      for i in range(len(entries)):
-         fields.append(Entry(self.body))
-         fields[i].grid(row = i, column = col)
-
-      return fields
-
-   # --- Getters --- #
-   # Get Data - Override
-   def get_data(self):
-
-      # Method Override
-      super().get_data()
-
-      # Return Data in New Format - Quantity, Width, Height, Depth, Capacity.
-      print(self.data)
-      return InputBinParameters(self.data[0], self.data[1], self.data[2], self.data[3], self.data[4])
-
-   # Check if "Back" button is pressed.
-   def get_backflag(self):
-      return self.backflag
-   
-   # --- Utility --- #
-   # Fetch Algorithm - Override
-   def fetch(self):
-
-      # Method Override
-      super().fetch()
-      self.data = []
-
-      # Fetch Data from window
-      for i in range(len(self.fields)):
-
-         field_val = self.fields[i].get()
-
-         # Positive Integers Only Check
-         if field_val != '' and isinstance(field_val, int):
-            self.data.append(abs(field_val))
-         else:
-            raise Exception("Input must be positive integer")
-
-      # Destroy window mainloop and pass control back to main
-      self.destroy_window()
-      return None
-   
-   def back(self):
-      self.backflag = True
-      self.destroy_window()
-      return None
-   
-   # Clear Fields
-   def clear(self):
-
-      # clear the content of text entry box
-      for i in range(len(self.fields)):
-         self.fields[i].delete(0, END)
-
-      return None
-
-
+##############################################################################
 # Main
 def main():
    print("This function is to test the ui programs. ")
