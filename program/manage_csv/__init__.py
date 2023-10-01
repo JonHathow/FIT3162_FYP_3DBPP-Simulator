@@ -7,7 +7,7 @@ from .constants import (Option, File, Mode,
 from .read_input_csv import read_input, fetch_filename
 from .write_input_bin import write_input_bin_func, prompt_input_bins
 from .write_input_box import write_input_box_func, prompt_input_boxes
-from .write_output import write_output
+from .write_output import write_output_func
 
 # imports needed for test suite
 from .input_parameters import InputBinParameters, InputBoxParameters
