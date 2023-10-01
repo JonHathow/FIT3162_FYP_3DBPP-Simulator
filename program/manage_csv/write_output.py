@@ -6,7 +6,7 @@ output files.
 
 import csv
 
-def write_output(filename: str, filecount: int, header: [str], rows):
+def write_output_func(filename: str, filecount: int, header: [str], rows):
     """
     filename    - name of the CSV file to write to
 
@@ -22,8 +22,8 @@ def write_output(filename: str, filecount: int, header: [str], rows):
     with open(f'{filename}{filecount}.csv', mode = 'w', newline = "") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(header)
-
         for row in rows:
             writer.writerow(row)
+            
 
     csvfile.close()

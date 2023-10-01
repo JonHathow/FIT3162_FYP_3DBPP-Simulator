@@ -13,7 +13,7 @@ from manage_csv.constants import (Option, File, Mode,
                                   HEADER_OUT_2, HEADER_OUTBINS_2, HEADER_SUM)
 from manage_csv.manage_filecount import fetch_filecount, update_filecount
 from manage_csv.manage_lastfile import fetch_lastfile
-from manage_csv.write_output import write_output
+from manage_csv.write_output import write_output_func
 from Option2_package import Packer
 
 def extract_boxes(packer: Packer, mode: Mode):
@@ -117,9 +117,9 @@ def output_master(packer: Packer):
     rows_unfitted           = extract_boxes(packer, Mode.UNFITTED.value)
     rows_bins, rows_summ    = extract_summary(packer)
 
-    write_output(FILE_FITTED_2, filecount + 1, HEADER_OUT_2, rows_fitted)
-    write_output(FILE_UNFITTED_2, filecount + 1, HEADER_OUT_2, rows_unfitted)
-    write_output(FILE_OUTBINS_2, filecount + 1, HEADER_OUTBINS_2, rows_bins)
-    write_output(FILE_SUMMARY_2, filecount + 1, HEADER_SUM, rows_summ)
+    write_output_func(FILE_FITTED_2, filecount + 1, HEADER_OUT_2, rows_fitted)
+    write_output_func(FILE_UNFITTED_2, filecount + 1, HEADER_OUT_2, rows_unfitted)
+    write_output_func(FILE_OUTBINS_2, filecount + 1, HEADER_OUTBINS_2, rows_bins)
+    write_output_func(FILE_SUMMARY_2, filecount + 1, HEADER_SUM, rows_summ)
     
     update_filecount(FILE_OUTCOUNT_2, filecount)

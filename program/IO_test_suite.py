@@ -2,9 +2,16 @@ from manage_csv import InputBinParameters, InputBoxParameters, prompt_range, pro
 from manage_csv import write_input_bin_func, prompt_input_bins
 from manage_csv import write_input_box_func, prompt_input_boxes
 from manage_csv import FILE_BIN_1, FILE_BIN_2, FILE_BOX_1, FILE_BOX_2, FILE_BINCOUNT_1, FILE_BINCOUNT_2, FILE_BOXCOUNT_1, FILE_BOXCOUNT_2
+from manage_csv import FILE_FITTED_1, HEADER_OUT_1
 from manage_csv import fetch_filename
 from manage_csv import update_filecount, fetch_filecount
-from manage_csv import update_lastfile, fetch_lastfile, read_input
+from manage_csv import update_lastfile, fetch_lastfile, read_input, write_output_func
+from Option1_package import Item, Bin, Packer
+from Option2_package import Item as ItemO2, Bin as BinO2, Packer as PackerO2
+from manage_csv import Mode
+from write_output_option1 import extract_boxes as extract_boxes_O1, extract_summary as extract_summary_O1, output_master as output_master_O1
+from write_output_option2 import extract_boxes as extract_boxes_O2, extract_summary as extract_summary_O2, output_master as output_master_O2
+from decimal import Decimal
 from unittest.mock import patch
 import shutil
 import unittest
@@ -382,7 +389,225 @@ class Test_Manage_Filecount2(unittest.TestCase):
         self.assertEqual(fetch_filecount(FILE_BOXCOUNT_1), 8)
         self.assertEqual(fetch_filecount(FILE_BINCOUNT_2), 6)
         self.assertEqual(fetch_filecount(FILE_BOXCOUNT_2), 9)
-    
+
+class Test_Write_Output(unittest.TestCase):
+
+    def test_write_output_func(self):
+        rows = [
+            ["Hello"],
+            ["World"]
+        ]
+        write_output_func(FILE_FITTED_1, 30, HEADER_OUT_1, rows)
+        path = FILE_FITTED_1 + "30.csv"
+        self.assertTrue(os.path.exists(path))
+
+class Test_Output_Option1(unittest.TestCase):
+
+    def test_extract_boxes(self):
+
+        # all items fitted
+        testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
+        testItem2 = Item(2,"test","cube", [5,10,10], 25, 2, 400, False, "orange")
+        testbin = Bin(1, [100,200,100], 5000)
+        testPacker = Packer()
+        testPacker.addBin(testbin)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.pack(True, True, True, True, 0.75)
+
+        expected_answer = [[1, 'test', 'orange', Decimal('10'), Decimal('20'), Decimal('30'), 6000.0, 25.0, [Decimal('0'), Decimal('0'), Decimal('0')], 0], [2, 'test', 'orange', Decimal('5'), Decimal('10'), Decimal('10'), 500.0, 25.0, [Decimal('10'), Decimal('0'), Decimal('0')], 0]]
+        self.assertEqual(extract_boxes_O1(testPacker, Mode.FITTED.value), expected_answer)
+
+        self.assertEqual(extract_boxes_O1(testPacker, Mode.UNFITTED.value), [])
+
+        # all items unfitted
+        testItem1 = Item(1,"test","cube", [520,520,530], 25, 2, 400, False, "orange")
+        testItem2 = Item(2,"test","cube", [350,530,510], 25, 2, 400, False, "orange")
+        testbin = Bin(1, [200,100,300], 5000)
+        testPacker = Packer()
+        testPacker.addBin(testbin)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.pack(True, True, True, True, 0.75)
+
+        self.assertEqual(extract_boxes_O1(testPacker, Mode.FITTED.value), [])
+
+        expected_answer = [[1, 'test', 'orange', Decimal('520'), Decimal('520'), Decimal('530'), 143312000.0, 25.0, [0, 0, 0], 1], [2, 'test', 'orange', Decimal('350'), Decimal('530'), Decimal('510'), 94605000.0, 25.0, [0, 0, 0], 1]]
+        self.assertEqual(extract_boxes_O1(testPacker, Mode.UNFITTED.value), expected_answer)
+
+        # 1 item fitted 1 item unfitted
+        testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
+        testItem2 = Item(2,"test","cube", [500,100,100], 25, 2, 400, False, "orange")
+        testbin = Bin(1, [100,200,100], 5000)
+        testPacker = Packer()
+        testPacker.addBin(testbin)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.pack(True, True, True, True, 0.75)
+
+        expected_answer = [[1, 'test', 'orange', Decimal('10'), Decimal('20'), Decimal('30'), 6000.0, 25.0, [Decimal('0'), Decimal('0'), Decimal('0')], 0]]
+        self.assertEqual(extract_boxes_O1(testPacker, Mode.FITTED.value), expected_answer)
+
+        expected_answer = [[2, 'test', 'orange', Decimal('500'), Decimal('100'), Decimal('100'), 5000000.0, 25.0, [0, 0, 0], 1]]
+        self.assertEqual(extract_boxes_O1(testPacker, Mode.UNFITTED.value), expected_answer)
+
+    def test_extract_summary(self):
+        # all items fitted
+        testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
+        testItem2 = Item(2,"test","cube", [5,10,10], 25, 2, 400, False, "orange")
+        testbin = Bin(1, [100,200,100], 5000)
+        testPacker = Packer()
+        testPacker.addBin(testbin)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.pack(True, True, True, True, 0.75)
+
+        bins, sum = extract_summary_O1(testPacker)
+
+        bins_exp = [[1, Decimal('2000000'), 500.0, 1999500.0, 0.03, []]]
+        summ_exp = [['I am not at all stressed', 'files_Option1\\csv_inputs\\inputBoxes1.csv', Decimal('2000000'), 6500.0, 1993500.0, 0.33, 0]]
+
+        self.assertEqual(bins, bins_exp)
+        self.assertEqual(sum, summ_exp)
+
+    def test_output_master(self):
+        # No existing files
+        testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
+        testItem2 = Item(2,"test","cube", [5,10,10], 25, 2, 400, False, "orange")
+        testbin = Bin(1, [100,200,100], 5000)
+        testPacker = Packer()
+        testPacker.addBin(testbin)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.pack(True, True, True, True, 0.75)
+        output_master_O1(testPacker)
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputBins1.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputFitted1.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputSummary1.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputUnfitted1.csv"))
+
+        # With existing files
+        testItem1 = Item(1,"test","cube", [10,20,30], 25, 2, 400, False, "orange")
+        testItem2 = Item(2,"test","cube", [5,10,10], 25, 2, 400, False, "orange")
+        testbin = Bin(1, [100,200,100], 5000)
+        testPacker = Packer()
+        testPacker.addBin(testbin)
+        testPacker.addItem(testItem1)
+        testPacker.addItem(testItem2)
+        testPacker.pack(True, True, True, True, 0.75)
+
+        output_master_O1(testPacker)
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputBins2.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputFitted2.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputSummary2.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputUnfitted2.csv"))
+
+class Test_Output_Option2(unittest.TestCase):
+
+    """
+    Currently there is a bug with this part of O2 output
+    """
+    def test_extract_boxes(self):
+
+        # all items fitted
+        testItem1 = ItemO2("test1", 10, 20, 30, 25)
+        testItem2 = ItemO2("test2", 20, 10, 10, 25)
+        testbin = BinO2(300, 100, 200, 100, 5000)
+        testPacker = PackerO2()
+        testPacker.add_bin(testbin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.pack()
+
+
+        expected_answer = [['test1', Decimal('10.000'), Decimal('30.000'), Decimal('20.000'), Decimal('25.000'), Decimal('6000.000'), [0, 0, 0], 1], ['test2', Decimal('20.000'), Decimal('10.000'), Decimal('10.000'), Decimal('25.000'), Decimal('2000.000'), [0, Decimal('10.000'), 0], 0]]
+        self.assertEqual(extract_boxes_O2(testPacker, Mode.FITTED.value), expected_answer)
+
+        
+        # self.assertEqual(extract_boxes_O2(testPacker, Mode.UNFITTED.value), [])
+
+        # all items unfitted
+        testItem1 = ItemO2("test1", 1000, 2000, 3000, 25)
+        testItem2 = ItemO2("test2", 2000, 1000, 1000, 25)
+        testbin = BinO2(300, 100, 200, 100, 5000)
+        testPacker = PackerO2()
+        testPacker.add_bin(testbin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.pack()
+
+        self.assertEqual(extract_boxes_O2(testPacker, Mode.FITTED.value), [])
+
+        # expected_answer = [[1, 'test', 'orange', Decimal('520'), Decimal('520'), Decimal('530'), 143312000.0, 25.0, [0, 0, 0], 1], [2, 'test', 'orange', Decimal('350'), Decimal('530'), Decimal('510'), 94605000.0, 25.0, [0, 0, 0], 1]]
+        # self.assertEqual(extract_boxes_O2(testPacker, Mode.UNFITTED.value), expected_answer)
+
+        # 1 item fitted 1 item unfitted
+        testItem1 = ItemO2("test1", 10, 20, 30, 25)
+        testItem2 = ItemO2("test2", 2000, 1000, 1000, 25)
+        testbin = BinO2(300, 100, 200, 100, 5000)
+        testPacker = PackerO2()
+        testPacker.add_bin(testbin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.pack()
+
+        expected_answer = [['test1', Decimal('10.000'), Decimal('30.000'), Decimal('20.000'), Decimal('25.000'), Decimal('6000.000'), [0, 0, 0], 1]]
+        self.assertEqual(extract_boxes_O2(testPacker, Mode.FITTED.value), expected_answer)
+
+        # expected_answer = [[2, 'test', 'orange', Decimal('500'), Decimal('100'), Decimal('100'), 5000000.0, 25.0, [0, 0, 0], 1]]
+        # self.assertEqual(extract_boxes_O2(testPacker, Mode.UNFITTED.value), expected_answer)
+
+    def test_extract_summary(self):
+        # all items fitted
+        testItem1 = ItemO2("test1", 10, 20, 30, 25)
+        testItem2 = ItemO2("test2", 20, 10, 10, 25)
+        testbin = BinO2(300, 100, 200, 100, 5000)
+        testPacker = PackerO2()
+        testPacker.add_bin(testbin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.pack()
+
+        bins, sum = extract_summary_O2(testPacker)
+
+        bins_exp = [[300, Decimal('2000000.000'), Decimal('2000.000'), Decimal('1998000.000'), Decimal('0.10')]]
+        summ_exp = [['files_Option2\\csv_inputs\\inputBins2.csv', 'files_Option2\\csv_inputs\\inputBoxes2.csv', Decimal('2000000.000'), Decimal('8000.000'), Decimal('1992000.000'), Decimal('0.40'), Decimal('8000.000')]]
+
+        self.assertEqual(bins, bins_exp)
+        self.assertEqual(sum, summ_exp)
+
+    def test_output_master(self):
+        # No existing files
+        testItem1 = ItemO2("test1", 10, 20, 30, 25)
+        testItem2 = ItemO2("test2", 20, 10, 10, 25)
+        testbin = BinO2(300, 100, 200, 100, 5000)
+        testPacker = PackerO2()
+        testPacker.add_bin(testbin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.pack()
+        output_master_O2(testPacker)
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputBins1.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputFitted1.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputSummary1.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputUnfitted1.csv"))
+
+        # With existing files
+        testItem1 = ItemO2("test1", 10, 20, 30, 25)
+        testItem2 = ItemO2("test2", 20, 10, 10, 25)
+        testbin = BinO2(300, 100, 200, 100, 5000)
+        testPacker = PackerO2()
+        testPacker.add_bin(testbin)
+        testPacker.add_item(testItem1)
+        testPacker.add_item(testItem2)
+        testPacker.pack()
+        output_master_O2(testPacker)
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputBins2.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputFitted2.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputSummary2.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputUnfitted2.csv"))
+
+
 if __name__ == '__main__':
     try:
         shutil.rmtree('files_Option1')
@@ -402,6 +627,9 @@ if __name__ == '__main__':
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Manage_Last_File))
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Manage_Filecount1))
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Manage_Filecount2))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Write_Output))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Output_Option1))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Output_Option2))
 
     runner = unittest.TextTestRunner()
     runner.run(suite)
