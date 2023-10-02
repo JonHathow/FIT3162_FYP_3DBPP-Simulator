@@ -1,29 +1,125 @@
-#Testing suite designed to test all of the methods in the auxiliary_methods.py folder in the py3dbp folder
-from manage_csv import InputBinParameters, InputBoxParameters, prompt_range, prompt_number, prompt_boolean, prompt_integer, get_input, prompt_input_bins, write_input_bin_func
-from manage_csv import Option, Mode, MENU_INPUT, MENU_INVALID, MENU_END, MENU_BIN_NOTLOADED, FILE_BIN_1, FILE_BOX_1, FILE_BOX_2, PROMPT_TYPE_BOX, FILE_BINCOUNT_1, FILE_BOXCOUNT_1
-from manage_csv import PROMPT_LASTFILE_BIN, PROMPT_LASTFILE_BOX, FILE_BOXCOUNT_2
-from manage_csv import prompt_input_boxes, write_input_box_func
-from manage_csv import fetch_filename, read_input
-from manage_csv import update_filecount, fix_filecount, fetch_filecount
-from Option1_input import O1_input
-from Option2_input import O2_input
+from Option1_input import O1_Input
+from Option2_input import O2_Input
 from unittest.mock import patch
 import unittest
-import csv
-import os
 import shutil
+import sys
+import os
+from io import StringIO
 
-class TestAux(unittest.TestCase):
+# Captures functions output
+def capture_output(function, *args):
+    captured_output = StringIO()
+    sys.stdout = captured_output
+    function(*args)
+    sys.stdout = sys.__stdout__
+    return captured_output.getvalue().strip()
+
+# 1 Bin 1 Box
+class Test_O1_Inputs_1(unittest.TestCase):
 
     @patch('builtins.input')
     def test_Option1_input(self, mock_input):
-        mock_input.side_effect = ["1", "0", "3", "100", "200", "200", "1000", "2", "0", "3", "1", "5", "20", "500", "200", "10000", "n", "n", "n", "3", "1", "4", "1", "0"]
-        O1_input()
+        mock_input.side_effect = ["1", "1", "100", "100", "100", "3000", "2", "1", "1", "1", "10", "10", "10", "10", "y", "y", "3", "1", "4", "1", "5", "0"]
+        O1_Input()
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputBins1.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputFitted1.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputSummary1.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputUnfitted1.csv"))
+
+
+# 1 Bin 3 Identical Boxes
+class Test_O1_Inputs_2(unittest.TestCase):
+
+    @patch('builtins.input')
+    def test_Option1_input(self, mock_input):
+        mock_input.side_effect = ["1", "1", "100", "100", "100", "3000", "2", "1", "3", "3", "10", "10", "10", "10", "y", "y", "3", "2", "4", "2", "5", "0"]
+        O1_Input()
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputBins2.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputFitted2.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputSummary2.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputUnfitted2.csv"))
+
+
+# 1 Bin 2 types of 2 boxes (total 4)
+class Test_O1_Inputs_3(unittest.TestCase):
+
+    @patch('builtins.input')
+    def test_Option1_input(self, mock_input):
+        mock_input.side_effect = ["1", "1", "100", "100", "100", "3000", "2", "2", "2", "2", "10", "50", "10", "50", "y", "y", "3", "3", "4", "3", "5", "0"]
+        O1_Input()
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputBins3.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputFitted3.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputSummary3.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputUnfitted3.csv"))
+
+
+# 2 Bins 5 types of 2 boxes (total 10)
+class Test_O1_Inputs_4(unittest.TestCase):
+
+    @patch('builtins.input')
+    def test_Option1_input(self, mock_input):
+        mock_input.side_effect = ["1", "2", "100", "100", "100", "3000", "2", "5", "2", "2", "5", "15", "5", "15", "y", "y", "3", "4", "4", "4", "5", "0"]
+        O1_Input()
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputBins4.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputFitted4.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputSummary4.csv"))
+        self.assertTrue(os.path.exists("files_Option1\csv_outputs\outputUnfitted4.csv"))
+
+
+# 1 Bin 1 Box
+class Test_O2_Inputs_1(unittest.TestCase):
 
     @patch('builtins.input')
     def test_Option2_input(self, mock_input):
-        mock_input.side_effect = ["1", "0", "3", "100", "200", "200", "1000", "2", "0", "3", "1", "5", "20", "500", "200", "10000", "3", "1", "4", "1", "0"]
-        O2_input()
+        mock_input.side_effect = ["1", "1", "100", "100", "100", "3000", "2", "1", "1", "1", "10", "10", "10", "10", "3", "1", "4", "1", "5", "0"]
+        O2_Input()
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputBins1.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputFitted1.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputSummary1.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputUnfitted1.csv"))
+
+
+# 1 Bin 3 Identical Boxes
+class Test_O2_Inputs_2(unittest.TestCase):
+
+    @patch('builtins.input')
+    def test_Option2_input(self, mock_input):
+        mock_input.side_effect = ["1", "1", "100", "100", "100", "3000", "2", "1", "3", "3", "10", "10", "10", "10", "3", "2", "4", "2", "5", "0"]
+        O2_Input()
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputBins2.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputFitted2.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputSummary2.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputUnfitted2.csv"))
+
+
+# 1 Bin 2 types of 2 boxes (total 4)
+class Test_O2_Inputs_3(unittest.TestCase):
+
+    @patch('builtins.input')
+    def test_Option2_input(self, mock_input):
+        mock_input.side_effect = ["1", "1", "100", "100", "100", "3000", "2", "2", "2", "2", "10", "50", "10", "50", "3", "3", "4", "3", "5", "0"]
+        O2_Input()
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputBins3.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputFitted3.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputSummary3.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputUnfitted3.csv"))
+
+
+# 2 Bins 5 types of 2 boxes (total 10)
+class Test_O2_Inputs_4(unittest.TestCase):
+
+    @patch('builtins.input')
+    def test_Option2_input(self, mock_input):
+        mock_input.side_effect = ["1", "2", "100", "100", "100", "3000", "2", "5", "2", "2", "5", "15", "5", "15", "3", "4", "4", "4", "5", "0"]
+        O2_Input()
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputBins4.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputFitted4.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputSummary4.csv"))
+        self.assertTrue(os.path.exists("files_Option2\csv_outputs\outputUnfitted4.csv"))
+
+
+
 
 if __name__ == '__main__':
     try:
@@ -32,4 +128,17 @@ if __name__ == '__main__':
     except OSError as e:
         pass
     
-    unittest.main()
+    suite = unittest.TestSuite()
+    # Adding tests to test suite
+    # This ensures tests are run in a certain order
+    # Needed as some tests require the files to have been created by previous tests
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_O1_Inputs_1))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_O1_Inputs_2))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_O1_Inputs_3))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_O1_Inputs_4))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_O2_Inputs_1))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_O2_Inputs_2))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_O2_Inputs_3))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_O2_Inputs_4))
+    runner = unittest.TextTestRunner()
+    runner.run(suite)
