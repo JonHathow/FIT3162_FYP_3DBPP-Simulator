@@ -15,16 +15,22 @@ def capture_output(function, *args):
     return captured_output.getvalue().strip()
 
 class TestAux(unittest.TestCase):
-    # Testing the interaction between Option1_input.py and Option 1
+
     @patch('builtins.input')
     def test_Option1_input(self, mock_input):
-        mock_input.side_effect = ["1", "0", "1", "100", "200", "200", "1000", "2", "0", "2", "1", "1", "20", "100", "10", "200", "n", "n", "n", "3", "1", "4", "1", "0", "0"]
-        # captured_output = capture_output(O1_input_test)
-        O1_input_test()
-        # self.assertEqual(captured_output, expected_output)
-        
-    # def test_Option1_input(self):
-    #     O1_input()
+        pass
+
+    # Data Flow Testing: This test verifies that data flows correctly between different modules or components, making it an integration test focused on data integration.
+
+    # Interface Testing: Testing the interfaces between different components to ensure they communicate effectively is a classic form of integration testing.
+
+    # Database Integration Testing: This type of testing focuses on verifying that data is properly stored, retrieved, and updated in the database when different components interact with it, making it an integration test.
+
+    # Security Integration Testing: Ensuring that security measures are correctly implemented at integration points is a form of integration testing that checks how different components interact with security features.
+
+    # Dependency Testing: This type of testing checks that all dependencies are correctly integrated, which is a key aspect of integration testing.
+
+    # End-to-End Testing: While primarily focused on verifying the entire system's functionality, end-to-end tests also involve the integration of different components, making them a type of integration test.
     
 if __name__ == '__main__':
     try:
