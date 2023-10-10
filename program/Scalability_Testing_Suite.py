@@ -36,7 +36,7 @@ class Test_Scalability_O1_small(unittest.TestCase):
         small scale tests where the number of bins and items do not exceed 10
         """
         
-        mock_input.side_effect = ["1", "3", "100", "100", "100", "3000", "2", "1", "10", "1", "10", "10", "10", "10", "y", "y", "3", "1", "4", "1", "5", "0"]
+        mock_input.side_effect = ["1", "3", "100", "100", "100", "3000", "2", "1", "10", "1", "10", "10", "10", "10", "y", "y", "3", "2", "4", "2", "5", "0"]
         O1_Input()
 
     @patch('builtins.input')
@@ -45,7 +45,7 @@ class Test_Scalability_O1_small(unittest.TestCase):
         small scale tests where the number of bins and items do not exceed 10
         """
         
-        mock_input.side_effect = ["1", "5", "100", "100", "100", "3000", "2", "2", "5", "1", "10", "10", "10", "10", "y", "y", "3", "1", "4", "1", "5", "0"]
+        mock_input.side_effect = ["1", "5", "100", "100", "100", "3000", "2", "2", "5", "1", "10", "10", "10", "10", "y", "y", "3", "3", "4", "3", "5", "0"]
         O1_Input()
     
 
@@ -57,7 +57,7 @@ class Test_Scalability_O1_medium(unittest.TestCase):
         medium scale tests where the number of bins and items are between 10 and 50
         """
         
-        mock_input.side_effect = ["1", "10", "100", "100", "100", "3000", "2", "3", "5", "1", "10", "10", "10", "10", "y", "y", "3", "1", "4", "1", "5", "0"]
+        mock_input.side_effect = ["1", "10", "100", "100", "100", "3000", "2", "3", "5", "1", "10", "10", "10", "10", "y", "y", "3", "4", "4", "4", "5", "0"]
         O1_Input()
 
     @patch('builtins.input')
@@ -66,7 +66,7 @@ class Test_Scalability_O1_medium(unittest.TestCase):
         medium scale tests where the number of bins and items are between 10 and 50
         """
         
-        mock_input.side_effect = ["1", "25", "100", "100", "100", "3000", "2", "3", "10", "1", "10", "10", "10", "10", "y", "y", "3", "2", "4", "2", "5", "0"]
+        mock_input.side_effect = ["1", "25", "100", "100", "100", "3000", "2", "3", "10", "1", "10", "10", "10", "10", "y", "y", "3", "5", "4", "5", "5", "0"]
         O1_Input()
 
     @patch('builtins.input')
@@ -75,7 +75,7 @@ class Test_Scalability_O1_medium(unittest.TestCase):
         medium scale tests where the number of bins and items are between 10 and 50
         """
         
-        mock_input.side_effect = ["1", "45", "100", "100", "100", "3000", "2", "5", "9", "1", "10", "10", "10", "10", "y", "y", "3", "2", "4", "2", "5", "0"]
+        mock_input.side_effect = ["1", "45", "100", "100", "100", "3000", "2", "5", "9", "1", "10", "10", "10", "10", "y", "y", "3", "6", "4", "6", "5", "0"]
         O1_Input()
 
 
