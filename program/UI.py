@@ -11,7 +11,7 @@ Classes Implemented
 4. Bin_Input Window
 5. Box_Input_O1 Window - Option 2 - Defined first as a parent to Option 1's Window
 6. Box_Input_O1 Window - Option 1 - Has a few more perimeters than Option 2
-7. Output Window
+7. Load_CSV Window
 """
 
 # Imports
@@ -591,7 +591,7 @@ class Box_Window_O1(Box_Window_O2):
 
       if button1.config('relief')[-1] == 'sunken':
         button2.config(state = DISABLED)
-        button2.config(text = "No")
+        button2.config(text = "Disabled")
       elif button1.config('relief')[-1] == 'raised':
         button2.config(state = NORMAL)
         button2.config(text = "Yes")
@@ -683,7 +683,18 @@ class Box_Window_O1(Box_Window_O2):
       
 
 ##############################################################################
-# 7. Output_Window
+# 7. Load_CSV_Window
+class Load_CSV_Window(Parent_Window):
+
+   # Init
+   def __init__(self, title, geometry) -> None:
+
+      # Create GUI Window
+      super().__init__(self, title, geometry)
+      return None
+   
+##############################################################################
+# 8. Output_Window
 class Output_Window(Parent_Window):
 
    # Init
