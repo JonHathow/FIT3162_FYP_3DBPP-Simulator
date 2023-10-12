@@ -8,6 +8,8 @@ from manage_csv.read_input_csv import read_input
 from write_output_option1 import output_master
 from Option1_package import Packer, Bin, Item, Painter
 
+# TODO: Check to see if rendering works for multiple boxes.
+
 def O1_Input():
     bins_loaded = False
     boxes_loaded = False
@@ -80,7 +82,7 @@ def O1_Input():
                     start = time.time()                
                     packer.pack(
                         bigger_first=True,
-                        distribute_items=False,
+                        distribute_items=True,
                         fix_point=True,
                         check_stable=True,
                         support_surface_ratio=0.75,
