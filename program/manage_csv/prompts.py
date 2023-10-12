@@ -58,4 +58,4 @@ def prompt_boolean(prompt: str) -> bool:
         elif response == "N" or response == "n":
             return False
         else:
-            print(ERROR_BOOLEAN)  
+            print(ERROR_BOOLEAN) 

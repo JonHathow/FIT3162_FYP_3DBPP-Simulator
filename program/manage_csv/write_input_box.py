@@ -2,7 +2,7 @@
 
 import os
 import csv
-from .constants import (Option, Mode, PROMPT_TYPE_BOX, PROMPT_QTY_BOX, PROMPT_DIM_BOX, PROMPT_WGT_BOX,
+from .constants import (Option, File, PROMPT_TYPE_BOX, PROMPT_QTY_BOX, PROMPT_DIM_BOX, PROMPT_WGT_BOX,
                         PROMPT_LEVEL_VAR, PROMPT_UPDOWN_VAR, PROMPT_UPDOWN,
                         FOLDER_INPUTS_1, FOLDER_INPUTS_2, FILE_BOXCOUNT_1, FILE_BOXCOUNT_2, FILE_BOX_1, FILE_BOX_2,
                         HEADER_BOX_1, HEADER_BOX_2, COLORS)
@@ -39,7 +39,7 @@ def prompt_input_boxes(option: Option) -> InputBoxParameters:
                            min(dim_lo, dim_hi), max(dim_lo, dim_hi), min(wgt_lo, wgt_hi), max(wgt_lo, wgt_hi))
 
     # Inputs specific to Option 1
-    if option == Option.OPTION1:
+    if option == Option.OPTION1.value:
         # Prompt user for whether they desire variation in loading priority level.
         level_var: bool = prompt_boolean(PROMPT_LEVEL_VAR)
 
@@ -55,10 +55,10 @@ def prompt_input_boxes(option: Option) -> InputBoxParameters:
             updown = False
 
         input_params.set_option1_params(level_var, updown_var, updown)
-
+    
     return input_params
 
-def write_input_box(option: Option) -> None:
+def write_input_box_func(option: Option) -> None:
     """
     Produce a CSV file with random values for boxes in the ranges specified by the user's inputs.
 
@@ -66,7 +66,7 @@ def write_input_box(option: Option) -> None:
               Option 1 or Option 2, used to determine file path,
               file name, and the header to be printed
     """
-    if option == Option.OPTION1:
+    if option == Option.OPTION1.value:
         folder_path     = FOLDER_INPUTS_1
         file_boxcount   = FILE_BOXCOUNT_1
         filename        = FILE_BOX_1
@@ -82,7 +82,7 @@ def write_input_box(option: Option) -> None:
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
-    filecount: int = fetch_filecount(file_boxcount, Mode.BOX)
+    filecount: int = fetch_filecount(file_boxcount)
     inputs: InputBoxParameters = prompt_input_boxes(option)
 
     filename = f'{filename}{filecount + 1}.csv'
@@ -106,7 +106,7 @@ def write_input_box(option: Option) -> None:
                 depth = uniform(inputs.dim_lo, inputs.dim_hi)
                 weight = uniform(inputs.wgt_lo, inputs.wgt_hi)
 
-                if option == Option.OPTION1:
+                if option == Option.OPTION1.value:
                     # Attributes specific to Option 1
                     shape = "cube"
                     level = 1 if not inputs.level_var else randint(1, 3)
