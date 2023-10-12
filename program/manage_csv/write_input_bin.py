@@ -3,7 +3,7 @@
 import os
 import csv
 from .constants import (Option, File, PROMPT_QTY_BIN, PROMPT_WID_BIN, PROMPT_HEI_BIN, PROMPT_DEP_BIN, PROMPT_WGT_BIN,
-                        FOLDER_INPUTS_1, FOLDER_INPUTS_2, FILE_BINCOUNT_1, FILE_BINCOUNT_2, FILE_BIN_1, FILE_BIN_2,
+                        FOLDER_INPUTS_1, FOLDER_INPUTS_2, FOLDER_BIN_1, FOLDER_BIN_2, FILE_BINCOUNT_1, FILE_BINCOUNT_2, FILE_BIN_1, FILE_BIN_2,
                         HEADER_BIN_1, HEADER_BIN_2)
 
 from .manage_filecount import update_filecount, fetch_filecount
@@ -44,12 +44,14 @@ def write_input_bin_func(option: Option) -> None:
     
     if option == Option.OPTION1.value:
         folder_path     = FOLDER_INPUTS_1
+        folder_bin_path = FOLDER_BIN_1
         file_bincount   = FILE_BINCOUNT_1
         filename        = FILE_BIN_1
         header          = HEADER_BIN_1
         
     else:
         folder_path     = FOLDER_INPUTS_2
+        folder_bin_path = FOLDER_BIN_2
         file_bincount   = FILE_BINCOUNT_2
         filename        = FILE_BIN_2
         header          = HEADER_BIN_2
@@ -57,6 +59,9 @@ def write_input_bin_func(option: Option) -> None:
     # Make a new directory if it does not already exist.
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
+
+    if not os.path.exists(folder_bin_path):
+        os.makedirs(folder_bin_path)
 
     filecount: int = fetch_filecount(file_bincount)
     inputs: InputBinParameters = prompt_input_bins()

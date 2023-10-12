@@ -4,7 +4,7 @@ import os
 import csv
 from .constants import (Option, File, PROMPT_TYPE_BOX, PROMPT_QTY_BOX, PROMPT_DIM_BOX, PROMPT_WGT_BOX,
                         PROMPT_LEVEL_VAR, PROMPT_UPDOWN_VAR, PROMPT_UPDOWN,
-                        FOLDER_INPUTS_1, FOLDER_INPUTS_2, FILE_BOXCOUNT_1, FILE_BOXCOUNT_2, FILE_BOX_1, FILE_BOX_2,
+                        FOLDER_INPUTS_1, FOLDER_INPUTS_2, FOLDER_BOX_1, FOLDER_BOX_2, FILE_BOXCOUNT_1, FILE_BOXCOUNT_2, FILE_BOX_1, FILE_BOX_2,
                         HEADER_BOX_1, HEADER_BOX_2, COLORS)
 from .manage_filecount import update_filecount, fetch_filecount
 from .prompts import prompt_integer, prompt_range, prompt_boolean
@@ -68,12 +68,14 @@ def write_input_box_func(option: Option) -> None:
     """
     if option == Option.OPTION1.value:
         folder_path     = FOLDER_INPUTS_1
+        folder_box_path = FOLDER_BOX_1
         file_boxcount   = FILE_BOXCOUNT_1
         filename        = FILE_BOX_1
         header          = HEADER_BOX_1
         
     else:
         folder_path     = FOLDER_INPUTS_2
+        folder_box_path = FOLDER_BOX_2
         file_boxcount   = FILE_BOXCOUNT_2
         filename        = FILE_BOX_2
         header          = HEADER_BOX_2    
@@ -81,6 +83,9 @@ def write_input_box_func(option: Option) -> None:
     # Make a new directory if it does not already exist.    
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
+
+    if not os.path.exists(folder_box_path):
+        os.makedirs(folder_box_path)
 
     filecount: int = fetch_filecount(file_boxcount)
     inputs: InputBoxParameters = prompt_input_boxes(option)
