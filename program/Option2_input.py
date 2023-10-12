@@ -5,7 +5,9 @@ from manage_csv.write_input_bin import write_input_bin_func
 from manage_csv.write_input_box import write_input_box_func
 from manage_csv.read_input_csv import read_input
 from write_output_option2 import output_master
-from Option2_package import Packer, Bin, Item
+from Option2_package import Packer, Bin, Item, Painter
+
+# TODO: Check to see if rendering works for multiple boxes.
 
 def O2_Input():
 
@@ -60,7 +62,8 @@ def O2_Input():
                         depth = float(item[2])
                         height = float(item[3])
                         weight = float(item[4])
-                        packer.add_item(Item(name, width, depth, height, weight))
+                        color = item[5]
+                        packer.add_item(Item(name, width, depth, height, weight, color))
 
                     boxes_loaded = True
 
@@ -74,6 +77,15 @@ def O2_Input():
 
             else:
                 packer.pack()
+                for b in packer.bins:
+                    painter = Painter(b)
+                    fig = painter.plotBoxAndItems(
+                            title = b.size,
+                            alpha = 0.8,
+                            write_num = False,
+                            fontsize = 10
+                        )
+                fig.show()
                 output_master(packer)
 
         elif response == "0":
