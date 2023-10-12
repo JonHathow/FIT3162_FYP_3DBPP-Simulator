@@ -3,12 +3,13 @@ from .auxiliary_methods import set_to_decimal
 
 
 class Item:
-    def __init__(self, name, length, width, height, weight):
+    def __init__(self, name, length, width, height, weight, color = "red"):
         self.name = name
         self.length = length
         self.width = width
         self.height = height
         self.weight = weight
+        self.color = color
         self.rotation_type = 0 # initial rotation type: (x, y, z) --> (l, w, h)
         self.position = START_POSITION # initial position: (0, 0, 0)
         self.number_of_decimals = DEFAULT_NUMBER_OF_DECIMALS
