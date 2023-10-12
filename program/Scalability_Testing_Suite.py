@@ -210,10 +210,10 @@ if __name__ == '__main__':
         pass
 
     suite = unittest.TestSuite()
-    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O1_small))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O1_small))
     # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O1_medium))
-    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O1_large))
-    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O2_small))
+    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O1_large))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O2_small))
     # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O2_medium))
     # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O2_large))
     runner = unittest.TextTestRunner()

@@ -80,7 +80,7 @@ def O1_Input():
                     start = time.time()                
                     packer.pack(
                         bigger_first=True,
-                        distribute_items=False,
+                        distribute_items=True,
                         fix_point=True,
                         check_stable=True,
                         support_surface_ratio=0.75,
@@ -115,13 +115,13 @@ def O1_Input():
                         print("gravity distribution : ",b.gravity)
                         print("***************************************************")
                         # draw results
-                        painter = Painter(b)
-                        fig = painter.plotBoxAndItems(
-                            title=b.partno,
-                            alpha=0.8,
-                            write_num=False,
-                            fontsize=10
-                        )
+                        # painter = Painter(b)
+                        # fig = painter.plotBoxAndItems(
+                        #     title=b.partno,
+                        #     alpha=0.8,
+                        #     write_num=False,
+                        #     fontsize=10
+                        # )
 
                     print("***************************************************")
                     print("UNFITTED ITEMS:")
@@ -142,7 +142,7 @@ def O1_Input():
 
                     print('used time : ',stop - start)
 
-                    fig.show()
+                    # fig.show()
                     #endregion
                     output_master(packer)
 
