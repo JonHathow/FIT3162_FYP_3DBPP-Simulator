@@ -12,6 +12,7 @@ Classes Implemented
 5. Box_Input_O1 Window - Option 2 - Defined first as a parent to Option 1's Window
 6. Box_Input_O1 Window - Option 1 - Has a few more perimeters than Option 2
 7. Load_CSV Window
+8. Output Window
 """
 
 # Imports
@@ -280,6 +281,7 @@ class MS_Window(Parent_Window):
 # 4. Create New Bin UI - Same for both option 1 and 2
 class Bin_Window(Parent_Window):
 
+   # --- Constructor --- #
    # Init
    def __init__(self, title, geometry, entries) -> None:
 
@@ -330,7 +332,6 @@ class Bin_Window(Parent_Window):
       else: 
          print("No data retrieved from user.")
          return None
-     
 
    # Check if "Back" button is pressed.
    def get_backflag(self):
@@ -373,6 +374,7 @@ class Bin_Window(Parent_Window):
 # 5. Create New Box UI - Option 2 
 class Box_Window_O2(Parent_Window):
 
+   # --- Constructor --- #
    # Init
    def __init__(self, title, geometry, chosen_algorithm, entries, range_entries) -> None:
 
@@ -451,25 +453,9 @@ class Box_Window_O2(Parent_Window):
       else: 
          print("No data retrieved from user.")
          return None
-   
-   # Back Button
-   def back(self):
-      self.backflag = True
-      self.destroy_window()
-      return None
-   
-   # Pack Window - Override
-   def pack_window(self):
-      
-      # Pack and publish - With Second Body
-      self.header.pack()
-      self.body.pack()
-      self.header_second.pack()
-      self.body_second.pack()
-      self.footer.pack(side = 'bottom')
 
-      return None
-   
+
+   # --- Creation Methods --- #
    # Unique Label and Field Creating Method - Creating Ranges (Low, High) Input
    def range_input_fields(self, range_entries):
       
@@ -495,6 +481,25 @@ class Box_Window_O2(Parent_Window):
          fields.append(high)
 
       return entries, fields
+  
+   # --- Utility Methods --- #
+   # Back Button
+   def back(self):
+      self.backflag = True
+      self.destroy_window()
+      return None
+   
+   # Pack Window - Override
+   def pack_window(self):
+      
+      # Pack and publish - With Second Body
+      self.header.pack()
+      self.body.pack()
+      self.header_second.pack()
+      self.body_second.pack()
+      self.footer.pack(side = 'bottom')
+
+      return None
 
    # Fetch Algorithm - Override
    def fetch(self):
@@ -530,6 +535,7 @@ class Box_Window_O2(Parent_Window):
 # 6. Create New Box UI - Option 1 - Which has a few more parameters than Option 2
 class Box_Window_O1(Box_Window_O2):
    
+   # --- Constructor --- #
    # Init
    def __init__(self, title, geometry, chosen_algorithm, entries, range_entries, bool_entries) -> None:
 
@@ -564,6 +570,7 @@ class Box_Window_O1(Box_Window_O2):
 
       self.start_window()
    
+   # --- Creation Methods --- #
    # Unique Boolean Field Create Method
    def bool_input_fields(self, bool_entries):
 
@@ -632,7 +639,8 @@ class Box_Window_O1(Box_Window_O2):
       else: 
          print("No data retrieved from user.")
          return None
-      
+   
+   # --- Utility Methods --- #
    # Clear - Override
    def clear(self):
       # Call Super
@@ -688,6 +696,7 @@ class Box_Window_O1(Box_Window_O2):
 # 7. Load_CSV_Window
 class Load_CSV_Window(Parent_Window):
 
+   # --- Constructor --- #
    # Init - Override
    def __init__(self, choosen_algorithm, filetype) -> None:
       
@@ -734,7 +743,7 @@ class Load_CSV_Window(Parent_Window):
       # Return filename status
       self.data = filename
    
-
+   # --- Utility Methods --- #
    # Verify Correct File Path - In Case User wanders to different directories in file explorer
    def filename_check(self, filename):
 
@@ -823,7 +832,7 @@ def main():
    print(bin_window_1.get_data())
    """
 
-   # Load CSV Window
+   # Load CSV Window Test
    lw_filename = Load_CSV_Window(Option.OPTION2, FILE_BOX)
    print(lw_filename.get_data())
 
