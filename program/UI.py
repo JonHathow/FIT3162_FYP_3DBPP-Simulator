@@ -12,12 +12,15 @@ Classes Implemented
 5. Box_Input_O1 Window - Option 2 - Defined first as a parent to Option 1's Window
 6. Box_Input_O1 Window - Option 1 - Has a few more perimeters than Option 2
 7. Load_CSV Window
+8. Output Window
 """
 
 # Imports
 from tkinter import *
+from tkinter import filedialog
 from manage_csv.input_parameters import InputBinParameters
 from manage_csv.input_parameters import InputBoxParameters
+from manage_csv.constants import *
 
 ##############################################################################
 # 1. General Purpose - Parent Window
@@ -278,6 +281,7 @@ class MS_Window(Parent_Window):
 # 4. Create New Bin UI - Same for both option 1 and 2
 class Bin_Window(Parent_Window):
 
+   # --- Constructor --- #
    # Init
    def __init__(self, title, geometry, entries) -> None:
 
@@ -328,7 +332,6 @@ class Bin_Window(Parent_Window):
       else: 
          print("No data retrieved from user.")
          return None
-     
 
    # Check if "Back" button is pressed.
    def get_backflag(self):
@@ -371,6 +374,7 @@ class Bin_Window(Parent_Window):
 # 5. Create New Box UI - Option 2 
 class Box_Window_O2(Parent_Window):
 
+   # --- Constructor --- #
    # Init
    def __init__(self, title, geometry, chosen_algorithm, entries, range_entries) -> None:
 
@@ -449,25 +453,9 @@ class Box_Window_O2(Parent_Window):
       else: 
          print("No data retrieved from user.")
          return None
-   
-   # Back Button
-   def back(self):
-      self.backflag = True
-      self.destroy_window()
-      return None
-   
-   # Pack Window - Override
-   def pack_window(self):
-      
-      # Pack and publish - With Second Body
-      self.header.pack()
-      self.body.pack()
-      self.header_second.pack()
-      self.body_second.pack()
-      self.footer.pack(side = 'bottom')
 
-      return None
-   
+
+   # --- Creation Methods --- #
    # Unique Label and Field Creating Method - Creating Ranges (Low, High) Input
    def range_input_fields(self, range_entries):
       
@@ -493,6 +481,25 @@ class Box_Window_O2(Parent_Window):
          fields.append(high)
 
       return entries, fields
+  
+   # --- Utility Methods --- #
+   # Back Button
+   def back(self):
+      self.backflag = True
+      self.destroy_window()
+      return None
+   
+   # Pack Window - Override
+   def pack_window(self):
+      
+      # Pack and publish - With Second Body
+      self.header.pack()
+      self.body.pack()
+      self.header_second.pack()
+      self.body_second.pack()
+      self.footer.pack(side = 'bottom')
+
+      return None
 
    # Fetch Algorithm - Override
    def fetch(self):
@@ -528,6 +535,7 @@ class Box_Window_O2(Parent_Window):
 # 6. Create New Box UI - Option 1 - Which has a few more parameters than Option 2
 class Box_Window_O1(Box_Window_O2):
    
+   # --- Constructor --- #
    # Init
    def __init__(self, title, geometry, chosen_algorithm, entries, range_entries, bool_entries) -> None:
 
@@ -562,6 +570,7 @@ class Box_Window_O1(Box_Window_O2):
 
       self.start_window()
    
+   # --- Creation Methods --- #
    # Unique Boolean Field Create Method
    def bool_input_fields(self, bool_entries):
 
@@ -630,7 +639,8 @@ class Box_Window_O1(Box_Window_O2):
       else: 
          print("No data retrieved from user.")
          return None
-      
+   
+   # --- Utility Methods --- #
    # Clear - Override
    def clear(self):
       # Call Super
@@ -686,12 +696,75 @@ class Box_Window_O1(Box_Window_O2):
 # 7. Load_CSV_Window
 class Load_CSV_Window(Parent_Window):
 
-   # Init
-   def __init__(self, title, geometry) -> None:
-
-      # Create GUI Window
-      super().__init__(self, title, geometry)
+   # --- Constructor --- #
+   # Init - Override
+   def __init__(self, choosen_algorithm, filetype) -> None:
+      
+      self.choosen_algorithm = choosen_algorithm
+      self.filetype = filetype
+      self.load_csv()
       return None
+   
+   # Load CSV
+   def load_csv(self):
+      
+      # Open Appropriate Directory
+      self.dir = None 
+
+      if self.choosen_algorithm == Option.OPTION1 and self.filetype ==  FILE_BIN:
+         self.dir = FOLDER_BIN_1  
+      elif self.choosen_algorithm == Option.OPTION1 and self.filetype ==  FILE_BOX:   
+         self.dir = FOLDER_BOX_1
+      elif self.choosen_algorithm == Option.OPTION2 and self.filetype ==  FILE_BIN:
+         self.dir = FOLDER_BIN_2
+      elif self.choosen_algorithm == Option.OPTION2 and self.filetype ==  FILE_BOX:
+         self.dir = FOLDER_BOX_2
+      else:
+         raise Exception("Choosen Algorithm and File Type Provided is Incorrect Format / Non-Existent")
+
+      # Load File
+      prompt = "Open a {} CSV File from within This Directory or Select Cancel to Go Back".format(self.filetype)
+      filename = ""
+
+      while not self.filename_check(filename):
+         filename = filedialog.askopenfilename(initialdir = self.dir,
+                                             title = prompt,
+                                             filetypes=[("CSV files", "*.csv")])
+      
+         # Check if "Cancel" was selected
+         if filename == "":
+            filename = "Canceled"
+            break
+         
+         if not self.filename_check(filename):
+            prompt = "Incorrect {} File Selected. Open a {} CSV File from within This Directory or Select Cancel to Go Back".format(self.filetype, self.filetype)
+
+
+      # Return filename status
+      self.data = filename
+   
+   # --- Utility Methods --- #
+   # Verify Correct File Path - In Case User wanders to different directories in file explorer
+   def filename_check(self, filename):
+
+      flag = False
+
+      # Parse File Paths
+      dir = self.dir
+      dir_paths = dir.split("\\")
+      # print(dir_paths)
+      
+      file_paths = filename.split("/")
+      file_paths = file_paths[-4:-1]
+      # print(file_paths)
+
+      # Check if Retrieved File Path matches original Dir
+      if file_paths == dir_paths:
+         flag = True
+
+      # print (flag)
+      return flag
+
    
 ##############################################################################
 # 8. Output_Window
@@ -709,6 +782,7 @@ class Output_Window(Parent_Window):
 def main():
    print("This function is to test the ui programs. ")
    print("This is not the main file. Please run Main.py instead.")
+   print("Reference: Methods of This Class used mainly in Mastet_Input.py")
 
 
    # --- Params --- #
@@ -753,9 +827,17 @@ def main():
    """
 
    # Box Window Test - Option 1
+   """
    print("Box Window Test - Option 1")
    bin_window_1 = Box_Window_O1(m_title, m_geometry, "Option 1 - Back Bottom Left Fill", bparams_normal, bparams_ranges, bparams_boolean)
    print(bin_window_1.get_data())
+   """
+
+   # Load CSV Window Test
+   """
+   lw_filename = Load_CSV_Window(Option.OPTION2, FILE_BOX)
+   print(lw_filename.get_data())
+   """
 
    return None
 
