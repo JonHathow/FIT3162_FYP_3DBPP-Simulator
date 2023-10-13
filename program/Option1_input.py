@@ -153,3 +153,7 @@ def O1_Input():
 
         else:
             print(MENU_INVALID)
+
+
+if __name__ == "__main__":
+   O1_Input()

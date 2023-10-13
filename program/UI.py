@@ -693,6 +693,14 @@ class Load_CSV_Window(Parent_Window):
       super().__init__(self, title, geometry)
       return None
    
+   # Initialize Content - Override
+   def initialize_content(self):
+
+      # Super Call
+      super().initialize_content()
+
+      
+   
 ##############################################################################
 # 8. Output_Window
 class Output_Window(Parent_Window):
