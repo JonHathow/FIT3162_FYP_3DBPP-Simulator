@@ -743,7 +743,7 @@ class Load_CSV_Window(Parent_Window):
       # Return filename status
       if filename != "Canceled":
          self.data = self.filename_shorten(filename)
-         print(self.dir)
+         # print(self.dir)
       else:
          self.data = filename
    
@@ -855,10 +855,8 @@ def main():
    """
 
    # Load CSV Window Test
-   """
    lw_filename = Load_CSV_Window(Option.OPTION2, FILE_BOX)
    print(lw_filename.get_data())
-   """
 
    return None
 
