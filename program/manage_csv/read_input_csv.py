@@ -33,7 +33,10 @@ def read_input(filename: str, filetype: File, option: Option) -> Optional[List[s
                   determines which PROMPT_CSVFILE string is used when the user is
                   prompted for a file to read
     """
-    filename = fetch_filename(filename, filetype)
+    filename = fetch_filename(filename, filetype) # Does the retrieved filepath from Load CSV Window Go Here?
+    
+    print("This is the format of filename: {}".format(filename))
+
     update_lastfile(filename, option, filetype)
 
     try:

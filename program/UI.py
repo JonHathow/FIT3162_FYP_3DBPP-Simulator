@@ -741,7 +741,11 @@ class Load_CSV_Window(Parent_Window):
 
 
       # Return filename status
-      self.data = filename
+      if filename != "Canceled":
+         self.data = self.filename_shorten(filename)
+         print(self.dir)
+      else:
+         self.data = filename
    
    # --- Utility Methods --- #
    # Verify Correct File Path - In Case User wanders to different directories in file explorer
@@ -764,6 +768,23 @@ class Load_CSV_Window(Parent_Window):
 
       # print (flag)
       return flag
+   
+   # Shorten File Path
+   def filename_shorten(self, filename):
+
+      file_paths = filename.split("/")
+      file_paths = file_paths[-4:]
+
+      f_short = ""
+
+      for i in range(len(file_paths)):
+
+         if i == 0:
+            f_short += file_paths[i]
+         else:
+            f_short += "\\" + file_paths[i]
+      
+      return f_short
 
    
 ##############################################################################
