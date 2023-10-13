@@ -782,6 +782,7 @@ class Output_Window(Parent_Window):
 def main():
    print("This function is to test the ui programs. ")
    print("This is not the main file. Please run Main.py instead.")
+   print("Reference: Methods of This Class used mainly in Mastet_Input.py")
 
 
    # --- Params --- #
@@ -833,8 +834,10 @@ def main():
    """
 
    # Load CSV Window Test
+   """
    lw_filename = Load_CSV_Window(Option.OPTION2, FILE_BOX)
    print(lw_filename.get_data())
+   """
 
    return None
 
