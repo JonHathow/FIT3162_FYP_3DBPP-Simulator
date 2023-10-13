@@ -16,8 +16,10 @@ Classes Implemented
 
 # Imports
 from tkinter import *
+from tkinter import filedialog
 from manage_csv.input_parameters import InputBinParameters
 from manage_csv.input_parameters import InputBoxParameters
+from manage_csv.constants import *
 
 ##############################################################################
 # 1. General Purpose - Parent Window
@@ -686,12 +688,74 @@ class Box_Window_O1(Box_Window_O2):
 # 7. Load_CSV_Window
 class Load_CSV_Window(Parent_Window):
 
-   # Init
-   def __init__(self, title, geometry) -> None:
-
-      # Create GUI Window
-      super().__init__(self, title, geometry)
+   # Init - Override
+   def __init__(self, choosen_algorithm, filetype) -> None:
+      
+      self.choosen_algorithm = choosen_algorithm
+      self.filetype = filetype
+      self.load_csv()
       return None
+   
+   # Load CSV
+   def load_csv(self):
+      
+      # Open Appropriate Directory
+      self.dir = None 
+
+      if self.choosen_algorithm == Option.OPTION1 and self.filetype ==  FILE_BIN:
+         self.dir = FOLDER_BIN_1  
+      elif self.choosen_algorithm == Option.OPTION1 and self.filetype ==  FILE_BOX:   
+         self.dir = FOLDER_BOX_1
+      elif self.choosen_algorithm == Option.OPTION2 and self.filetype ==  FILE_BIN:
+         self.dir = FOLDER_BIN_2
+      elif self.choosen_algorithm == Option.OPTION2 and self.filetype ==  FILE_BOX:
+         self.dir = FOLDER_BOX_2
+      else:
+         raise Exception("Choosen Algorithm and File Type Provided is Incorrect Format / Non-Existent")
+
+      # Load File
+      prompt = "Open a {} CSV File from within This Directory or Select Cancel to Go Back".format(self.filetype)
+      filename = ""
+
+      while not self.filename_check(filename):
+         filename = filedialog.askopenfilename(initialdir = self.dir,
+                                             title = prompt,
+                                             filetypes=[("CSV files", "*.csv")])
+      
+         # Check if "Cancel" was selected
+         if filename == "":
+            filename = "Canceled"
+            break
+         
+         if not self.filename_check(filename):
+            prompt = "Incorrect {} File Selected. Open a {} CSV File from within This Directory or Select Cancel to Go Back".format(self.filetype, self.filetype)
+
+
+      # Return filename status
+      self.data = filename
+   
+
+   # Verify Correct File Path - In Case User wanders to different directories in file explorer
+   def filename_check(self, filename):
+
+      flag = False
+
+      # Parse File Paths
+      dir = self.dir
+      dir_paths = dir.split("\\")
+      # print(dir_paths)
+      
+      file_paths = filename.split("/")
+      file_paths = file_paths[-4:-1]
+      # print(file_paths)
+
+      # Check if Retrieved File Path matches original Dir
+      if file_paths == dir_paths:
+         flag = True
+
+      # print (flag)
+      return flag
+
    
 ##############################################################################
 # 8. Output_Window
@@ -753,9 +817,15 @@ def main():
    """
 
    # Box Window Test - Option 1
+   """
    print("Box Window Test - Option 1")
    bin_window_1 = Box_Window_O1(m_title, m_geometry, "Option 1 - Back Bottom Left Fill", bparams_normal, bparams_ranges, bparams_boolean)
    print(bin_window_1.get_data())
+   """
+
+   # Load CSV Window
+   lw_filename = Load_CSV_Window(Option.OPTION2, FILE_BOX)
+   print(lw_filename.get_data())
 
    return None
 

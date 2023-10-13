@@ -2,7 +2,7 @@
 Python Classes to represent a generic cuboidal object - Containers and SKU Items.
 
 Creation Date: 13/8/2023
-Authors: How Yu Chern, Cheryl Frances Lee, Anson Sameer Lee
+Authors: How Yu Chern
 
 Classes Implemented (Ref: MCS15_Project_Proposal)
 1. Cuboid - Represents any Cuboid Object
