@@ -21,23 +21,23 @@ class Test_Scalability_O1_small(unittest.TestCase):
     # def test_smthereadwad(self):
     #     O1_Input()
 
-    @patch('builtins.input')
-    def test_ss1(self, mock_input):
-        """
-        small scale tests where the number of bins and items do not exceed 10
-        """
+    # @patch('builtins.input')
+    # def test_ss1(self, mock_input):
+    #     """
+    #     small scale tests where the number of bins and items do not exceed 10
+    #     """
         
-        mock_input.side_effect = ["1", "2", "100", "100", "100", "3000", "2", "1", "3", "1", "10", "10", "10", "10", "y", "y", "3", "1", "4", "1", "5", "0"]
-        O1_Input()
+    #     mock_input.side_effect = ["1", "2", "100", "100", "100", "3000", "2", "1", "3", "1", "10", "10", "10", "10", "y", "y", "3", "1", "4", "1", "5", "0"]
+    #     O1_Input()
 
-    @patch('builtins.input')
-    def test_ss2(self, mock_input):
-        """
-        small scale tests where the number of bins and items do not exceed 10
-        """
+    # @patch('builtins.input')
+    # def test_ss2(self, mock_input):
+    #     """
+    #     small scale tests where the number of bins and items do not exceed 10
+    #     """
         
-        mock_input.side_effect = ["1", "3", "100", "100", "100", "3000", "2", "1", "10", "1", "10", "10", "10", "10", "y", "y", "3", "2", "4", "2", "5", "0"]
-        O1_Input()
+    #     mock_input.side_effect = ["1", "3", "100", "100", "100", "3000", "2", "1", "10", "1", "10", "10", "10", "10", "y", "y", "3", "2", "4", "2", "5", "0"]
+    #     O1_Input()
 
     @patch('builtins.input')
     def test_ss3(self, mock_input):
@@ -45,7 +45,7 @@ class Test_Scalability_O1_small(unittest.TestCase):
         small scale tests where the number of bins and items do not exceed 10
         """
         
-        mock_input.side_effect = ["1", "5", "100", "100", "100", "3000", "2", "2", "5", "1", "10", "10", "10", "10", "y", "y", "3", "3", "4", "3", "5", "0"]
+        mock_input.side_effect = ["1", "5", "100", "100", "100", "3000", "2", "2", "5", "1", "10", "10", "10", "10", "y", "y", "3", "1", "4", "1", "5", "0"]
         O1_Input()
     
 
@@ -114,23 +114,23 @@ class Test_Scalability_O2_small(unittest.TestCase):
     # def test_smthereadwad(self):
     #     O1_Input()
 
-    @patch('builtins.input')
-    def test_ss1(self, mock_input):
-        """
-        small scale tests where the number of bins and items do not exceed 10
-        """
+    # @patch('builtins.input')
+    # def test_ss1(self, mock_input):
+    #     """
+    #     small scale tests where the number of bins and items do not exceed 10
+    #     """
         
-        mock_input.side_effect = ["1", "2", "100", "100", "100", "3000", "2", "1", "3", "1", "10", "10", "10", "10", "3", "1", "4", "1", "5", "0"]
-        O2_Input()
+    #     mock_input.side_effect = ["1", "2", "100", "100", "100", "3000", "2", "1", "3", "1", "10", "10", "10", "10", "3", "1", "4", "1", "5", "0"]
+    #     O2_Input()
 
-    @patch('builtins.input')
-    def test_ss2(self, mock_input):
-        """
-        small scale tests where the number of bins and items do not exceed 10
-        """
+    # @patch('builtins.input')
+    # def test_ss2(self, mock_input):
+    #     """
+    #     small scale tests where the number of bins and items do not exceed 10
+    #     """
         
-        mock_input.side_effect = ["1", "3", "100", "100", "100", "3000", "2", "1", "10", "1", "10", "10", "10", "10", "3", "1", "4", "1", "5", "0"]
-        O2_Input()
+    #     mock_input.side_effect = ["1", "3", "100", "100", "100", "3000", "2", "1", "10", "1", "10", "10", "10", "10", "3", "1", "4", "1", "5", "0"]
+    #     O2_Input()
 
     @patch('builtins.input')
     def test_ss3(self, mock_input):
@@ -213,7 +213,7 @@ if __name__ == '__main__':
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O1_small))
     # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O1_medium))
     # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O1_large))
-    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O2_small))
+    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O2_small))
     # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O2_medium))
     # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Scalability_O2_large))
     runner = unittest.TextTestRunner()

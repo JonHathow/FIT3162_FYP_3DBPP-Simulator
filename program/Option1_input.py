@@ -115,13 +115,13 @@ def O1_Input():
                         print("gravity distribution : ",b.gravity)
                         print("***************************************************")
                         # draw results
-                        # painter = Painter(b)
-                        # fig = painter.plotBoxAndItems(
-                        #     title=b.partno,
-                        #     alpha=0.8,
-                        #     write_num=False,
-                        #     fontsize=10
-                        # )
+                        painter = Painter(b)
+                        fig = painter.plotBoxAndItems(
+                            title=b.partno,
+                            alpha=0.8,
+                            write_num=False,
+                            fontsize=10
+                        )
 
                     print("***************************************************")
                     print("UNFITTED ITEMS:")
@@ -142,8 +142,8 @@ def O1_Input():
 
                     print('used time : ',stop - start)
 
-                    # fig.show()
-                    #endregion
+                    fig.show()
+                    # endregion
                     output_master(packer)
 
         
