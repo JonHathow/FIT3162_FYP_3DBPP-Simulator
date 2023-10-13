@@ -155,3 +155,7 @@ def O1_Input():
 
         else:
             print(MENU_INVALID)
+
+# Test Run
+if __name__ == "__main__":
+   O1_Input()
