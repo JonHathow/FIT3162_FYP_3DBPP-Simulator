@@ -107,7 +107,7 @@ class O2_Analysis(unittest.TestCase):
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
-    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(O1_Analysis))
-    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(O2_Analysis))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(O1_Analysis))
+    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(O2_Analysis))
     runner = unittest.TextTestRunner()
     runner.run(suite)
