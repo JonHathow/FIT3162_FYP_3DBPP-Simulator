@@ -29,9 +29,22 @@ def O2_Input():
         # Read a CSV file for bins.
         elif response == "3":
             bin_params = read_input(FILE_BIN_2, File.BIN.value, Option.OPTION2.value)
+            bins_loaded = True if bin_params is not None else False
 
-            if bin_params is not None:
+        # Read a CSV file for boxes.
+        elif response == "4":
+            item_params = read_input(FILE_BOX_2, File.BOX, Option.OPTION2)
+            boxes_loaded = True if item_params is not None else False
 
+        elif response == "5":
+
+            if not bins_loaded or not boxes_loaded:
+                if not bins_loaded:
+                    print(MENU_BIN_NOTLOADED)
+                if not boxes_loaded:
+                    print(MENU_BOX_NOTLOADED)
+
+            else:
                 # Initialize packing function.
                 packer = Packer()
 
@@ -43,39 +56,18 @@ def O2_Input():
                     depth = float(b[3])
                     capacity = float(b[4])
                     packer.add_bin(Bin(name, width, depth, height, capacity))
+                
+                # Initialize items.
+                for item in item_params:
+                    name = item[0]
+                    width = float(item[1])
+                    depth = float(item[2])
+                    height = float(item[3])
+                    weight = float(item[4])
+                    color = item[5]
+                    packer.add_item(Item(name, width, depth, height, weight, color))
 
-                bins_loaded = True
-
-        # Read a CSV file for boxes.
-        elif response == "4":
-            if not bins_loaded:
-                print(MENU_BIN_NOTLOADED)
-            
-            else:        
-                item_params = read_input(FILE_BOX_2, File.BOX, Option.OPTION2)
-
-                if item_params is not None:
-
-                    for item in item_params:
-                        name = item[0]
-                        width = float(item[1])
-                        depth = float(item[2])
-                        height = float(item[3])
-                        weight = float(item[4])
-                        color = item[5]
-                        packer.add_item(Item(name, width, depth, height, weight, color))
-
-                    boxes_loaded = True
-
-        elif response == "5":
-
-            if not bins_loaded or not boxes_loaded:
-                if not bins_loaded:
-                    print(MENU_BIN_NOTLOADED)
-                if not boxes_loaded:
-                    print(MENU_BOX_NOTLOADED)
-
-            else:
+                # Compute packing.
                 packer.pack()
                 for b in packer.bins:
                     painter = Painter(b)
