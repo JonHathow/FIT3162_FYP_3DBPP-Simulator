@@ -99,8 +99,6 @@ class Test_Prompts(unittest.TestCase):
     @patch('builtins.input')
     def test_prompt_Number(self, mock_get_input):
 
-        # input always return string
-
         mock_get_input.return_value = "4"
         self.assertEqual(prompt_number("dimension"), float(4))
 
@@ -204,25 +202,25 @@ class Test_Write_Input_Bin(unittest.TestCase):
         mock_prompt_input_bins.return_value = InputBinParameters(4, 100, 200, 500, 10000)
         mock_fetch_filecount.return_value = 0
         write_input_bin_func(1)
-        self.assertEqual(os.path.exists('files_Option1\csv_inputs\inputBins1.csv'), True)
+        self.assertEqual(os.path.exists('files_Option1\csv_inputs\csv_bins\inputBins1.csv'), True)
 
         mock_prompt_input_bins.return_value = InputBinParameters(4, 100, 200, 500, 10000)
         mock_fetch_filecount.return_value = 1
         write_input_bin_func(1)
-        self.assertEqual(os.path.exists('files_Option1\csv_inputs\inputBins2.csv'), True)
+        self.assertEqual(os.path.exists('files_Option1\csv_inputs\csv_bins\inputBins2.csv'), True)
         
 
         mock_prompt_input_bins.return_value = InputBinParameters(4, 100, 200, 500, 10000)
         mock_fetch_filecount.return_value = 0
         write_input_bin_func(2)
-        self.assertEqual(os.path.exists('files_Option2\csv_inputs\inputBins1.csv'), True)
+        self.assertEqual(os.path.exists('files_Option2\csv_inputs\csv_bins\inputBins1.csv'), True)
         
         
         mock_prompt_input_bins.return_value = InputBinParameters(4, 100, 200, 500, 10000)
         mock_fetch_filecount.return_value = 0
         write_input_bin_func(3)
-        self.assertEqual(os.path.exists('files_Option3\csv_inputs\inputBins1.csv'), False)
-        self.assertEqual(os.path.exists('files_Option2\csv_inputs\inputBins2.csv'), False)
+        self.assertEqual(os.path.exists('files_Option3\csv_inputs\csv_bins\inputBins1.csv'), False)
+        self.assertEqual(os.path.exists('files_Option2\csv_inputs\csv_bins\inputBins2.csv'), False)
 
 class Test_Write_Input_Box(unittest.TestCase):
 
@@ -262,23 +260,23 @@ class Test_Write_Input_Box(unittest.TestCase):
         mock_prompt_input_boxes.return_value = InputBoxParameters(3, 1, 10, 100, 1000, 50, 300)
         mock_fetch_filecount.return_value = 0
         write_input_box_func(1)
-        self.assertEqual(os.path.exists('files_Option1\csv_inputs\inputBoxes1.csv'), True)
+        self.assertEqual(os.path.exists('files_Option1\csv_inputs\csv_boxes\inputBoxes1.csv'), True)
 
         mock_prompt_input_boxes.return_value = InputBoxParameters(3, 1, 10, 100, 1000, 50, 300)
         mock_fetch_filecount.return_value = 1
         write_input_box_func(1)
-        self.assertEqual(os.path.exists('files_Option1\csv_inputs\inputBoxes2.csv'), True)
+        self.assertEqual(os.path.exists('files_Option1\csv_inputs\csv_boxes\inputBoxes2.csv'), True)
 
         mock_prompt_input_boxes.return_value = InputBoxParameters(3, 1, 10, 100, 1000, 50, 300)
         mock_fetch_filecount.return_value = 0
         write_input_box_func(2)
-        self.assertEqual(os.path.exists('files_Option2\csv_inputs\inputBoxes1.csv'), True)
+        self.assertEqual(os.path.exists('files_Option2\csv_inputs\csv_boxes\inputBoxes1.csv'), True)
 
         mock_prompt_input_boxes.return_value = InputBoxParameters(3, 1, 10, 100, 1000, 50, 300)
         mock_fetch_filecount.return_value = 0
         write_input_box_func(3)
-        self.assertEqual(os.path.exists('files_Option3\csv_inputs\inputBoxes1.csv'), False)
-        self.assertEqual(os.path.exists('files_Option2\csv_inputs\inputBoxes2.csv'), False)
+        self.assertEqual(os.path.exists('files_Option3\csv_inputs\csv_boxes\inputBoxes1.csv'), False)
+        self.assertEqual(os.path.exists('files_Option2\csv_inputs\csv_boxes\inputBoxes2.csv'), False)
 
 class Test_Read_Input_CSV(unittest.TestCase):
     
@@ -286,16 +284,16 @@ class Test_Read_Input_CSV(unittest.TestCase):
     def test_fetch_filename(self, mock_prompt_integer):
 
         mock_prompt_integer.return_value = 1
-        self.assertEqual(fetch_filename(FILE_BIN_1, 1), "files_Option1\csv_inputs\inputBins1.csv")
+        self.assertEqual(fetch_filename(FILE_BIN_1, 1), "files_Option1\csv_inputs\csv_bins\inputBins1.csv")
 
         mock_prompt_integer.return_value = 2
-        self.assertEqual(fetch_filename(FILE_BIN_2, 1), "files_Option2\csv_inputs\inputBins2.csv")
+        self.assertEqual(fetch_filename(FILE_BIN_2, 1), "files_Option2\csv_inputs\csv_bins\inputBins2.csv")
 
         mock_prompt_integer.return_value = 1
-        self.assertEqual(fetch_filename(FILE_BOX_1, 2), "files_Option1\csv_inputs\inputBoxes1.csv")
+        self.assertEqual(fetch_filename(FILE_BOX_1, 2), "files_Option1\csv_inputs\csv_boxes\inputBoxes1.csv")
 
         mock_prompt_integer.return_value = 2
-        self.assertEqual(fetch_filename(FILE_BOX_2, 2), "files_Option2\csv_inputs\inputBoxes2.csv")
+        self.assertEqual(fetch_filename(FILE_BOX_2, 2), "files_Option2\csv_inputs\csv_boxes\inputBoxes2.csv")
 
         mock_prompt_integer.return_value = 123456
         self.assertEqual(fetch_filename("My IQ ----->", "Doesnt really matter"), "My IQ ----->123456.csv")
@@ -334,14 +332,14 @@ class Test_Manage_Last_File(unittest.TestCase):
             reader = csv.reader(csvfile)
             for row in reader:
                 res = row
-        self.assertEqual(res, ["files_Option2\csv_inputs\inputBins"])
+        self.assertEqual(res, ["files_Option2\csv_inputs\csv_bins\inputBins"])
 
         update_lastfile(FILE_BOX_1, 1, 1)
         with open("files_Option1\csv_outputs\lastBinFile.txt", mode = 'r') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
                 res = row
-        self.assertEqual(res, ["files_Option1\csv_inputs\inputBoxes"])
+        self.assertEqual(res, ["files_Option1\csv_inputs\csv_boxes\inputBoxes"])
 
         update_lastfile("I am not at all stressed", 1, 1)
         with open("files_Option1\csv_outputs\lastBinFile.txt", mode = 'r') as csvfile:
@@ -352,10 +350,10 @@ class Test_Manage_Last_File(unittest.TestCase):
 
     def test_fetch_lastfile(self):
         update_lastfile(FILE_BIN_2, 1, 1)
-        self.assertEqual(fetch_lastfile(1, 1), "files_Option2\csv_inputs\inputBins")
+        self.assertEqual(fetch_lastfile(1, 1), "files_Option2\csv_inputs\csv_bins\inputBins")
 
         update_lastfile(FILE_BOX_1, 1, 1)
-        self.assertEqual(fetch_lastfile(1, 1), "files_Option1\csv_inputs\inputBoxes")
+        self.assertEqual(fetch_lastfile(1, 1), "files_Option1\csv_inputs\csv_boxes\inputBoxes")
 
         update_lastfile("I am not at all stressed", 1, 1)
         self.assertEqual(fetch_lastfile(1, 1), "I am not at all stressed")
@@ -465,7 +463,7 @@ class Test_Output_Option1(unittest.TestCase):
         bins, sum = extract_summary_O1(testPacker)
 
         bins_exp = [[1, Decimal('2000000'), 500.0, 1999500.0, 0.03, []]]
-        summ_exp = [['I am not at all stressed', 'files_Option1\\csv_inputs\\inputBoxes1.csv', Decimal('2000000'), 6500.0, 1993500.0, 0.33, 0]]
+        summ_exp = [['I am not at all stressed', 'files_Option1\\csv_inputs\\csv_boxes\\inputBoxes1.csv', Decimal('2000000'), 6500.0, 1993500.0, 0.33, 0]]
 
         self.assertEqual(bins, bins_exp)
         self.assertEqual(sum, summ_exp)
@@ -571,7 +569,7 @@ class Test_Output_Option2(unittest.TestCase):
         bins, sum = extract_summary_O2(testPacker)
 
         bins_exp = [[300, Decimal('2000000.000'), Decimal('2000.000'), Decimal('1998000.000'), Decimal('0.10')]]
-        summ_exp = [['files_Option2\\csv_inputs\\inputBins2.csv', 'files_Option2\\csv_inputs\\inputBoxes2.csv', Decimal('2000000.000'), Decimal('8000.000'), Decimal('1992000.000'), Decimal('0.40'), Decimal('8000.000')]]
+        summ_exp = [['files_Option2\\csv_inputs\\csv_bins\\inputBins2.csv', 'files_Option2\\csv_inputs\\csv_boxes\\inputBoxes2.csv', Decimal('2000000.000'), Decimal('8000.000'), Decimal('1992000.000'), Decimal('0.40'), Decimal('8000.000')]]
 
         self.assertEqual(bins, bins_exp)
         self.assertEqual(sum, summ_exp)
