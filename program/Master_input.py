@@ -109,8 +109,11 @@ def run_load_window(c_option, filetype):
    lcsv_window = Load_CSV_Window(c_option, filetype)
    filepath = lcsv_window.get_data()
 
-   if filepath == "Canceled":
+   if filepath == None:
        back_flag = True
+      
+   print(filepath)
+   print(back_flag)
    
    return filepath, back_flag
 

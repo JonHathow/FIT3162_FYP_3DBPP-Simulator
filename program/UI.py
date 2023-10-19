@@ -765,8 +765,10 @@ class Load_CSV_Window(Parent_Window):
    # Init - Override
    def __init__(self, choosen_algorithm, filetype) -> None:
       
+      self.window = Tk()
       self.choosen_algorithm = choosen_algorithm
       self.filetype = filetype
+      self.data = None
       self.load_csv()
       return None
    
@@ -794,7 +796,8 @@ class Load_CSV_Window(Parent_Window):
       while not self.filename_check(filename):
          filename = filedialog.askopenfilename(initialdir = self.dir,
                                              title = prompt,
-                                             filetypes=[("CSV files", "*.csv")])
+                                             filetypes=[("CSV files", "*.csv")]
+                                             ,parent = self.window)
       
          # Check if "Cancel" was selected
          if filename == "":
@@ -809,8 +812,8 @@ class Load_CSV_Window(Parent_Window):
       if filename != "Canceled":
          self.data = self.filename_shorten(filename)
          print(self.dir)
-      else:
-         self.data = filename
+
+      self.destroy_window()
    
    # --- Utility Methods --- #
    # Verify Correct File Path - In Case User wanders to different directories in file explorer
