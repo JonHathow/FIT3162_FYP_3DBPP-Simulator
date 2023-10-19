@@ -74,6 +74,10 @@ def run_bin_window():
    bw = Bin_Window(m_title, m_geometry, bin_params)
    bin_inputs = bw.get_data()
    backflag = bw.get_backflag()
+
+   print("Details:")
+   print(bin_inputs)
+   print(backflag)
    
    return bin_inputs, backflag
 
@@ -97,6 +101,10 @@ def run_box_window(c_option):
       box_inputs = box_w2.get_data()
       back_flag = box_w2.get_backflag()
    
+   print("Details:")
+   print(box_inputs)
+   print(back_flag)
+
    return box_inputs, back_flag
 
 # Run Load CSV Window
@@ -161,7 +169,7 @@ def master_sub(response, c_option, past_option,  bin_filename, box_filename, bin
          bin_inputs, backflag = run_bin_window()
          print("Bin Inputs {}".format(bin_inputs))
 
-         if not backflag:
+         if not backflag and bin_inputs is not None:
             write_input_bin_func(c_option, bin_inputs)
             past_option = "Bin CSV Created"
 
@@ -171,7 +179,7 @@ def master_sub(response, c_option, past_option,  bin_filename, box_filename, bin
          box_inputs, backflag = run_box_window(c_option)
          print("Box Inputs {}".format(box_inputs))
 
-         if not backflag:
+         if not backflag  and box_inputs is not None:
             write_input_box_func(c_option, box_inputs)
             past_option = "Box CSV Created"
 
