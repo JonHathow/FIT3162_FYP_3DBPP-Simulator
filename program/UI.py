@@ -167,6 +167,10 @@ class Main_Window(Parent_Window):
       # ----- Header ----- #
       heading = Label(self.header, text="Warehouse 3DBPP Simulator", font=("Arial", 20), pady = 10)
       heading.grid(row=0, column=0)
+      desc = Label(self.header, text="This program simulates the solving of 3 Dimensional Bin Packing Problem", font=("Arial", 12))
+      desc.grid(row=1, column=0)
+      desc2 = Label(self.header, text="using existing Solution Algorithms", font=("Arial", 12))
+      desc2.grid(row=2, column=0)
    
       # ----- Body ----- #
       guide = Label(self.body, text="Select a Solution Algorithm to Continue", font=("Arial", 15))
@@ -212,7 +216,7 @@ class MS_Window(Parent_Window):
    
    #--- Constructor ---#
    # Init Window
-   def __init__(self, title, geometry, chosen_algorithm, options) -> None:
+   def __init__(self, title, geometry, chosen_algorithm, options, past_option = None, bin_filename = None, box_filename = None) -> None:
 
       # Create GUI Window
       super().__init__(title, geometry)
@@ -220,6 +224,15 @@ class MS_Window(Parent_Window):
       # Chosen Algorithm and Back Status
       self.c_algorithm = chosen_algorithm
       self.backflag = False
+
+      # Additional Frames
+      self.body_second = Frame(self.window)
+      self.body_third = Frame(self.window)
+
+      # Additional Functionalities
+      self.past_option = past_option
+      self.bin_filename = bin_filename
+      self.box_filename = box_filename
 
       # Options Dropdow Menu
       self.options_field, self.o_select = self.create_dropdown(options, self.body)
@@ -244,6 +257,42 @@ class MS_Window(Parent_Window):
       options_heading = Label(self.body, text="Select Option:", padx = 10, pady = 20)
       options_heading.grid(row=0, column=0)
       self.options_field.grid(row=0, column=1, padx=10)
+
+      
+      # ----- Body Second: Info of Last Selected Option ----- #
+      # Recording of Past Options
+      if self.past_option is None:
+         options_prompt = "No Options Chosen Yet"
+      else:
+         options_prompt = self.past_option
+
+      options_status = Label(self.body_second, text=options_prompt, font=("Arial", 15))
+      options_status.grid(row=0, column=0)
+
+      # CSV Files Tracker
+      if self.bin_filename is None and self.box_filename is None:
+         csv_prompt = "Load CSV Files to Continue"
+      elif self.bin_filename is None:
+         csv_prompt = "Please Load Bin CSV File"
+      elif self.box_filename is None:
+         csv_prompt = "Please Load Box CSV File"
+      elif self.bin_filename is not None and self.box_filename is not None:
+         csv_prompt = "You May run Compute Algorithm"
+
+      csv_status = Label(self.body_second, text=csv_prompt, font=("Arial", 13))
+      csv_status.grid(row=1, column=0)
+
+      # ----- Body Third: Loaded CSVs Info ----- #
+      bin_csv_label = Label(self.body_third, text="Loaded Bin CSV:", font=("Arial", 12))
+      bin_csv_label.grid(row=0, column=0)
+      box_csv_label = Label(self.body_third, text="Loaded Box CSV:", font=("Arial", 12))
+      box_csv_label.grid(row=1, column=0)
+
+      bin_csv_status = Label(self.body_third, text= self.bin_filename if self.bin_filename is not None else "None", font=("Arial", 12))
+      bin_csv_status.grid(row=0, column=1)
+      box_csv_status = Label(self.body_third, text= self.box_filename if self.box_filename is not None else "None", font=("Arial", 12))
+      box_csv_status.grid(row=1, column=1)
+
    
       # ----- Footer ----- #
       compute_button = Button(self.footer , text = "Continue" , command = self.fetch, bg = "lime")
@@ -275,6 +324,17 @@ class MS_Window(Parent_Window):
 
       # Destroy window mainloop and pass control back to main
       self.destroy_window()
+      return None
+   
+      # Pack Window
+   def pack_window(self):
+
+      # Pack and publish
+      self.header.pack()
+      self.body.pack(pady = 5)
+      self.footer.pack(side = 'bottom')
+      self.body_third.pack(side = 'bottom', pady = 3)
+      self.body_second.pack(side = 'bottom', pady = 3)
       return None
    
 ##############################################################################
@@ -454,6 +514,9 @@ class Box_Window_O2(Parent_Window):
          print("No data retrieved from user.")
          return None
 
+   # Get Backflag - If Back Button is Pressed
+   def get_backflag(self):
+      return self.backflag
 
    # --- Creation Methods --- #
    # Unique Label and Field Creating Method - Creating Ranges (Low, High) Input
@@ -567,6 +630,8 @@ class Box_Window_O1(Box_Window_O2):
 
       # 2nd Button - "Allow Varying Loading Orientations" makes it so that 3rd Button - "Allow Upside Down Loading" is default False if No.2 is True
       self.bool_buttons[1].config(command=self.toggle_activity)
+      self.bool_buttons[2].config(state = DISABLED)
+      self.bool_buttons[2].config(text = "Disabled")
 
       self.start_window()
    
@@ -700,8 +765,10 @@ class Load_CSV_Window(Parent_Window):
    # Init - Override
    def __init__(self, choosen_algorithm, filetype) -> None:
       
+      self.window = Tk()
       self.choosen_algorithm = choosen_algorithm
       self.filetype = filetype
+      self.data = None
       self.load_csv()
       return None
    
@@ -711,13 +778,13 @@ class Load_CSV_Window(Parent_Window):
       # Open Appropriate Directory
       self.dir = None 
 
-      if self.choosen_algorithm == Option.OPTION1 and self.filetype ==  FILE_BIN:
+      if self.choosen_algorithm == Option.OPTION1.value and self.filetype ==  FILE_BIN:
          self.dir = FOLDER_BIN_1  
-      elif self.choosen_algorithm == Option.OPTION1 and self.filetype ==  FILE_BOX:   
+      elif self.choosen_algorithm == Option.OPTION1.value and self.filetype ==  FILE_BOX:   
          self.dir = FOLDER_BOX_1
-      elif self.choosen_algorithm == Option.OPTION2 and self.filetype ==  FILE_BIN:
+      elif self.choosen_algorithm == Option.OPTION2.value and self.filetype ==  FILE_BIN:
          self.dir = FOLDER_BIN_2
-      elif self.choosen_algorithm == Option.OPTION2 and self.filetype ==  FILE_BOX:
+      elif self.choosen_algorithm == Option.OPTION2.value and self.filetype ==  FILE_BOX:
          self.dir = FOLDER_BOX_2
       else:
          raise Exception("Choosen Algorithm and File Type Provided is Incorrect Format / Non-Existent")
@@ -729,7 +796,8 @@ class Load_CSV_Window(Parent_Window):
       while not self.filename_check(filename):
          filename = filedialog.askopenfilename(initialdir = self.dir,
                                              title = prompt,
-                                             filetypes=[("CSV files", "*.csv")])
+                                             filetypes=[("CSV files", "*.csv")]
+                                             ,parent = self.window)
       
          # Check if "Cancel" was selected
          if filename == "":
@@ -744,8 +812,8 @@ class Load_CSV_Window(Parent_Window):
       if filename != "Canceled":
          self.data = self.filename_shorten(filename)
          print(self.dir)
-      else:
-         self.data = filename
+
+      self.destroy_window()
    
    # --- Utility Methods --- #
    # Verify Correct File Path - In Case User wanders to different directories in file explorer
@@ -856,7 +924,7 @@ def main():
 
    # Load CSV Window Test
    """
-   lw_filename = Load_CSV_Window(Option.OPTION2, FILE_BOX)
+   lw_filename = Load_CSV_Window(Option.OPTION2.value, FILE_BOX)
    print(lw_filename.get_data())
    """
 

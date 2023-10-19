@@ -72,6 +72,10 @@ def extract_summary(packer: Packer):
     volume_f = 0
     volume_u = 0
 
+    # Fix UnboundLocalError: cannot access local variable 'vol_f' where it is not associated with a value
+    vol_b = 0
+    vol_f = 0
+
     for idx,b in enumerate(packer.bins):
         vol_b       = b.width * b.height * b.depth
         volume_b    += vol_b
