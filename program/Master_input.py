@@ -257,9 +257,10 @@ def ms_main():
       # Run Main Window
       c_algo, exit_flag = run_main_window(m_title, m_geometry)
       print("Exit: {} ".format(exit_flag))
+      print("Choosen Algorithm: {} ".format(c_algo))
 
       # Exit Condition
-      if exit_flag:
+      if exit_flag or c_algo is None:
           break
       
       # Call Master Subroutine
