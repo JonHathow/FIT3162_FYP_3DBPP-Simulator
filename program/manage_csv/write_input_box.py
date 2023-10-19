@@ -10,6 +10,7 @@ from .manage_filecount import update_filecount, fetch_filecount
 from .prompts import prompt_integer, prompt_range, prompt_boolean
 from .input_parameters import InputBoxParameters
 from random import randint, uniform
+from UI import Box_Window_O1, Box_Window_O2
 
 def prompt_input_boxes(option: Option) -> InputBoxParameters:
     """ 
@@ -58,7 +59,7 @@ def prompt_input_boxes(option: Option) -> InputBoxParameters:
     
     return input_params
 
-def write_input_box_func(option: Option) -> None:
+def write_input_box_func(option: Option, b_inputs) -> None:
     """
     Produce a CSV file with random values for boxes in the ranges specified by the user's inputs.
 
@@ -88,8 +89,15 @@ def write_input_box_func(option: Option) -> None:
         os.makedirs(folder_box_path)
 
     filecount: int = fetch_filecount(file_boxcount)
-    inputs: InputBoxParameters = prompt_input_boxes(option)
 
+    # --- Fetching Box Information ---- #
+    inputs = None
+    if b_inputs is not None:
+        inputs: InputBoxParameters = b_inputs
+    else:
+        inputs: InputBoxParameters = prompt_input_boxes(option)
+    
+    # Write File
     filename = f'{filename}{filecount + 1}.csv'
 
     with open(filename, mode = 'w', newline = "") as csvfile:

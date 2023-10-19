@@ -11,8 +11,14 @@ from Option2_package import Packer, Bin, Item, Painter
 
 def O2_Input():
 
+    # Fix Inascessible Local Variable Error
+    global bin_params, bins_loaded, item_params, boxes_loaded 
+
+    # Essential Params - Init
     bins_loaded = False
     boxes_loaded = False
+    bin_params = None
+    item_params = None
 
     while True:
 
@@ -37,48 +43,7 @@ def O2_Input():
             boxes_loaded = True if item_params is not None else False
 
         elif response == "5":
-
-            if not bins_loaded or not boxes_loaded:
-                if not bins_loaded:
-                    print(MENU_BIN_NOTLOADED)
-                if not boxes_loaded:
-                    print(MENU_BOX_NOTLOADED)
-
-            else:
-                # Initialize packing function.
-                packer = Packer()
-
-                # Initialize bins.
-                for b in bin_params:
-                    name = b[0]
-                    width = float(b[1])
-                    height = float(b[2])
-                    depth = float(b[3])
-                    capacity = float(b[4])
-                    packer.add_bin(Bin(name, width, depth, height, capacity))
-                
-                # Initialize items.
-                for item in item_params:
-                    name = item[0]
-                    width = float(item[1])
-                    depth = float(item[2])
-                    height = float(item[3])
-                    weight = float(item[4])
-                    color = item[5]
-                    packer.add_item(Item(name, width, depth, height, weight, color))
-
-                # Compute packing.
-                packer.pack()
-                for b in packer.bins:
-                    painter = Painter(b)
-                    fig = painter.plotBoxAndItems(
-                            title = b.size,
-                            alpha = 0.8,
-                            write_num = False,
-                            fontsize = 10
-                        )
-                fig.show()
-                output_master(packer)
+            O2_compute(bin_params, bins_loaded, item_params, boxes_loaded)
 
         elif response == "0":
             print(MENU_END)
@@ -86,6 +51,56 @@ def O2_Input():
 
         else:
             print(MENU_INVALID)
+
+# Compute Algorithm
+def O2_compute(bin_params, item_params):
+
+    # Check if Bin and Box CSVs are properly loaded
+    bins_loaded = True if bin_params is not None else False
+    boxes_loaded = True if item_params is not None else False
+    
+    if not bins_loaded or not boxes_loaded:
+        if not bins_loaded:
+            print(MENU_BIN_NOTLOADED)
+        if not boxes_loaded:
+            print(MENU_BOX_NOTLOADED)
+
+    # If they are, run simulation
+    else:
+        # Initialize packing function.
+        packer = Packer()
+
+        # Initialize bins.
+        for b in bin_params:
+            name = b[0]
+            width = float(b[1])
+            height = float(b[2])
+            depth = float(b[3])
+            capacity = float(b[4])
+            packer.add_bin(Bin(name, width, depth, height, capacity))
+        
+        # Initialize items.
+        for item in item_params:
+            name = item[0]
+            width = float(item[1])
+            depth = float(item[2])
+            height = float(item[3])
+            weight = float(item[4])
+            color = item[5]
+            packer.add_item(Item(name, width, depth, height, weight, color))
+
+        # Compute packing.
+        packer.pack()
+        for b in packer.bins:
+            painter = Painter(b)
+            fig = painter.plotBoxAndItems(
+                    title = b.size,
+                    alpha = 0.8,
+                    write_num = False,
+                    fontsize = 10
+                )
+        fig.show()
+        output_master(packer)
 
 # Test Run
 if __name__ == "__main__":
