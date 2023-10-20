@@ -57,7 +57,7 @@ def O1_Input():
             print(boxes_loaded)
 
             print("Compute")
-            O1_compute(bin_params, bins_loaded, item_params, boxes_loaded)
+            O1_compute(bin_params, item_params)
         
         elif response == "0":
             print(MENU_END)
