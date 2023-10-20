@@ -43,7 +43,7 @@ def O2_Input():
             boxes_loaded = True if item_params is not None else False
 
         elif response == "5":
-            O2_compute(bin_params, bins_loaded, item_params, boxes_loaded)
+            O2_compute(bin_params, item_params)
 
         elif response == "0":
             print(MENU_END)
