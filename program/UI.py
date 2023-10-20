@@ -148,7 +148,7 @@ class Main_Window(Parent_Window):
    
    #--- Constructor ---#
    # Init Window
-   def __init__(self, title, geometry, algorithms) -> None:
+   def __init__(self, title, geometry, algorithms, past_option = None, past_calgo = None, bin_filename = None, box_filename = None) -> None:
       
       # Create GUI Window
       super().__init__(title, geometry)
@@ -156,6 +156,12 @@ class Main_Window(Parent_Window):
       # Algorithm Dropdow Menu and Exit Flag
       self.exitflag = False
       self.approach_field, self.a_select = self.create_dropdown(algorithms, self.body)
+
+      # Previous Run State Parameters
+      self.past_option = past_option
+      self.past_calgo = past_calgo
+      self.bin_filename = bin_filename
+      self.box_filename = box_filename
 
       # Initialize Window Content
       self.initialize_content()
@@ -173,9 +179,16 @@ class Main_Window(Parent_Window):
       desc2.grid(row=2, column=0)
    
       # ----- Body ----- #
-      guide = Label(self.body, text="Select a Solution Algorithm to Continue", font=("Arial", 15))
+      guide = Label(self.body, text="Select a Solution Algorithm to Continue", font=("Arial", 15), pady = 5)
       guide.grid(row=1, column=0)
-      self.approach_field.grid(row=2, column=0, pady = "10")
+      self.approach_field.grid(row=2, column=0, pady = 5)
+
+      # ----- Body - Previous Run Status ----- #
+      if self.past_option is not None and self.past_calgo is not None and self.bin_filename is not None and self.box_filename is not None:
+         pr_prompt = Label(self.body, text= "Previously Run: {}" .format(self.past_calgo), font=("Arial", 15))
+         pr_prompt.grid(row=3, column=0)
+         pr_status = Label(self.body, text= "On CSV files: {} and {}".format(self.bin_filename, self.box_filename), font=("Arial", 12))
+         pr_status.grid(row=4, column=0)
 
       # ----- Footer ----- #
       # Buttons - Continue and Clear

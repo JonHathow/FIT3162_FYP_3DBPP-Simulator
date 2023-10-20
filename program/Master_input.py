@@ -29,11 +29,11 @@ bparams_boolean = ["Allow Varying Priority Levels", "Allow Varying Loading Orien
 
 # --- Run UI Functions --- #
 # Main Window
-def run_main_window(m_title, m_geometry):
+def run_main_window(m_title, m_geometry, past_option, past_calgo, bin_filename, box_filename):
 
    # Create Main Window
    m_algorithms = ["Option 1 - Back Bottom Left Fill", "Option 2 - Best Match Fill"] # Can add more options here
-   mw = Main_Window(m_title, m_geometry, m_algorithms)
+   mw = Main_Window(m_title, m_geometry, m_algorithms, past_option, past_calgo, bin_filename, box_filename)
 
    # Retrieve Chosen Algorithm
    data = mw.get_data()
@@ -250,12 +250,13 @@ def ms_main():
    # Status Params
    past_option = None
    exit_flag = False
+   past_calgo = None
 
    # Main Window Loop
    while not exit_flag:
        
       # Run Main Window
-      c_algo, exit_flag = run_main_window(m_title, m_geometry)
+      c_algo, exit_flag = run_main_window(m_title, m_geometry, past_option, past_calgo, bin_filename, box_filename)
       print("Exit: {} ".format(exit_flag))
       print("Choosen Algorithm: {} ".format(c_algo))
 
@@ -265,6 +266,8 @@ def ms_main():
       
       # Call Master Subroutine
       back_flag = False
+      bin_filename = None
+      box_filename = None
 
       while not back_flag:
 
@@ -274,7 +277,8 @@ def ms_main():
             c_option = Option.OPTION1.value
          elif c_algo == "Option 2 - Best Match Fill":
             c_option = Option.OPTION2.value
-
+         
+         past_calgo = c_algo
          past_option, bin_filename, box_filename, bin_params, item_params, terminate = master_sub(chosen_option, c_option, past_option, bin_filename, box_filename, bin_params, item_params)
 
          if terminate:
