@@ -59,7 +59,7 @@ def prompt_input_boxes(option: Option) -> InputBoxParameters:
     
     return input_params
 
-def write_input_box_func(option: Option, b_inputs:InputBoxParameters = None) -> None:
+def write_input_box_func(option: Option, b_inputs:InputBoxParameters = None, ui_flag: bool = False) -> None:
     """
     Produce a CSV file with random values for boxes in the ranges specified by the user's inputs.
 
@@ -92,7 +92,7 @@ def write_input_box_func(option: Option, b_inputs:InputBoxParameters = None) -> 
 
     # --- Fetching Box Information ---- #
     inputs = None
-    if b_inputs is not None:
+    if ui_flag:
         inputs: InputBoxParameters = b_inputs
     else:
         inputs: InputBoxParameters = prompt_input_boxes(option)

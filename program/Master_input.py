@@ -153,8 +153,9 @@ def master_sub(response, c_option, past_option,  bin_filename, box_filename, bin
     response_no = ms_format(response)
     terminate = False
 
-    # Back Flag
+    # Flags
     backflag = False
+    ui_flag = True
 
     # Check choosen algorithm
     if c_option == Option.OPTION1.value:
@@ -170,7 +171,7 @@ def master_sub(response, c_option, past_option,  bin_filename, box_filename, bin
          print("Bin Inputs {}".format(bin_inputs))
 
          if not backflag and bin_inputs is not None:
-            write_input_bin_func(c_option, bin_inputs)
+            write_input_bin_func(c_option, bin_inputs, ui_flag)
             past_option = "Bin CSV Created"
 
     # Write a CSV file for boxes.
@@ -180,17 +181,18 @@ def master_sub(response, c_option, past_option,  bin_filename, box_filename, bin
          print("Box Inputs {}".format(box_inputs))
 
          if not backflag  and box_inputs is not None:
-            write_input_box_func(c_option, box_inputs)
+            write_input_box_func(c_option, box_inputs, ui_flag)
             past_option = "Box CSV Created"
 
     # Read a CSV file for bins.
     elif response_no == "3":
          
+         # Use UI to get filepath
          bin_filename, backflag = run_load_window(c_option, FILE_BIN)
          print("File Path {}".format(bin_filename))
 
          if not backflag:
-            bin_params = read_input(bin_filename, filetype, c_option)
+            bin_params = read_input(bin_filename, filetype, c_option, ui_flag)
             bins_loaded = True if bin_params is not None else False
             past_option = "Bin CSV Loaded"
 
@@ -283,10 +285,6 @@ def ms_main():
 
          if terminate:
              break
-   
-           
-   print("Simulation Exit. Thank you for using the simulation.")
-   print("==================================================================")
    
    return None
 
