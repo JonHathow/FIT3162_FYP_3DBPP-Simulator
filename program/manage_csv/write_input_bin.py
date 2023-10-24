@@ -34,7 +34,7 @@ def prompt_input_bins() -> InputBinParameters:
 
     return InputBinParameters(qty, wid, hei, dep, wgt)
 
-def write_input_bin_func(option: Option, b_inputs: InputBinParameters = None) -> None:
+def write_input_bin_func(option: Option, b_inputs: InputBinParameters = None, ui_flag: bool = False) -> None:
     """
     Produce a CSV file for bins specfied by the user's inputs.
 
@@ -68,7 +68,7 @@ def write_input_bin_func(option: Option, b_inputs: InputBinParameters = None) ->
     
     # --- Fetching Bin Information ---- #
     inputs = None
-    if b_inputs is not None:
+    if ui_flag:
         inputs: InputBinParameters = b_inputs
     else:
         inputs: InputBinParameters = prompt_input_bins()
