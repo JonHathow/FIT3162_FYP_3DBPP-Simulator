@@ -400,7 +400,8 @@ class Bin_Window(Parent_Window):
 
       # Return Data in New Format - Quantity, Width, Height, Depth, Capacity.
       # But check if data was retrieved (is not nothing) first.
-      if self.data is not None:
+      # 5 params returned
+      if self.data is not None and len(self.data) == 5:
           return InputBinParameters(self.data[0], self.data[1], self.data[2], self.data[3], self.data[4])
       else: 
          print("No data retrieved from user.")
@@ -521,7 +522,8 @@ class Box_Window_O2(Parent_Window):
 
       # Return Data in New Format
       # Number of Boxes, quantity range = (qty_lo, qty_hi), dimensions range (WHD) = (dim_lo, dim_hi), weight range = (wgt_lo, wgt_hi)
-      if self.data is not None:
+      # 7 params returned
+      if self.data is not None and len(self.data) == 7:
           return InputBoxParameters(self.data[0], min(self.data[1], self.data[2]), max(self.data[1], self.data[2]), min(self.data[3], self.data[4]), max(self.data[3], self.data[4]), min(self.data[5], self.data[6]), max(self.data[5], self.data[6]))
       else: 
          print("No data retrieved from user.")
@@ -705,7 +707,8 @@ class Box_Window_O1(Box_Window_O2):
 
       # Return Data in New Format
       # Number of Boxes, quantity range = (qty_lo, qty_hi), dimensions range (WHD) = (dim_lo, dim_hi), weight range = (wgt_lo, wgt_hi)
-      if self.data is not None:
+      # Either 9 to 10 params returned
+      if self.data is not None and len(self.data) >= 9:
           ibp = InputBoxParameters(self.data[0], min(self.data[1], self.data[2]), max(self.data[1], self.data[2]), min(self.data[3], self.data[4]), max(self.data[3], self.data[4]), min(self.data[5], self.data[6]), max(self.data[5], self.data[6]))
           
           # True / Falses - "Allow Varying Priority Levels", "Allow Varying Loading Orientations", "Allow Upside Down Loading" - False if No.2 is True
