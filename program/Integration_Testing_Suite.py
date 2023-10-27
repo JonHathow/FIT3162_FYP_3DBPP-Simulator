@@ -17,6 +17,9 @@ def capture_output(function, *args):
 
 class Test_Integration(unittest.TestCase):
 
+    def test_temp(self):
+        O1_Input()
+
     @patch('builtins.input')
     def test_Dataflow_Interface(self, mock_input):
         """
