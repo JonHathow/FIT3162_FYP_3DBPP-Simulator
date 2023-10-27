@@ -15,4 +15,4 @@ from .prompts import prompt_boolean, prompt_integer, prompt_number, prompt_range
 from .manage_filecount import update_filecount, fetch_filecount
 from .manage_lastfile import update_lastfile, fetch_lastfile
 from .constants import FILE_BOXCOUNT_2, PROMPT_TYPE_BOX, FILE_BINCOUNT_1, FILE_BOXCOUNT_1, FILE_BINCOUNT_2
-from .constants import PROMPT_QTY_BIN, PROMPT_WID_BIN, PROMPT_HEI_BIN, PROMPT_DEP_BIN, PROMPT_WGT_BIN
+from .constants import PROMPT_QTY_BIN, PROMPT_WID_BIN, PROMPT_HEI_BIN, PROMPT_DEP_BIN, PROMPT_WGT_BIN, FILE_LASTBIN, FILE_LASTBOX

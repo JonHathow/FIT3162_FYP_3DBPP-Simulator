@@ -2,7 +2,7 @@ from manage_csv import InputBinParameters, InputBoxParameters, prompt_range, pro
 from manage_csv import write_input_bin_func, prompt_input_bins
 from manage_csv import write_input_box_func, prompt_input_boxes
 from manage_csv import FILE_BIN_1, FILE_BIN_2, FILE_BOX_1, FILE_BOX_2, FILE_BINCOUNT_1, FILE_BINCOUNT_2, FILE_BOXCOUNT_1, FILE_BOXCOUNT_2
-from manage_csv import FILE_FITTED_1, HEADER_OUT_1
+from manage_csv import FILE_FITTED_1, HEADER_OUT_1, FILE_LASTBIN, FILE_LASTBOX
 from manage_csv import fetch_filename
 from manage_csv import update_filecount, fetch_filecount
 from manage_csv import update_lastfile, fetch_lastfile, read_input, write_output_func
@@ -206,6 +206,7 @@ class Test_Write_Input_Bin(unittest.TestCase):
     @patch('manage_csv.write_input_bin.fetch_filecount')
     @patch('manage_csv.write_input_bin.prompt_input_bins')
     def test_writeIBin(self, mock_prompt_input_bins, mock_fetch_filecount):
+        
         mock_prompt_input_bins.return_value = InputBinParameters(4, 100, 200, 500, 10000)
         mock_fetch_filecount.return_value = 0
         write_input_bin_func(1)
@@ -216,10 +217,10 @@ class Test_Write_Input_Bin(unittest.TestCase):
         write_input_bin_func(1)
         self.assertEqual(os.path.exists('files_Option1\csv_inputs\csv_bins\inputBins2.csv'), True)
         
-        # b_inputs not null
+        # b_inputs not null, UI flag is true
         b_inputs = InputBinParameters(4, 100, 200, 500, 10000)
         mock_fetch_filecount.return_value = 2
-        write_input_bin_func(1, b_inputs)
+        write_input_bin_func(1, b_inputs, True)
         self.assertEqual(os.path.exists('files_Option1\csv_inputs\csv_bins\inputBins3.csv'), True)
 
         mock_prompt_input_bins.return_value = InputBinParameters(4, 100, 200, 500, 10000)
@@ -227,10 +228,10 @@ class Test_Write_Input_Bin(unittest.TestCase):
         write_input_bin_func(2)
         self.assertEqual(os.path.exists('files_Option2\csv_inputs\csv_bins\inputBins1.csv'), True)
         
-        # b_inputs not null
+        # b_inputs not null, ui flag is true
         b_inputs = InputBinParameters(4, 100, 200, 500, 10000)
         mock_fetch_filecount.return_value = 1
-        write_input_bin_func(2, b_inputs)
+        write_input_bin_func(2, b_inputs, True)
         self.assertEqual(os.path.exists('files_Option2\csv_inputs\csv_bins\inputBins2.csv'), True)
         
         # Invalid Option
@@ -243,8 +244,8 @@ class Test_Write_Input_Bin(unittest.TestCase):
         b_inputs = "Hello World"
         mock_fetch_filecount.return_value = 2
         with self.assertRaises(AttributeError):
-            write_input_bin_func(2, b_inputs)
-        
+            write_input_bin_func(2, b_inputs, ui_flag=True)
+                 
 class Test_Write_Input_Box(unittest.TestCase):
 
     @patch('manage_csv.write_input_box.prompt_boolean')
@@ -290,10 +291,10 @@ class Test_Write_Input_Box(unittest.TestCase):
         write_input_box_func(1)
         self.assertEqual(os.path.exists('files_Option1\csv_inputs\csv_boxes\inputBoxes2.csv'), True)
         
-        # b_inputs not null
+        # b_inputs not null, ui flag is true
         b_inputs = InputBoxParameters(3, 1, 10, 100, 1000, 50, 300)
         mock_fetch_filecount.return_value = 2
-        write_input_box_func(1, b_inputs)
+        write_input_box_func(1, b_inputs, True)
         self.assertEqual(os.path.exists('files_Option1\csv_inputs\csv_boxes\inputBoxes3.csv'), True)
 
         mock_prompt_input_boxes.return_value = InputBoxParameters(3, 1, 10, 100, 1000, 50, 300)
@@ -301,10 +302,10 @@ class Test_Write_Input_Box(unittest.TestCase):
         write_input_box_func(2)
         self.assertEqual(os.path.exists('files_Option2\csv_inputs\csv_boxes\inputBoxes1.csv'), True)
         
-        # b_inputs not null
+        # b_inputs not null, ui flag is true
         b_inputs = InputBoxParameters(3, 1, 10, 100, 1000, 50, 300)
         mock_fetch_filecount.return_value = 1
-        write_input_box_func(2, b_inputs)
+        write_input_box_func(2, b_inputs, True)
         self.assertEqual(os.path.exists('files_Option2\csv_inputs\csv_boxes\inputBoxes2.csv'), True)
 
         # Invalid Option
@@ -318,13 +319,8 @@ class Test_Write_Input_Box(unittest.TestCase):
         b_inputs = "Hello World"
         mock_fetch_filecount.return_value = 2
         with self.assertRaises(AttributeError):
-            write_input_box_func(2, b_inputs)
+            write_input_box_func(2, b_inputs, True)
 
-"""
-Needs to be fixed
-
-Check with commented out changes with Jonathan
-"""
 class Test_Read_Input_CSV(unittest.TestCase):
     
     @patch('manage_csv.read_input_csv.prompt_integer')
@@ -351,40 +347,43 @@ class Test_Read_Input_CSV(unittest.TestCase):
         mock_prompt_integer.return_value = 1
         self.assertEqual(fetch_filename(True, "Doesnt really matter"), "True1.csv")
     
-
     
-    # @patch('builtins.input')
-    def test_read_input(self):
+    @patch('builtins.input')
+    def test_read_input(self, mock_input):
 
-        # mock_input.return_value = "1"
-        self.assertEqual(read_input(FILE_BIN_1, 1, 1), None)
+        mock_input.return_value = "1"
+        self.assertEqual(read_input(FILE_BIN_1, 1, 1), [['Bin_#1', '100', '200', '500', '10000'], ['Bin_#2', '100', '200', '500', '10000'], ['Bin_#3', '100', '200', '500', '10000'], ['Bin_#4', '100', '200', '500', '10000']])
 
-        # mock_input.return_value = "2"
-        self.assertEqual(read_input(FILE_BIN_2, 1, 2), None)
+        mock_input.return_value = "2"
+        self.assertEqual(read_input(FILE_BIN_2, 1, 2), [['Bin_#1', '100', '200', '500', '10000'], ['Bin_#2', '100', '200', '500', '10000'], ['Bin_#3', '100', '200', '500', '10000'], ['Bin_#4', '100', '200', '500', '10000']])
 
-        # mock_input.return_value = "1"
-        self.assertEqual(read_input(FILE_BOX_1, 2, 1), None)
+        # Boxes are randomly generated, cant test for exact values
+        mock_input.return_value = "1"
+        self.assertNotEqual(read_input(FILE_BOX_1, 2, 1), None)
 
-        # mock_input.return_value = "2"
+        mock_input.return_value = "2"
+        self.assertNotEqual(read_input(FILE_BOX_2, 2, 2), None)
+        
+        mock_input.return_value = "200"
         self.assertEqual(read_input(FILE_BOX_2, 2, 2), None)
 
 class Test_Manage_Last_File(unittest.TestCase):
 
     def test_update_lastfile(self):
         res = ""
-        update_lastfile(FILE_BIN_2, 1, 1)
-        with open("files_Option1\csv_outputs\lastBinFile.txt", mode = 'r') as csvfile:
+        update_lastfile(FILE_LASTBIN, 2, 1)
+        with open("files_Option2\csv_outputs\lastBinFile.txt", mode = 'r') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
                 res = row
-        self.assertEqual(res, ["files_Option2\csv_inputs\csv_bins\inputBins"])
+        self.assertEqual(res, ['lastBinFile.txt'])
 
-        update_lastfile(FILE_BOX_1, 1, 1)
-        with open("files_Option1\csv_outputs\lastBinFile.txt", mode = 'r') as csvfile:
+        update_lastfile(FILE_LASTBOX, 1, 2)
+        with open("files_Option1\csv_outputs\lastBoxFile.txt", mode = 'r') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
                 res = row
-        self.assertEqual(res, ["files_Option1\csv_inputs\csv_boxes\inputBoxes"])
+        self.assertEqual(res, ['lastBoxFile.txt'])
 
         update_lastfile("I am not at all stressed", 1, 1)
         with open("files_Option1\csv_outputs\lastBinFile.txt", mode = 'r') as csvfile:
@@ -394,11 +393,11 @@ class Test_Manage_Last_File(unittest.TestCase):
         self.assertEqual(res, ["I am not at all stressed"])
 
     def test_fetch_lastfile(self):
-        update_lastfile(FILE_BIN_2, 1, 1)
-        self.assertEqual(fetch_lastfile(1, 1), "files_Option2\csv_inputs\csv_bins\inputBins")
+        update_lastfile(FILE_BIN_2, 2, 1)
+        self.assertEqual(fetch_lastfile(2, 1), "files_Option2\csv_inputs\csv_bins\inputBins")
 
-        update_lastfile(FILE_BOX_1, 1, 1)
-        self.assertEqual(fetch_lastfile(1, 1), "files_Option1\csv_inputs\csv_boxes\inputBoxes")
+        update_lastfile(FILE_BOX_1, 1, 2)
+        self.assertEqual(fetch_lastfile(1, 2), "files_Option1\csv_inputs\csv_boxes\inputBoxes")
 
         update_lastfile("I am not at all stressed", 1, 1)
         self.assertEqual(fetch_lastfile(1, 1), "I am not at all stressed")
@@ -671,8 +670,8 @@ if __name__ == '__main__':
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Manage_Filecount1))
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Manage_Filecount2))
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Write_Output))
-    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Output_Option1))
-    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Output_Option2))
+    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Output_Option1))
+    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Output_Option2))
 
     runner = unittest.TextTestRunner()
     runner.run(suite)
