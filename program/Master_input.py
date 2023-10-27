@@ -19,7 +19,7 @@ from UI import *
 # --- Global Variables: UI Details ---#
 # Core Params
 m_title = "Storage Optimization in Automated Fulfilment Centers"
-m_geometry = "600x400"
+m_geometry = "600x420"
 bin_params = ["Quantity", "Width", "Height", "Depth", "Capacity"]
 
 # Box Param Option 1 & Option 2
