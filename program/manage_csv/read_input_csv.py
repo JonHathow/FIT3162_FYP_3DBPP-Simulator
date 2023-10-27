@@ -23,7 +23,7 @@ def fetch_filename(filename: str, filetype: File) -> str:
     prompt = PROMPT_CSVFILE_BIN if filetype == File.BIN.value else PROMPT_CSVFILE_BOX
     return f"{filename}{prompt_integer(prompt)}.csv"
 
-def read_input(filename: str, filetype: File, option: Option) -> Optional[List[str]]:
+def read_input(filename: str, filetype: File, option: Option, ui_flag: bool = False) -> Optional[List[str]]:
     """
     Reads from a CSV file of inputs for either bins or boxes.
 
@@ -35,7 +35,9 @@ def read_input(filename: str, filetype: File, option: Option) -> Optional[List[s
     """
 
     # --- Fetch File Name --- #
-    # filename = fetch_filename(filename, filetype)
+    # Has ui_flag: true = UI in use, false then use fetch_filename() to get correct filepath
+    if not ui_flag:
+        filename = fetch_filename(filename, filetype)
     
     print("This is the format of filename: {}".format(filename))
 

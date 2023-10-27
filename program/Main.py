@@ -22,6 +22,10 @@ def main():
 
    # Run Warehouse - Master Subroutine
    ms_main()
+
+   # Exit Message
+   print("Simulation Exit. Thank you for using the simulation.")
+   print("==================================================================")
    
    return None
 
