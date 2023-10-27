@@ -36,6 +36,8 @@ def read_input(filename: str, filetype: File, option: Option, ui_flag: bool = Fa
 
     # --- Fetch File Name --- #
     # Has ui_flag: true = UI in use, false then use fetch_filename() to get correct filepath
+    print("UI Flag Status for read_input: {}".format(ui_flag))
+    
     if not ui_flag:
         filename = fetch_filename(filename, filetype)
     
