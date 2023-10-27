@@ -46,6 +46,15 @@ class Parent_Window():
       self.header = Frame(self.window)
       self.body = Frame(self.window)
       self.footer = Frame(self.window, pady = 20)
+
+      # ----- Exception Handling ----- #
+      # Window for Printing Exceptions. Override Pack() and Pack this if needed.
+      self.body_ex = Frame(self.window, pady=5)
+
+      # Some common Exception Types
+      self.ex_null = "Input must be positive integer, not Null"
+      self.ex_not_int = "Input cannot be negative integers, or other types like string"
+
       return None
    
    # Create Window Content - Center Content is unique for each window
@@ -271,7 +280,6 @@ class MS_Window(Parent_Window):
       options_heading.grid(row=0, column=0)
       self.options_field.grid(row=0, column=1, padx=10)
 
-      
       # ----- Body Second: Info of Last Selected Option ----- #
       # Recording of Past Options
       if self.past_option is None:
@@ -306,7 +314,6 @@ class MS_Window(Parent_Window):
       box_csv_status = Label(self.body_third, text= self.box_filename if self.box_filename is not None else "None", font=("Arial", 12))
       box_csv_status.grid(row=1, column=1)
 
-   
       # ----- Footer ----- #
       compute_button = Button(self.footer , text = "Continue" , command = self.fetch, bg = "lime")
       exit_button = Button(self.footer, text = "Back" , command = self.back, bg = "red", fg = "white")
@@ -362,7 +369,6 @@ class Bin_Window(Parent_Window):
       super().__init__(title, geometry)
       self.backflag = False
       self.entries = entries
-
       self.initialize_content()
       return None
    
@@ -378,9 +384,13 @@ class Bin_Window(Parent_Window):
 
       # ----- Body ----- #
       # Bin Variables - Integer Types
-      # Quantity, Width, Height, Depth, Capacity20
+      # Quantity, Width, Height, Depth, Capacity
       self.labels = self.create_input_labels(self.entries, 0)
       self.fields = self.create_input_fields(self.entries, 1)
+
+      # Print Exceptions
+      self.ex_label = Label(self.body_ex, font=("Arial", 15), foreground = "red", pady = 5)
+      self.ex_label.grid(row=1, column=0)
 
       # ----- Footer ----- #
       compute_button = Button(self.footer, text = "Create" , command = self.fetch, bg = "lime")
@@ -398,9 +408,9 @@ class Bin_Window(Parent_Window):
    # Get Data - Override
    def get_data(self):
 
-      # Return Data in New Format - Quantity, Width, Height, Depth, Capacity.
-      # But check if data was retrieved (is not nothing) first.
-      if self.data is not None:
+      # Return Data in New Format - Quantity, Width, Height, Depth, Capacity (Total: 5 params returned).
+      # Otherwise return None if data is None or fields are empty = [].
+      if self.data is not None and len(self.data) == 5:
           return InputBinParameters(self.data[0], self.data[1], self.data[2], self.data[3], self.data[4])
       else: 
          print("No data retrieved from user.")
@@ -424,14 +434,16 @@ class Bin_Window(Parent_Window):
 
          # Null Values Check
          if field_val == '':
-            raise Exception("Input must be positive integer, not Null")
+            self.ex_label.config(text = self.ex_null)
+            raise Exception(self.ex_null)
          
          # Positive Integers Only Check
          if field_val.isdigit():
             field_val = abs(int(field_val))
             self.data.append(field_val)
          else:
-            raise Exception("Input must be positive integer, not negative integers, or other types like String")
+            self.ex_label.config(text = self.ex_not_int)
+            raise Exception(self.ex_not_int)
 
       # Destroy window mainloop and pass control back to main
       self.destroy_window()
@@ -441,6 +453,17 @@ class Bin_Window(Parent_Window):
    def back(self):
       self.backflag = True
       self.destroy_window()
+      return None
+   
+   # Pack Window - Override
+   def pack_window(self):
+      
+      # Pack and publish - With Second Body
+      self.header.pack()
+      self.body.pack()
+      self.body_ex.pack()
+      self.footer.pack(side = 'bottom')
+
       return None
    
 ##############################################################################
@@ -474,7 +497,7 @@ class Box_Window_O2(Parent_Window):
       self.initialize_content()
       self.start_window()
 
-   # Create Content Auxiliary Method
+   # Create Content Auxiliary Method - Important for O1's class to work.
    def initialize_content(self):
 
       # Call Super - Method Override
@@ -504,6 +527,10 @@ class Box_Window_O2(Parent_Window):
       range_lab, range_field = self.range_input_fields(self.range_entries)
       self.labels += range_lab
       self.fields += range_field
+
+      # Print Exceptions
+      self.ex_label = Label(self.body_ex, font=("Arial", 15), foreground = "red", pady = 5)
+      self.ex_label.grid(row=1, column=0)  
    
       # ----- Footer ----- #
       compute_button = Button(self.footer, text = "Create" , command = self.fetch, bg = "lime")
@@ -520,8 +547,8 @@ class Box_Window_O2(Parent_Window):
    def get_data(self):
 
       # Return Data in New Format
-      # Number of Boxes, quantity range = (qty_lo, qty_hi), dimensions range (WHD) = (dim_lo, dim_hi), weight range = (wgt_lo, wgt_hi)
-      if self.data is not None:
+      # Number of Boxes, quantity range = (qty_lo, qty_hi), dimensions range (WHD) = (dim_lo, dim_hi), weight range = (wgt_lo, wgt_hi) (Total: 7 params returned).
+      if self.data is not None and len(self.data) == 7:
           return InputBoxParameters(self.data[0], min(self.data[1], self.data[2]), max(self.data[1], self.data[2]), min(self.data[3], self.data[4]), max(self.data[3], self.data[4]), min(self.data[5], self.data[6]), max(self.data[5], self.data[6]))
       else: 
          print("No data retrieved from user.")
@@ -573,6 +600,7 @@ class Box_Window_O2(Parent_Window):
       self.body.pack()
       self.header_second.pack()
       self.body_second.pack()
+      self.body_ex.pack()
       self.footer.pack(side = 'bottom')
 
       return None
@@ -599,14 +627,17 @@ class Box_Window_O2(Parent_Window):
 
          # Null Values Check
          if field_val == '':
-            raise Exception("Input must be positive integer, not Null")
+            self.ex_label.config(text = self.ex_null)
+            raise Exception(self.ex_null)
          
          # Positive Integers Only Check
          if field_val.isdigit():
             field_val = abs(int(field_val))
             self.data.append(field_val)
          else:
-            raise Exception("Input must be positive integer, not negative integers, or other types like String")
+            self.ex_label.config(text = self.ex_not_int)
+            raise Exception(self.ex_not_int)
+
 
 # 6. Create New Box UI - Option 1 - Which has a few more parameters than Option 2
 class Box_Window_O1(Box_Window_O2):
@@ -645,6 +676,10 @@ class Box_Window_O1(Box_Window_O2):
       self.bool_buttons[1].config(command=self.toggle_activity)
       self.bool_buttons[2].config(state = DISABLED)
       self.bool_buttons[2].config(text = "Disabled")
+
+      # Print Exceptions
+      self.ex_label = Label(self.body_ex, font=("Arial", 15), foreground = "red", pady = 5)
+      self.ex_label.grid(row=1, column=0)
 
       self.start_window()
    
@@ -705,7 +740,8 @@ class Box_Window_O1(Box_Window_O2):
 
       # Return Data in New Format
       # Number of Boxes, quantity range = (qty_lo, qty_hi), dimensions range (WHD) = (dim_lo, dim_hi), weight range = (wgt_lo, wgt_hi)
-      if self.data is not None:
+      # Total: 9 to 10 params returned
+      if self.data is not None and len(self.data) >= 9:
           ibp = InputBoxParameters(self.data[0], min(self.data[1], self.data[2]), max(self.data[1], self.data[2]), min(self.data[3], self.data[4]), max(self.data[3], self.data[4]), min(self.data[5], self.data[6]), max(self.data[5], self.data[6]))
           
           # True / Falses - "Allow Varying Priority Levels", "Allow Varying Loading Orientations", "Allow Upside Down Loading" - False if No.2 is True
@@ -765,6 +801,7 @@ class Box_Window_O1(Box_Window_O2):
       self.header_second.pack()
       self.body_second.pack()
       self.body_third.pack()
+      self.body_ex.pack()
       self.footer.pack(side = 'bottom')
 
       return None
