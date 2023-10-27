@@ -1,5 +1,6 @@
 """ Handles writing and reading of CSV files for Option 2. """
 
+import time
 from manage_csv.constants import File, Option, MENU_INPUT, MENU_INVALID, MENU_BIN_NOTLOADED, MENU_BOX_NOTLOADED, MENU_END, FILE_BIN_2, FILE_BOX_2
 from manage_csv.write_input_bin import write_input_bin_func
 from manage_csv.write_input_box import write_input_box_func
@@ -90,7 +91,13 @@ def O2_compute(bin_params, item_params):
             packer.add_item(Item(name, width, depth, height, weight, color))
 
         # Compute packing.
+        start = time.time() 
         packer.pack()
+        stop = time.time()
+        
+        print("================================================")
+        print('used time : ',stop - start)
+        
         for b in packer.bins:
             painter = Painter(b)
             fig = painter.plotBoxAndItems(
@@ -99,6 +106,7 @@ def O2_compute(bin_params, item_params):
                     write_num = False,
                     fontsize = 10
                 )
+            
         fig.show()
         output_master(packer)
 
