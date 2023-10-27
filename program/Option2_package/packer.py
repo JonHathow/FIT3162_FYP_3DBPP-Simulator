@@ -433,8 +433,20 @@ class Packer:
                 bin.unplaced_items.append(unplaced_item) 
         
         for bin in self.bins:
-            for unplaced_item in self.unplaced_items:
-                self.pack_to_bin(bin, unplaced_item)
+            count = 0
+            while count < len(self.unplaced_items):
+                initial_s = len(bin.unfitted_items)
+                self.pack_to_bin(bin, self.unplaced_items[count])
+                final_s = len(bin.unfitted_items)
+                # if bins unfitted item count doesnt increase, remove this item from packer unplaced items list
+                if (final_s - initial_s == 0):
+                    del self.unplaced_items[count]
+                count += 1
+                
+                
+            # for unplaced_item in self.unplaced_items:
+            #     self.pack_to_bin(bin, unplaced_item)
+                
                 
             print("\n:::::::::::", bin.string())
             print("FITTED ITEMS:")
