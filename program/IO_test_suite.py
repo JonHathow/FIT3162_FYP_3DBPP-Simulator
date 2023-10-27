@@ -507,7 +507,7 @@ class Test_Output_Option1(unittest.TestCase):
         bins, sum = extract_summary_O1(testPacker)
 
         bins_exp = [[1, Decimal('2000000'), 500.0, 1999500.0, 0.03, []]]
-        summ_exp = [['I am not at all stressed', 'files_Option1\\csv_inputs\\csv_boxes\\inputBoxes', Decimal('2000000'), 6500.0, 1993500.0, 0.33, 0]]
+        summ_exp = [['I am not at all stressed', 'lastBoxFile.txt', Decimal('2000000'), 6500.0, 1993500.0, 0.33, 0]]
 
         self.assertEqual(bins, bins_exp)
         self.assertEqual(sum, summ_exp)
@@ -613,7 +613,7 @@ class Test_Output_Option2(unittest.TestCase):
         bins, sum = extract_summary_O2(testPacker)
 
         bins_exp = [[300, Decimal('2000000.000'), Decimal('2000.000'), Decimal('1998000.000'), Decimal('0.10')]]
-        summ_exp = [['files_Option2\\csv_inputs\\csv_bins\\inputBins', 'files_Option2\\csv_inputs\\csv_boxes\\inputBoxes', Decimal('2000000.000'), Decimal('8000.000'), Decimal('1992000.000'), Decimal('0.40'), Decimal('8000.000')]]
+        summ_exp = [['lastBinFile.txt', 'files_Option2\\csv_inputs\\csv_boxes\\inputBoxes200.csv', Decimal('2000000.000'), Decimal('8000.000'), Decimal('1992000.000'), Decimal('0.40'), Decimal('8000.000')]]
 
         self.assertEqual(bins, bins_exp)
         self.assertEqual(sum, summ_exp)
@@ -670,8 +670,8 @@ if __name__ == '__main__':
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Manage_Filecount1))
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Manage_Filecount2))
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Write_Output))
-    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Output_Option1))
-    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Output_Option2))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Output_Option1))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(Test_Output_Option2))
 
     runner = unittest.TextTestRunner()
     runner.run(suite)
