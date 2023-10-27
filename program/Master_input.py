@@ -19,7 +19,7 @@ from UI import *
 # --- Global Variables: UI Details ---#
 # Core Params
 m_title = "Storage Optimization in Automated Fulfilment Centers"
-m_geometry = "600x400"
+m_geometry = "600x420"
 bin_params = ["Quantity", "Width", "Height", "Depth", "Capacity"]
 
 # Box Param Option 1 & Option 2
@@ -27,6 +27,7 @@ bparams_normal = ["Number of Boxes"]
 bparams_ranges = ["Quantity Range", "Dimensions Range", "Weight Range"]
 bparams_boolean = ["Allow Varying Priority Levels", "Allow Varying Loading Orientations", "Allow Upside Down Loading"]
 
+##############################################################################
 # --- Run UI Functions --- #
 # Main Window
 def run_main_window(m_title, m_geometry, past_option, past_calgo, bin_filename, box_filename):
@@ -125,6 +126,7 @@ def run_load_window(c_option, filetype):
    
    return filepath, back_flag
 
+##############################################################################
 # --- Utility Functions --- #
 # Utility Function to format the Master Subroutine Window's selected option.
 def ms_format(response):
@@ -141,6 +143,7 @@ def filename_format(filename):
     # print(file_short)
     return file_short
 
+##############################################################################
 # --- Master Subroutine - Common Functionality between O1 and O2 --- #
 def master_sub(response, c_option, past_option,  bin_filename, box_filename, bin_params, item_params):
     
@@ -210,7 +213,7 @@ def master_sub(response, c_option, past_option,  bin_filename, box_filename, bin
          print("File Path {}".format(box_filename))
 
          if not backflag:
-            item_params = read_input(box_filename, filetype, c_option)
+            item_params = read_input(box_filename, filetype, c_option, ui_flag)
             boxes_loaded = True if item_params is not None else False
             past_option = "Box CSV Loaded"
 

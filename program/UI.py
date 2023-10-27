@@ -12,7 +12,7 @@ Classes Implemented
 5. Box_Input_O1 Window - Option 2 - Defined first as a parent to Option 1's Window
 6. Box_Input_O1 Window - Option 1 - Has a few more perimeters than Option 2
 7. Load_CSV Window
-8. Output Window
+8. Output Window - [Implementation Cancelled]
 """
 
 # Imports

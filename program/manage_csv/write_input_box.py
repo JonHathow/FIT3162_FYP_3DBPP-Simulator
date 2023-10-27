@@ -92,6 +92,8 @@ def write_input_box_func(option: Option, b_inputs:InputBoxParameters = None, ui_
 
     # --- Fetching Box Information ---- #
     inputs = None
+    print("UI Flag Status for write_input: {}".format(ui_flag))
+    
     if ui_flag:
         inputs: InputBoxParameters = b_inputs
     else:
