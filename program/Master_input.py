@@ -161,11 +161,11 @@ def master_sub(response, c_option, past_option,  bin_filename, box_filename, bin
     ui_flag = True
 
     # Check choosen algorithm
-    if c_option == Option.OPTION1.value:
-        filetype = File.BIN.value
+   #  if c_option == Option.OPTION1.value:
         
-    elif c_option == Option.OPTION2.value:
-        filetype = File.BOX.value
+        
+   #  elif c_option == Option.OPTION2.value:
+        
    
     # Write a CSV file for bins.
     if response_no == "1":
@@ -189,6 +189,7 @@ def master_sub(response, c_option, past_option,  bin_filename, box_filename, bin
 
     # Read a CSV file for bins.
     elif response_no == "3":
+         filetype = File.BIN.value
          
          # Use UI to get filepath
          bin_filename, backflag = run_load_window(c_option, FILE_BIN)
@@ -208,6 +209,7 @@ def master_sub(response, c_option, past_option,  bin_filename, box_filename, bin
 
     # Read a CSV file for boxes.
     elif response_no == "4":
+         filetype = File.BOX.value
          
          box_filename, backflag = run_load_window(c_option, FILE_BOX)
          print("File Path {}".format(box_filename))
