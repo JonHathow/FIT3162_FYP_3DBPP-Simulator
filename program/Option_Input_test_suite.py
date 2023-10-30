@@ -7,13 +7,15 @@ import sys
 import os
 from io import StringIO
 
-# Captures functions output
-def capture_output(function, *args):
-    captured_output = StringIO()
-    sys.stdout = captured_output
-    function(*args)
-    sys.stdout = sys.__stdout__
-    return captured_output.getvalue().strip()
+
+"""
+Integration tests for option 1 and option 2 input functions
+
+Each option interacts with:
+- input CSV module
+- The options code stored in Option1/2_pacakge folder
+- output CSV module
+"""
 
 # 1 Bin 1 Box
 class Test_O1_Inputs_1(unittest.TestCase):

@@ -7,14 +7,11 @@ from Option2_input import O2_Input
 from unittest.mock import patch
 import shutil
 
-# Captures functions output
-def capture_output(function, *args):
-    captured_output = StringIO()
-    sys.stdout = captured_output
-    function(*args)
-    sys.stdout = sys.__stdout__
-    return captured_output.getvalue().strip()
+"""
+Scalability test for our software
 
+9 tests per algorithm, slowly increasing in size by amount of bins and boxes to pack.
+"""
 
 class Test_Scalability_O1_small(unittest.TestCase):
 
