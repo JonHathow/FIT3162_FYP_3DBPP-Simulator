@@ -6,10 +6,12 @@ The 3DBPP Simulation Program was built as a Final Year Project, with the purpose
 
 The 3DBPP Solution Algorihtms that we referenced are:
 
-Option 1 - Best-Fit Heuristic
+**Option 1 - Best-Fit Heuristic: Back Bottom Left Fill**
+
 Dube, E., Kanavathy, L. R., & Za, O. C. (2006). Optimizing Three-Dimensional bin packing through simulation. In Proceedings of the Sixth IASTED International Conference on Modelling, Simulation, and Optimization. https://www.researchgate.net/publication/228974015_Optimizing_Three-Dimensional_Bin_Packing_Through_Simulation
 
-Option 2 - Genetic Algorithm with Best Match Fill (BMF) Heuristic
+**Option 2 - Genetic Algorithm with Best Match Fill (BMF) Heuristic**
+
 Gonçalves, J. F., & Resende, M. G. C. (2012). A parallel multi-population biased random-key genetic algorithm for a container loading problem. Computers &amp; Operations Research, 39(2), 179–190. https://doi.org/10.1016/j.cor.2011.03.009 
 
 ## Project Packages
