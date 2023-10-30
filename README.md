@@ -1,92 +1,176 @@
 # Storage optimization in automated fulfilment centers
 
 
+## Project Description
+The 3DBPP Simulation Program was built as a Final Year Project, with the purpose of investigating the 3 Dimensional Bin Packing Problem, and for running and testing existing 3DBPP solution algorithms.
 
-## Getting started
+The 3DBPP Solution Algorihtms that we referenced are:
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Option 1 - Best-Fit Heuristic
+Dube, E., Kanavathy, L. R., & Za, O. C. (2006). Optimizing Three-Dimensional bin packing through simulation. In Proceedings of the Sixth IASTED International Conference on Modelling, Simulation, and Optimization. https://www.researchgate.net/publication/228974015_Optimizing_Three-Dimensional_Bin_Packing_Through_Simulation
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Option 2 - Genetic Algorithm with Best Match Fill (BMF) Heuristic
+Gonçalves, J. F., & Resende, M. G. C. (2012). A parallel multi-population biased random-key genetic algorithm for a container loading problem. Computers &amp; Operations Research, 39(2), 179–190. https://doi.org/10.1016/j.cor.2011.03.009 
 
-## Add your files
+## Project Packages
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+(1) manage_csv
 
-```
-cd existing_repo
-git remote add origin https://git.infotech.monash.edu/fit3162_mcs15/storage-optimization-in-automated-fulfilment-centers.git
-git branch -M main
-git push -uf origin main
-```
+Contains various functions and types for handling the reading and
+writing of the CSV files to be used as inputs for the bin-packing
+problem as implemented in Option 1 and Option 2.
 
-## Integrate with your tools
+    constants.py            - contains various strings and enums used
+                              throughout the package and other files
 
-- [ ] [Set up project integrations](https://git.infotech.monash.edu/fit3162_mcs15/storage-optimization-in-automated-fulfilment-centers/-/settings/integrations)
+    prompts.py              - functions to prompt users for inputs of
+                              various types
 
-## Collaborate with your team
+    manage_filecount.py     - functions to read from and write to
+                              fileBinCount.txt and fileBoxCount.txt
+                              files
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+    input_parameters.py     - classes to instantiate objects that
+                              store user inputs for further
+                              processing
 
-## Test and Deploy
+    read_input.py           - functions to read from a CSV file of
+                              inputs for either bins or boxes
 
-Use the built-in continuous integration in GitLab.
+    write_input_bin.py      - functions to write a CSV file for bins
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+    write_input_box.py      - functions to write a CSV file for boxes
 
-***
+    write_output.py         - function that prints given array of
+                              records detailing the output of the
+                              program and prints them to a CSV file
 
-# Editing this README
+(2) Option1_package
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+Contains functions and types from Option 1's implementation, exported
+to an external folder for ease of access.
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+(3) Option2_package
 
-## Name
-Choose a self-explaining name for your project.
+Contains functions and types from Option 2's implementation, exported
+to an external folder for ease of access.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## File Structure
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+Folders storing the relevant input files should be created within the
+same parent directory as the repository folder. Accordingly, the file
+structure should look something like this:
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+PARENT DIRECTORY
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+    -- files_Option1
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+        -- fileBinCount.txt
+        -- fileBoxCount.txt
+        -- inputBins1.csv
+        -- inputBoxes1.csv
+        -- inputBoxes2.csv
+        ...
+
+    -- files_Option2
+
+        -- fileBinCount.txt
+        -- fileBoxCount.txt
+        -- inputBins1.csv
+        -- inputBoxes1.csv
+        -- inputBoxes2.csv
+        ...
+
+    -- storage-optimization-in-automated-fulfilment-centers
+
+        -- program
+
+            -- manage_csv
+                ...
+
+            -- Option1_package
+                ...
+
+            -- Option2_package
+                ...
+
+            -- Option1_input.py
+            -- Option2_input.py
+
+Attempting to run the scripts locally on your device may result in
+something that looks different from this. Please report to me if this
+happens to be the case.
+
+DO NOT include the generated text and CSV files when pushing to the
+remote repository. However, do keep copies of files that result in
+errors for debugging purposes.
+
+## Project Subroutines
+
+The Project is run using Main.py, but the communication between the user interface and the subroutines is managed by master_input.py, the master subroutine.
+For more information about the master subroutine, you may refer to the comments in the code file.
+
+The subroutines Option1_input.py and Option2_input.py handle the reading and writing
+of CSV files used as the inputs of their respective implemantations.
+
+    (1) constants.py
+    (2) prompts.py
+    (3) manage_filecountpy
+    (4) input_parameters.py
+    (5) read_input_csv.py
+    (6) write_input_bin.py
+    (7) write_input_box.py
+    (8) write_output.py
+
+To understand how these input subroutines work, it is recommended to
+review the documenation of the Python scripts in the manage_csv
+package in the following order:
+
+    (1) constants.py
+    (2) prompts.py
+    (3) manage_filecountpy
+    (4) input_parameters.py
+    (5) read_input_csv.py
+    (6) write_input_bin.py
+    (7) write_input_box.py
+    (8) write_output.py
+
+The documentation of the following files should also be perused:
+
+    (1) write_output_option1.py
+    (2) write_output_option2.py
+
+Despite their name, both Option1_input.py and Option2_input.py are
+responsible for producing output files as well as parsing input.
+They may be given a more suitable name should the need arise.
+
+## Project Front-End
+
+The Project Front-End Graphical User Interface, UI.py, has all the classes for all the UI windows in the simulation program.
+
+The UI Windows are:
+
+1. Parent_Window - Parent Window that is the foundation for all other windows.
+2. Main_Window - Main Menu Windows
+3. MS_Window (Master Subroutine Window) - The User Interface of the Master Subroutine
+4. Bin_Input Window - Create Bin CSV Form
+5. Box_Input_O2 Window - Create Box CSV Form for Option 2
+6. Box_Input_O1 Window - Create Box CSV Form for Option 1
+7. Load_CSV Window - Load CSV Window that opens File Explorer for loading a bin or box csv file into the program.
+8. Output Window - Implementation Cancelled
+
+## Additional Notes
+
+To the best of my ability, I have separated functions that prompt for
+user input from those that handle file I/O. This way, the "prompt"
+functions I haved used throughout the package can be switched out
+when it comes time to integrate the subroutines with the front-end.
 
 ## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+For more information on how to set up and run the program, refer to the 3DBPP Simulation - User and Technical Guide PDF file.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## Authors and Acknowledgment
+1. Cheryl Frances Lee - Project Manager and Back-End Developer
+2. How Yu Chern - Technical Lead and Front-End Developer
+3. Anson Sameer Lee - Quality Assurance Officer
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
