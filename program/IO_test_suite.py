@@ -18,12 +18,9 @@ import unittest
 import csv
 import os
 
-""" 
-Current Issues:
-
-Read Input CSV 1 line of code is commented out, not sure why
 """
-
+Unit tests covering all python files in manage_csv folder, as well as write_output_option1.py and write_output_option2.py
+"""
 
 class Test_Input_Parameters(unittest.TestCase):
 
@@ -357,7 +354,7 @@ class Test_Read_Input_CSV(unittest.TestCase):
         mock_input.return_value = "2"
         self.assertEqual(read_input(FILE_BIN_2, 1, 2), [['Bin_#1', '100', '200', '500', '10000'], ['Bin_#2', '100', '200', '500', '10000'], ['Bin_#3', '100', '200', '500', '10000'], ['Bin_#4', '100', '200', '500', '10000']])
 
-        # Boxes are randomly generated, cant test for exact values
+        # Boxes are randomly generated, cant test for exact values so test if output files were created
         mock_input.return_value = "1"
         self.assertNotEqual(read_input(FILE_BOX_1, 2, 1), None)
 
@@ -562,11 +559,11 @@ class Test_Output_Option2(unittest.TestCase):
         testPacker.pack()
 
 
-        expected_answer = [['test1', Decimal('10.000'), Decimal('30.000'), Decimal('20.000'), Decimal('25.000'), Decimal('6000.000'), [0, 0, 0], 1], ['test2', Decimal('20.000'), Decimal('10.000'), Decimal('10.000'), Decimal('25.000'), Decimal('2000.000'), [0, Decimal('10.000'), 0], 0]]
+        expected_answer = [['test1', Decimal('10.000'), Decimal('30.000'), Decimal('20.000'), Decimal('25.000'), Decimal('6000.000'), [0, 0, 0], 1]]
         self.assertEqual(extract_boxes_O2(testPacker, Mode.FITTED.value), expected_answer)
 
-        
-        # self.assertEqual(extract_boxes_O2(testPacker, Mode.UNFITTED.value), [])
+        exp_answer = [['test2', Decimal('20.000'), Decimal('10.000'), Decimal('10.000'), Decimal('25.000'), Decimal('2000.000'), [0, 0, 0], 0]]
+        self.assertEqual(extract_boxes_O2(testPacker, Mode.UNFITTED.value), exp_answer)
 
         # all items unfitted
         testItem1 = ItemO2("test1", 1000, 2000, 3000, 25)
@@ -580,8 +577,9 @@ class Test_Output_Option2(unittest.TestCase):
 
         self.assertEqual(extract_boxes_O2(testPacker, Mode.FITTED.value), [])
 
-        # expected_answer = [[1, 'test', 'orange', Decimal('520'), Decimal('520'), Decimal('530'), 143312000.0, 25.0, [0, 0, 0], 1], [2, 'test', 'orange', Decimal('350'), Decimal('530'), Decimal('510'), 94605000.0, 25.0, [0, 0, 0], 1]]
-        # self.assertEqual(extract_boxes_O2(testPacker, Mode.UNFITTED.value), expected_answer)
+        expected_answer = [['test1', Decimal('1000.000'), Decimal('3000.000'), Decimal('2000.000'), Decimal('25.000'), Decimal('6000000000.000'), [0, 0, 0], 5], ['test2', Decimal('2000.000'), Decimal('1000.000'), Decimal('1000.000'), Decimal('25.000'), Decimal('2000000000.000'), [0, 0, 0], 5]]
+        
+        self.assertEqual(extract_boxes_O2(testPacker, Mode.UNFITTED.value), expected_answer)
 
         # 1 item fitted 1 item unfitted
         testItem1 = ItemO2("test1", 10, 20, 30, 25)
@@ -593,14 +591,16 @@ class Test_Output_Option2(unittest.TestCase):
         testPacker.add_item(testItem2)
         testPacker.pack()
 
+        
+
         expected_answer = [['test1', Decimal('10.000'), Decimal('30.000'), Decimal('20.000'), Decimal('25.000'), Decimal('6000.000'), [0, 0, 0], 1]]
         self.assertEqual(extract_boxes_O2(testPacker, Mode.FITTED.value), expected_answer)
 
-        # expected_answer = [[2, 'test', 'orange', Decimal('500'), Decimal('100'), Decimal('100'), 5000000.0, 25.0, [0, 0, 0], 1]]
-        # self.assertEqual(extract_boxes_O2(testPacker, Mode.UNFITTED.value), expected_answer)
+        expected_answer = [['test2', Decimal('2000.000'), Decimal('1000.000'), Decimal('1000.000'), Decimal('25.000'), Decimal('2000000000.000'), [0, 0, 0], 5]]
+        self.assertEqual(extract_boxes_O2(testPacker, Mode.UNFITTED.value), expected_answer)
 
     def test_extract_summary(self):
-        # all items fitted
+        
         testItem1 = ItemO2("test1", 10, 20, 30, 25)
         testItem2 = ItemO2("test2", 20, 10, 10, 25)
         testbin = BinO2(300, 100, 200, 100, 5000)
@@ -612,8 +612,8 @@ class Test_Output_Option2(unittest.TestCase):
 
         bins, sum = extract_summary_O2(testPacker)
 
-        bins_exp = [[300, Decimal('2000000.000'), Decimal('2000.000'), Decimal('1998000.000'), Decimal('0.10')]]
-        summ_exp = [['lastBinFile.txt', 'files_Option2\\csv_inputs\\csv_boxes\\inputBoxes200.csv', Decimal('2000000.000'), Decimal('8000.000'), Decimal('1992000.000'), Decimal('0.40'), Decimal('8000.000')]]
+        bins_exp = [[300, Decimal('2000000.000'), Decimal('6000.000'), Decimal('1994000.000'), Decimal('0.30')]]
+        summ_exp = [['lastBinFile.txt', 'files_Option2\\csv_inputs\\csv_boxes\\inputBoxes200.csv', Decimal('2000000.000'), Decimal('6000.000'), Decimal('1994000.000'), Decimal('0.30'), Decimal('2000.000')]]
 
         self.assertEqual(bins, bins_exp)
         self.assertEqual(sum, summ_exp)

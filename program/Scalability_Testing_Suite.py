@@ -18,8 +18,6 @@ def capture_output(function, *args):
 
 class Test_Scalability_O1_small(unittest.TestCase):
 
-    # def test_smthereadwad(self):
-    #     O1_Input()
 
     @patch('builtins.input')
     def test_ss1(self, mock_input):
@@ -87,32 +85,29 @@ class Test_Scalability_O1_large(unittest.TestCase):
         large scale tests where the number of bins and items are between 50 and 100
         """
         
-        mock_input.side_effect = ["1", "51", "100", "100", "100", "3000", "2", "4", "13", "1", "10", "10", "10", "10", "y", "y", "3", "1", "4", "1", "5", "0"]
+        mock_input.side_effect = ["1", "51", "100", "100", "100", "3000", "2", "4", "13", "1", "10", "10", "10", "10", "y", "y", "3", "7", "4", "7", "5", "0"]
         O1_Input()
 
-    # @patch('builtins.input')
-    # def test_ls2(self, mock_input):
-    #     """
-    #     large scale tests where the number of bins and items are between 50 and 100
-    #     """
+    @patch('builtins.input')
+    def test_ls2(self, mock_input):
+        """
+        large scale tests where the number of bins and items are between 50 and 100
+        """
         
-    #     mock_input.side_effect = ["1", "75", "100", "100", "100", "3000", "2", "5", "15", "1", "10", "10", "10", "10", "y", "y", "3", "3", "4", "3", "5", "0"]
-    #     O1_Input()
+        mock_input.side_effect = ["1", "75", "100", "100", "100", "3000", "2", "5", "15", "1", "10", "10", "10", "10", "y", "y", "3", "8", "4", "8", "5", "0"]
+        O1_Input()
 
-    # @patch('builtins.input')
-    # def test_ls3(self, mock_input):
-    #     """
-    #     large scale tests where the number of bins and items are between 50 and 100
-    #     """
+    @patch('builtins.input')
+    def test_ls3(self, mock_input):
+        """
+        large scale tests where the number of bins and items are between 50 and 100
+        """
         
-    #     mock_input.side_effect = ["1", "89", "100", "100", "100", "3000", "2", "15", "6", "1", "10", "10", "10", "10", "y", "y", "3", "3", "4", "3", "5", "0"]
-    #     O1_Input()
+        mock_input.side_effect = ["1", "89", "100", "100", "100", "3000", "2", "15", "6", "1", "10", "10", "10", "10", "y", "y", "3", "9", "4", "9", "5", "0"]
+        O1_Input()
 
 
 class Test_Scalability_O2_small(unittest.TestCase):
-
-    # def test_smthereadwad(self):
-    #     O1_Input()
 
     @patch('builtins.input')
     def test_ss1(self, mock_input):

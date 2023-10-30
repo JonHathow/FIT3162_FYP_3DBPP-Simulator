@@ -7,14 +7,12 @@ from Option2_input import O2_Input
 from unittest.mock import patch
 import shutil
 
-# Captures functions output
-def capture_output(function, *args):
-    captured_output = StringIO()
-    sys.stdout = captured_output
-    function(*args)
-    sys.stdout = sys.__stdout__
-    return captured_output.getvalue().strip()
+"""
+Integration tests for this software
 
+This test suite only has a few tests, as some integration tests are run in IO_test_suite as well as Scalability_Testing_Suite,
+Given that running either O1_Input or O2_Input is automatically considered an integration test due to its nature.
+"""
 class Test_Integration(unittest.TestCase):
 
     @patch('builtins.input')
