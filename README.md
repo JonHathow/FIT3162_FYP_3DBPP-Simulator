@@ -10,9 +10,18 @@ The 3DBPP Solution Algorihtms that we referenced are:
 
 Dube, E., Kanavathy, L. R., & Za, O. C. (2006). Optimizing Three-Dimensional bin packing through simulation. In Proceedings of the Sixth IASTED International Conference on Modelling, Simulation, and Optimization. https://www.researchgate.net/publication/228974015_Optimizing_Three-Dimensional_Bin_Packing_Through_Simulation
 
+Github Repo:
+
+Janet. (2020, July 27). Janet-19/3D-bin-packing-problem: GitHub. https://github.com/Janet-19/3d-bin-packing-problem/tree/master
+
+
 **Option 2 - Genetic Algorithm with Best Match Fill (BMF) Heuristic**
 
 Gonçalves, J. F., & Resende, M. G. C. (2012). A parallel multi-population biased random-key genetic algorithm for a container loading problem. Computers &amp; Operations Research, 39(2), 179–190. https://doi.org/10.1016/j.cor.2011.03.009 
+
+Github Repo:
+
+Shiu, R. C. (2023, June 29). jerry800416 /3D-bin-packing. GitHub. https://github.com/jerry800416/3D-bin-packing 
 
 ## Project Packages
 
