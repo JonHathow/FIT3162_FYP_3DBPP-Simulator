@@ -61,7 +61,7 @@ to an external folder for ease of access.
 
 Folders storing the relevant input files should be created within the
 same parent directory as the repository folder. Accordingly, the file
-structure should look something like this:
+structure should resemble something like this:
 
 PARENT DIRECTORY
 
@@ -69,45 +69,56 @@ PARENT DIRECTORY
 
         -- fileBinCount.txt
         -- fileBoxCount.txt
-        -- inputBins1.csv
-        -- inputBoxes1.csv
-        -- inputBoxes2.csv
-        ...
+
+        -- csv_bins
+            -- inputBins1.csv
+            -- inputBins2.csv
+            ...
+        
+        -- csv_boxes
+            -- inputBoxes1.csv
+            -- inputBoxes2.csv
+            ...
 
     -- files_Option2
 
         -- fileBinCount.txt
         -- fileBoxCount.txt
-        -- inputBins1.csv
-        -- inputBoxes1.csv
-        -- inputBoxes2.csv
-        ...
 
-    -- storage-optimization-in-automated-fulfilment-centers
+        -- csv_bins
+            -- inputBins1.csv
+            -- inputBins2.csv
+            ...
+        
+        -- csv_boxes
+            -- inputBoxes1.csv
+            -- inputBoxes2.csv
+            ...
 
-        -- program
+    -- program
 
-            -- manage_csv
-                ...
+        -- manage_csv
+            ...
 
-            -- Option1_package
-                ...
+        -- Option1_package
+            ...
 
-            -- Option2_package
-                ...
+        -- Option2_package
+            ...
 
-            -- Option1_input.py
-            -- Option2_input.py
+        -- Option1_input.py
+        -- Option2_input.py
 
-Attempting to run the scripts locally on your device may result in
-something that looks different from this. Please report to me if this
-happens to be the case.
+Keep in mind that files_Option1 and files_Option2 will be created
+in the current directory as specified in the terminal. By default
+this should be the path to the directory the repository is locally
+saved in but may vary.
 
 DO NOT include the generated text and CSV files when pushing to the
 remote repository. However, do keep copies of files that result in
 errors for debugging purposes.
 
-## Project Subroutines
+## Project Back-End Subroutines
 
 The Project is run using Main.py, but the communication between the user interface and the subroutines is managed by master_input.py, the master subroutine.
 For more information about the master subroutine, you may refer to the comments in the code file.
@@ -163,10 +174,10 @@ The UI Windows are:
 
 ## Additional Notes
 
-To the best of my ability, I have separated functions that prompt for
+To the best of our ability, we have separated functions that prompt for
 user input from those that handle file I/O. This way, the "prompt"
-functions I haved used throughout the package can be switched out
-when it comes time to integrate the subroutines with the front-end.
+functions used throughout the package can be switched out when it come
+time to integrate the subroutines with the front-end.
 
 ## Support
 For more information on how to set up and run the program, refer to the 3DBPP Simulation - User and Technical Guide PDF file.
@@ -175,4 +186,3 @@ For more information on how to set up and run the program, refer to the 3DBPP Si
 1. Cheryl Frances Lee - Project Manager and Back-End Developer
 2. How Yu Chern - Technical Lead and Front-End Developer
 3. Anson Sameer Lee - Quality Assurance Officer
-
